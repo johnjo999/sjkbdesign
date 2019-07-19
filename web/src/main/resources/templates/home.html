@@ -1,0 +1,1194 @@
+<!doctype html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Libs CSS -->
+    <link rel="stylesheet" href="./assets/fonts/Feather/feather.css">
+    <link rel="stylesheet" href="./assets/libs/flickity/dist/flickity.min.css">
+    <link rel="stylesheet" href="./assets/libs/flickity-fade/flickity-fade.css">
+    <link rel="stylesheet" href="./assets/libs/aos/dist/aos.css">
+    <link rel="stylesheet" href="./assets/libs/jarallax/dist/jarallax.css">
+    <link rel="stylesheet" href="./assets/libs/highlightjs/styles/vs2015.css">
+    <link rel="stylesheet" href="./assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.min.css">
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="./assets/css/theme.min.css">
+
+    <title>SJKB Design</title>
+    <style>
+        body {
+            padding-top: 100px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- MODALS
+    ================================================== -->
+    <!-- Example -->
+    <div class="modal fade" id="modalExample" tabindex="-1" role="dialog" aria-labelledby="modalExampleTitle"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+
+                    <!-- Close -->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+
+                    <!-- Image -->
+                    <div class="text-center">
+                        <img src="../assets/img/illustrations/illustration-1.png" alt="..." class="img-fluid mb-3"
+                            style="width: 200px;">
+                    </div>
+
+                    <!-- Heading -->
+                    <h2 class="font-weight-bold text-center mb-1" id="modalExampleTitle">
+                        Schedule an appointment
+                    </h2>
+
+                    <!-- Text -->
+                    <p class="font-size-lg text-center text-muted mb-6 mb-md-8">
+                        We can help you solve your kitchen problems.
+                    </p>
+
+                    <!-- Form -->
+                    <form>
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+
+                                <!-- First name -->
+                                <div class="form-label-group">
+                                    <input type="text" class="form-control form-control-flush"
+                                        id="registrationFirstNameModal" placeholder="First name">
+                                    <label for="registrationFirstNameModal">First name</label>
+                                </div>
+
+                            </div>
+                            <div class="col-12 col-md-6">
+
+                                <!-- Last name -->
+                                <div class="form-label-group">
+                                    <input type="text" class="form-control form-control-flush"
+                                        id="registrationLastNameModal" placeholder="Last name">
+                                    <label for="registrationLastNameModal">Last name</label>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+
+                                <!-- Email -->
+                                <div class="form-label-group">
+                                    <input type="email" class="form-control form-control-flush"
+                                        id="registrationEmailModal" placeholder="Email">
+                                    <label for="registrationEmailModal">Email</label>
+                                </div>
+
+                            </div>
+                            <div class="col-12 col-md-6">
+
+                                <!-- Password -->
+                                <div class="form-label-group">
+                                    <input type="password" class="form-control form-control-flush"
+                                        id="registrationPasswordModal" placeholder="Password">
+                                    <label for="registrationPasswordModal">Password</label>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+
+                                <!-- Submit -->
+                                <button class="btn btn-block btn-primary mt-3 lift">
+                                    Request a visit
+                                </button>
+
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup: Horizontal  -->
+    <div class="modal fade" id="modalSignupHorizontal" tabindex="-1" role="dialog"
+        aria-labelledby="modalSignupHorizontalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="card card-row">
+                    <div class="row no-gutters">
+                        <div class="col-12 col-md-6 bg-cover card-img-left"
+                            style="background-image: url(./assets/img/photos/photo-8.jpg);">
+
+                            <!-- Image (placeholder) -->
+                            <img src="./assets/img/photos/photo-8.jpg" alt="..." class="img-fluid d-md-none invisible">
+
+                            <!-- Shape -->
+                            <div class="shape shape-right shape-fluid-y svg-shim text-white d-none d-md-block">
+                                <svg viewBox="0 0 112 690" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M116 0H51V172C76 384 0 517 0 517V690H116V0Z" fill="currentColor" />
+                                </svg>
+                            </div>
+
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="card-body">
+
+                                <!-- Close -->
+                                <button type="button" class="modal-close close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+
+                                <!-- Heading -->
+                                <h2 class="mb-0 font-weight-bold text-center" id="modalSignupHorizontalTitle">
+                                    Sign Up
+                                </h2>
+
+                                <!-- Text -->
+                                <p class="mb-6 text-center text-muted">
+                                    Simplify your workflow in minutes.
+                                </p>
+
+                                <!-- Form -->
+                                <form class="mb-6">
+
+                                    <!-- Email -->
+                                    <div class="form-group">
+                                        <label class="sr-only" for="modalSignupHorizontalEmail">
+                                            Your email
+                                        </label>
+                                        <input type="email" class="form-control" id="modalSignupHorizontalEmail"
+                                            placeholder="Your email">
+                                    </div>
+
+                                    <!-- Password -->
+                                    <div class="form-group mb-5">
+                                        <label class="sr-only" for="modalSignupHorizontalPassword">
+                                            Create a password
+                                        </label>
+                                        <input type="password" class="form-control" id="modalSignupHorizontalPassword"
+                                            placeholder="Create a password">
+                                    </div>
+
+                                    <!-- Submit -->
+                                    <button class="btn btn-block btn-primary" type="submit">
+                                        Sign up
+                                    </button>
+
+                                </form>
+
+                            </div>
+                        </div>
+
+                    </div> <!-- / .row -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Signin: Horizontal  -->
+    <div class="modal fade" id="modalSigninHorizontal" tabindex="-1" role="dialog"
+        aria-labelledby="modalSigninHorizontalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="card card-row">
+                    <div class="row no-gutters">
+                        <div class="col-12 col-md-6 bg-cover card-img-left"
+                            style="background-image: url(./assets/img/photos/photo-5.jpg);">
+
+                            <!-- Image (placeholder) -->
+                            <img src="./assets/img/photos/photo-5.jpg" alt="..." class="img-fluid d-md-none invisible">
+
+                            <!-- Shape -->
+                            <div class="shape shape-right shape-fluid-y svg-shim text-white d-none d-md-block">
+                                <svg viewBox="0 0 112 690" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M116 0H51V172C76 384 0 517 0 517V690H116V0Z" fill="currentColor" />
+                                </svg>
+                            </div>
+
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="card-body">
+
+                                <!-- Close -->
+                                <button type="button" class="modal-close close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+
+                                <!-- Heading -->
+                                <h2 class="mb-0 font-weight-bold text-center" id="modalSigninHorizontalTitle">
+                                    Sign In
+                                </h2>
+
+                                <!-- Text -->
+                                <p class="mb-6 text-center text-muted">
+                                    Check in on your project.
+                                </p>
+
+                                <!-- Form -->
+                                <form class="mb-6" th:action="@{/login.html}" method="post">
+
+                                    <!-- Email -->
+                                    <div class="form-group">
+                                        <label class="sr-only" for="modalSigninHorizontalEmail">
+                                            Your email
+                                        </label>
+                                        <input type="text" name="username" class="form-control" id="modalSigninHorizontalEmail"
+                                            placeholder="Your email">
+                                    </div>
+
+                                    <!-- Password -->
+                                    <div class="form-group mb-5">
+                                        <label class="sr-only" for="modalSigninHorizontalPassword">
+                                            Password
+                                        </label>
+                                        <input type="password" name="password" class="form-control" id="modalSigninHorizontalPassword"
+                                            placeholder="password">
+                                    </div>
+
+                                    <!-- Submit -->
+                                    <button class="btn btn-block btn-primary" type="submit">
+                                        Sign in
+                                    </button>
+
+                                </form>
+
+                                <!-- Text -->
+                                <p class="mb-0 font-size-sm text-center text-muted">
+                                    Don't have an account yet? <a data-toggle="modal" href="#modalSignupHorizontal" 
+                                    onclick='$("#modalSigninHorizontal").hide()'>Sign up</a>.
+                                </p>
+
+                            </div>
+                        </div>
+
+                    </div> <!-- / .row -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- NAVBAR
+    ================================================== -->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+
+            <!-- Brand -->
+            <a class="navbar-brand" href="./home.html">
+                <span class="navbar-brand-img">
+                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 150"
+                        style="background-color: rgba(0, 0, 0, 0); background-position: initial initial; background-repeat: initial initial;">
+                        <defs>
+                            <linearGradient id="editing-outline-gradient" x1="-0.41354545764260087"
+                                x2="1.4135454576426008" y1="0.09326335692419985" y2="0.9067366430758002">
+                                <stop offset="0" stop-color="#ee4208"></stop>
+                                <stop offset="1" stop-color="#4139ff"></stop>
+                            </linearGradient>
+                            <filter id="editing-outline" x="-100%" y="-100%" width="300%" height="300%">
+                                <feMorphology in="SourceGraphic" operator="dilate" radius="2" result="outline">
+                                </feMorphology>
+                                <feComposite operator="out" in="outline" in2="SourceAlpha"></feComposite>
+                            </filter>
+                        </defs>
+                        <text x="250" y="75" filter="url(#editing-outline)" fill="url(#editing-outline-gradient)"
+                            style="font-size: 42px;">SJKB Design</text>
+                    </svg>
+                </span>
+            </a>
+
+            <!-- Toggler -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Collapse -->
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+
+                <!-- Toggler -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fe fe-x"></i>
+                </button>
+
+                <!-- Navigation -->
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarLandings" data-toggle="dropdown" href="#"
+                            aria-haspopup="true" aria-expanded="false">
+                            Gallery
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-xl p-0" aria-labelledby="navbarLandings">
+                            <div class="row no-gutters">
+                                <div class="col-12 col-lg-6">
+                                    <div class="dropdown-img-left"
+                                        style="background-image: url(./assets/img/photos/photo-3.jpg);">
+
+                                        <!-- Heading -->
+                                        <h4 class="font-weight-bold text-white mb-0">
+                                            What type of project?
+                                        </h4>
+
+                                        <!-- Text -->
+                                        <p class="font-size-sm text-white">
+                                            Kitchen, Bathroom, Laundry
+                                        </p>
+
+                                        <!-- Button -->
+                                        <a href="./overview.html"
+                                            class="btn btn-sm btn-white shadow-dark fonFt-size-sm">
+                                            Explore
+                                        </a>
+
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="dropdown-body">
+                                        <div class="row no-gutters">
+                                            <div class="col-6">
+
+                                                <!-- Heading -->
+                                                <h6 class="dropdown-header">
+                                                    Collaborate
+                                                </h6>
+
+                                                <!-- List -->
+                                                <a class="dropdown-item" href="#">
+                                                    Homeowners
+                                                </a>
+                                                <a class="dropdown-item" href="#">
+                                                    Builders
+                                                </a>
+                                                <a class="dropdown-item mb-5" href="#">
+                                                    Designers
+                                                </a>
+
+                                                <!-- Heading -->
+                                                <h6 class="dropdown-header">
+                                                    Rooms
+                                                </h6>
+
+                                                <!-- List -->
+                                                <a class="dropdown-item" href="#">
+                                                    Kitchen
+                                                </a>
+                                                <a class="dropdown-item" href="#">
+                                                    Bath
+                                                </a>
+                                                <a class="dropdown-item" href="#">
+                                                    Laundry
+                                                </a>
+
+                                            </div>
+                                            <div class="col-6">
+
+                                                <!-- Heading -->
+                                                <h6 class="dropdown-header">
+                                                    Services
+                                                </h6>
+
+                                                <!-- List -->
+                                                <a class="dropdown-item" href="#">
+                                                    Design
+                                                </a>
+                                                <a class="dropdown-item" href="#">
+                                                    Drawings
+                                                </a>
+                                                <a class="dropdown-item" href="#">
+                                                    Remodel
+                                                </a>
+                                                <a class="dropdown-item" href="#">
+                                                    Consulting
+                                                </a>
+
+                                            </div>
+                                        </div> <!-- / .row -->
+                                    </div>
+                                </div>
+                            </div> <!-- / .row -->
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarPages" data-toggle="dropdown" href="#"
+                            aria-haspopup="true" aria-expanded="false">
+                            Pages
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg" aria-labelledby="navbarPages">
+                            <div class="row no-gutters">
+                                <div class="col-6 col-lg-4">
+
+                                    <!-- Heading -->
+                                    <h6 class="dropdown-header">
+                                        Career
+                                    </h6>
+
+                                    <!-- List -->
+                                    <a class="dropdown-item" href="./careers.html">
+                                        Listing
+                                    </a>
+                                    <a class="dropdown-item mb-5" href="./career-single.html">
+                                        Join Us
+                                    </a>
+
+                                    <!-- Heading -->
+                                    <h6 class="dropdown-header">
+                                        Company
+                                    </h6>
+
+                                    <!-- List -->
+                                    <a class="dropdown-item" href="./about.html">
+                                        About
+                                    </a>
+                                    <a class="dropdown-item" href="./pricing.html">
+                                        Pricing
+                                    </a>
+                                    <a class="dropdown-item mb-5 mb-lg-0" href="./terms-of-service.html">
+                                        Terms
+                                    </a>
+
+                                </div>
+                                <div class="col-6 col-lg-4">
+
+                                    <!-- Heading -->
+                                    <h6 class="dropdown-header">
+                                        Help center
+                                    </h6>
+
+                                    <!-- List -->
+                                    <a class="dropdown-item" href="#">
+                                        How To
+                                    </a>
+                                    <a class="dropdown-item mb-5" href="#">
+                                        Article
+                                    </a>
+
+                                    <!-- Heading -->
+                                    <h6 class="dropdown-header">
+                                        Contact
+                                    </h6>
+
+                                    <!-- List -->
+                                    <a class="dropdown-item" href="#">
+                                        Basic
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        Cover
+                                    </a>
+
+                                </div>
+                                <div class="col-6 col-lg-4">
+
+                                    <!-- Heading -->
+                                    <h6 class="dropdown-header">
+                                        Planning
+                                    </h6>
+
+                                    <!-- List -->
+                                    <a class="dropdown-item" href="./blog.html">
+                                        Timelines
+                                    </a>
+                                    <a class="dropdown-item" href="./blog-post.html">
+                                        Cost
+                                    </a>                                  
+                                </div>
+                            </div>
+                        </div> <!-- / .row -->
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDocumentation" data-toggle="dropdown" href="#"
+                            aria-haspopup="true" aria-expanded="false">
+                            Documentation
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-md" aria-labelledby="navbarDocumentation">
+                            <div class="list-group list-group-flush">
+                                <a class="list-group-item" href="./docs/index.html">
+
+                                    <!-- Icon -->
+                                    <div class="icon icon-sm text-primary">
+                                        <?xml version="1.0" encoding="UTF-8"?>
+                                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink">
+                                            <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+                                            <title>Stockholm-icons / General / Clipboard</title>
+                                            <desc>Created with Sketch.</desc>
+                                            <g id="Stockholm-icons-/-General-/-Clipboard" stroke="none" stroke-width="1"
+                                                fill="none" fill-rule="evenodd">
+                                                <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                                <path
+                                                    d="M8,3 L8,3.5 C8,4.32842712 8.67157288,5 9.5,5 L14.5,5 C15.3284271,5 16,4.32842712 16,3.5 L16,3 L18,3 C19.1045695,3 20,3.8954305 20,5 L20,21 C20,22.1045695 19.1045695,23 18,23 L6,23 C4.8954305,23 4,22.1045695 4,21 L4,5 C4,3.8954305 4.8954305,3 6,3 L8,3 Z"
+                                                    id="Combined-Shape" fill="#335EEA" opacity="0.3"></path>
+                                                <path
+                                                    d="M11,2 C11,1.44771525 11.4477153,1 12,1 C12.5522847,1 13,1.44771525 13,2 L14.5,2 C14.7761424,2 15,2.22385763 15,2.5 L15,3.5 C15,3.77614237 14.7761424,4 14.5,4 L9.5,4 C9.22385763,4 9,3.77614237 9,3.5 L9,2.5 C9,2.22385763 9.22385763,2 9.5,2 L11,2 Z"
+                                                    id="Combined-Shape" fill="#335EEA"></path>
+                                                <rect id="Rectangle-152" fill="#335EEA" opacity="0.3" x="7" y="10"
+                                                    width="5" height="2" rx="1"></rect>
+                                                <rect id="Rectangle-152-Copy" fill="#335EEA" opacity="0.3" x="7" y="14"
+                                                    width="9" height="2" rx="1"></rect>
+                                            </g>
+                                        </svg>
+                                    </div>
+
+                                    <!-- Content -->
+                                    <div class="ml-4">
+
+                                        <!-- Heading -->
+                                        <h6 class="font-weight-bold text-uppercase text-primary mb-0">
+                                            Documentation
+                                        </h6>
+
+                                        <!-- Text -->
+                                        <p class="font-size-sm text-gray-700 mb-0">
+                                            Customizing and building
+                                        </p>
+
+                                    </div>
+
+                                </a>
+                                <a class="list-group-item" href="./docs/alerts.html">
+
+                                    <!-- Icon -->
+                                    <div class="icon icon-sm text-primary">
+                                        <?xml version="1.0" encoding="UTF-8"?>
+                                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink">
+                                            <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+                                            <title>Stockholm-icons / Layout / Layout-4-blocks</title>
+                                            <desc>Created with Sketch.</desc>
+                                            <g id="Stockholm-icons-/-Layout-/-Layout-4-blocks" stroke="none"
+                                                stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                                <rect id="Rectangle-7" fill="#335EEA" x="4" y="4" width="7" height="7"
+                                                    rx="1.5"></rect>
+                                                <path
+                                                    d="M5.5,13 L9.5,13 C10.3284271,13 11,13.6715729 11,14.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,14.5 C4,13.6715729 4.67157288,13 5.5,13 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,9.5 C20,10.3284271 19.3284271,11 18.5,11 L14.5,11 C13.6715729,11 13,10.3284271 13,9.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z M14.5,13 L18.5,13 C19.3284271,13 20,13.6715729 20,14.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,14.5 C13,13.6715729 13.6715729,13 14.5,13 Z"
+                                                    id="Combined-Shape" fill="#335EEA" opacity="0.3"></path>
+                                            </g>
+                                        </svg>
+                                    </div>
+
+                                    <!-- Content -->
+                                    <div class="ml-4">
+
+                                        <!-- Heading -->
+                                        <h6 class="font-weight-bold text-uppercase text-primary mb-0">
+                                            Components
+                                        </h6>
+
+                                        <!-- Text -->
+                                        <p class="font-size-sm text-gray-700 mb-0">
+                                            Full list of components
+                                        </p>
+
+                                    </div>
+
+                                </a>
+                                
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <!-- Button -->
+                <a class="navbar-btn btn btn-sm btn-primary lift ml-auto" data-toggle="modal" href="#modalSigninHorizontal">
+                    Active Projects
+                </a>
+
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- WELCOME
+    ================================================== -->
+    <section class="position-relative pt-12 pt-md-14 mt-n11">
+
+        <!-- Shape -->
+        <div class="shape shape-fluid-x shape-blur-2 svg-shim text-light">
+            <svg viewBox="0 0 1313 768" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M442.794 768C605.882 768 748.362 679.773 825.111 548.444L825.294 549C825.294 549 825.543 548.251 826.056 546.819C839.139 524.212 850.279 500.339 859.248 475.43C901.996 397.81 989.306 277.09 1144.29 206L1143.37 205.307C1230.34 171.296 1295.63 94.049 1312.83 0H1.29419V295.514C0.631105 305.423 0.294189 315.422 0.294189 325.5C0.294189 569.886 198.408 768 442.794 768Z"
+                    fill="currentColor" />
+            </svg>
+
+        </div>
+
+        <!-- Content -->
+        <div class="container">
+            <div class="row align-items-center text-center text-md-left">
+                <div class="col-12 col-md-6">
+
+                    <!-- Image -->
+                    <img src="./img/backgrounds/arrangement-color.jpg" alt="..."
+                        class="img-fluid mw-130 float-right mb-6 mb-md-0" data-aos="fade-right">
+
+                </div>
+                <div class="col-12 col-md-6">
+
+                    <!-- Heading -->
+                    <h1 class="display-1 font-weight-bold">
+                        <div data-aos="fade-left">reimagine</div>
+                        <div data-aos="fade-left" data-aos-delay="100">Your Kitchen.</div>
+                    </h1>
+
+                    <!-- Text -->
+                    <p class="font-size-lg text-muted mb-0" data-aos="fade-left" data-aos-delay="200">
+                        It has to be functional, and yet it has to look good. It's a workplace where conversations happen. Let's design a space that fits your style.
+                    </p>
+
+                </div>
+            </div> <!-- / .row -->
+        </div> <!-- / .container -->
+
+    </section>
+
+    <!-- HUB
+    ================================================== -->
+    <section class="py-8 py-md-11">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-4 text-center" data-aos="fade-up">
+
+                    <!-- Icon -->
+                    <div class="icon text-primary mb-3">
+                        <?xml version="1.0" encoding="UTF-8"?>
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+                            <title>Stockholm-icons / General / Settings-1</title>
+                            <desc>Created with Sketch.</desc>
+                            <g id="Stockholm-icons-/-General-/-Settings-1" stroke="none" stroke-width="1" fill="none"
+                                fill-rule="evenodd">
+                                <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                <path
+                                    d="M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z"
+                                    id="Combined-Shape" fill="#335EEA"></path>
+                                <path
+                                    d="M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z"
+                                    id="Combined-Shape" fill="#335EEA" opacity="0.3"></path>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <!-- Heading -->
+                    <h3>
+                        Plan your Layout
+                    </h3>
+
+                    <!-- Text -->
+                    <p class="text-muted mb-6 mb-md-0">
+                        Think about how you move around in your Kitchen. Where things are placed. Sure, the sink should be close to the dishwasher. That's easy. But let's talk through some other considerations.
+                    </p>
+
+                </div>
+                <div class="col-12 col-md-4 text-center" data-aos="fade-up" data-aos-delay="50">
+
+                    <!-- Icon -->
+                    <div class="icon text-primary mb-3">
+                        <?xml version="1.0" encoding="UTF-8"?>
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+                            <title>Stockholm-icons / Layout / Layout-arrange</title>
+                            <desc>Created with Sketch.</desc>
+                            <g id="Stockholm-icons-/-Layout-/-Layout-arrange" stroke="none" stroke-width="1" fill="none"
+                                fill-rule="evenodd">
+                                <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                <path
+                                    d="M5.5,4 L9.5,4 C10.3284271,4 11,4.67157288 11,5.5 L11,6.5 C11,7.32842712 10.3284271,8 9.5,8 L5.5,8 C4.67157288,8 4,7.32842712 4,6.5 L4,5.5 C4,4.67157288 4.67157288,4 5.5,4 Z M14.5,16 L18.5,16 C19.3284271,16 20,16.6715729 20,17.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,17.5 C13,16.6715729 13.6715729,16 14.5,16 Z"
+                                    id="Combined-Shape" fill="#335EEA"></path>
+                                <path
+                                    d="M5.5,10 L9.5,10 C10.3284271,10 11,10.6715729 11,11.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,11.5 C4,10.6715729 4.67157288,10 5.5,10 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,12.5 C20,13.3284271 19.3284271,14 18.5,14 L14.5,14 C13.6715729,14 13,13.3284271 13,12.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z"
+                                    id="Combined-Shape" fill="#335EEA" opacity="0.3"></path>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <!-- Heading -->
+                    <h3>
+                        Choose your Look
+                    </h3>
+
+                    <!-- Text -->
+                    <p class="text-muted mb-6 mb-md-0">
+                        Do you want something modern, minimal, or industrial? Or do you prefer something more traditional? There are more choices than ever when selecting beautiful cabinets and countertops.
+                    </p>
+
+                </div>
+                <div class="col-12 col-md-4 text-center" data-aos="fade-up" data-aos-delay="100">
+
+                    <!-- Icon -->
+                    <div class="icon text-primary mb-3">
+                        <?xml version="1.0" encoding="UTF-8"?>
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+                            <title>Stockholm-icons / Code / Code</title>
+                            <desc>Created with Sketch.</desc>
+                            <g id="Stockholm-icons-/-Code-/-Code" stroke="none" stroke-width="1" fill="none"
+                                fill-rule="evenodd">
+                                <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                <path
+                                    d="M17.2718029,8.68536757 C16.8932864,8.28319382 16.9124644,7.65031935 17.3146382,7.27180288 C17.7168119,6.89328641 18.3496864,6.91246442 18.7282029,7.31463817 L22.7282029,11.5646382 C23.0906029,11.9496882 23.0906029,12.5503176 22.7282029,12.9353676 L18.7282029,17.1853676 C18.3496864,17.5875413 17.7168119,17.6067193 17.3146382,17.2282029 C16.9124644,16.8496864 16.8932864,16.2168119 17.2718029,15.8146382 L20.6267538,12.2500029 L17.2718029,8.68536757 Z M6.72819712,8.6853647 L3.37324625,12.25 L6.72819712,15.8146353 C7.10671359,16.2168091 7.08753558,16.8496835 6.68536183,17.2282 C6.28318808,17.6067165 5.65031361,17.5875384 5.27179713,17.1853647 L1.27179713,12.9353647 C0.909397125,12.5503147 0.909397125,11.9496853 1.27179713,11.5646353 L5.27179713,7.3146353 C5.65031361,6.91246155 6.28318808,6.89328354 6.68536183,7.27180001 C7.08753558,7.65031648 7.10671359,8.28319095 6.72819712,8.6853647 Z"
+                                    id="Combined-Shape" fill="#335EEA"></path>
+                                <rect id="Rectangle-28" fill="#335EEA" opacity="0.3"
+                                    transform="translate(12.000000, 12.000000) rotate(-345.000000) translate(-12.000000, -12.000000) "
+                                    x="11" y="4" width="2" height="16" rx="1"></rect>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <!-- Heading -->
+                    <h3>
+                        Maximize your Investment
+                    </h3>
+
+                    <!-- Text -->
+                    <p class="text-muted mb-0">
+                        Your kitchen is likely the most expensive room in your house. Let's create a design that will stand the test of time and maximize your home's value. A design that has impact at a reasonable cost.
+                    </p>
+
+                </div>
+            </div> <!-- / .row -->
+        </div> <!-- / .container -->
+    </section>
+
+    <!-- ABOUT
+    ================================================== -->
+    <section class="py-8 py-md-11 bg-gray-200">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-7 text-center">
+
+                    <!-- Heading -->
+                    <h2 class="font-weight-bold">
+                        Spaces for your Family.
+                    </h2>
+
+                    <!-- Text -->
+                    <p class="font-size-lg text-muted mb-7 mb-md-9">
+                        Kitchens and Bathrooms to fit your home. 
+                    </p>
+
+                </div>
+            </div> <!-- / .row -->
+            <div class="form-row">
+                <div class="col-12 col-lg-6 d-lg-flex pb-1 mb-4">
+
+                    <!-- Card -->
+                    <div class="card shadow-light-lg overflow-hidden" data-aos="fade-up">
+                        <div class="row">
+                            <div class="col-md-4 position-relative">
+
+                                <!-- Image -->
+                                <img src="assets/img/illustrations/illustration-8.png"
+                                    class="h-75 position-absolute right-0 mt-7 mr-n4" alt="...">
+
+                            </div>
+                            <div class="col-md-8">
+
+                                <!-- Body -->
+                                <div class="card-body py-7 py-md-9 text-center">
+
+                                    <!-- Heading -->
+                                    <h4 class="font-weight-bold">
+                                        New Designs
+                                    </h4>
+
+                                    <!-- Text -->
+                                    <p class="text-muted mb-0">
+                                            If you are doing a major remodel, or starting a new home project, then the choices are unlimited. The big decisions are fun, but the small details are equally important. 
+                                        
+                                    </p>
+
+                                </div>
+
+                            </div>
+                        </div> <!-- / .row -->
+                    </div>
+
+                </div>
+                <div class="col-12 col-lg-6 d-lg-flex pb-1 mb-4">
+
+                    <!-- Card -->
+                    <div class="card shadow-light-lg overflow-hidden text-center" data-aos="fade-up">
+                        <div class="row">
+                            <div class="col-md-8">
+
+                                <!-- Body -->
+                                <div class="card-body py-7 py-md-9">
+
+                                    <!-- Heading -->
+                                    <h4 class="font-weight-bold">
+                                        Remodels
+                                    </h4>
+
+                                    <!-- Text -->
+                                    <p class="text-muted mb-0">
+                                            Older homes did not provide as much room for Kitchens and Bathrooms. Space may be limited. Let's figure out how to maximize what is available. Small changes can have a big impact.
+                                    </p>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-4">
+
+                                <!-- Image -->
+                                <img src="assets/img/illustrations/illustration-6.png"
+                                    class="h-75 position-absolute left-0 mt-7" alt="...">
+
+                            </div>
+                        </div> <!-- / .row -->
+                    </div>
+
+                </div>
+            </div> <!-- / .row -->
+            <div class="row">
+                <div class="col-12">
+
+                    <!-- Card -->
+                    <div class="card shadow-light-lg overflow-hidden text-center text-lg-left" data-aos="fade-up">
+                        <div class="row">
+                            <div class="col-md-4 position-relative">
+
+                                <!-- Image -->
+                                <img src="assets/img/illustrations/illustration-2.png"
+                                    class="h-75 position-absolute right-0 mt-6" alt="...">
+
+                            </div>
+                            <div class="col-md-8">
+
+                                <!-- Body -->
+                                <div class="card-body py-7 py-md-9">
+
+                                    <!-- Heading -->
+                                    <h4 class="font-weight-bold">
+                                        Working together.
+                                    </h4>
+
+                                    <!-- Text -->
+                                    <p class="text-muted mb-0">
+                                        We will come visit you in your home and listen. Tell us what you have in mind. We will work with you to capture that in a design that fits your budget. 
+                                        We will take some measurements and whip up some drawings. Once we've settled on a plan and selected materials, we can work with your contractor
+                                        or send out one of our installers to make your new kitchen or bathroom a reality. 
+                                    </p>
+
+                                </div>
+
+                            </div>
+                        </div> <!-- / .row -->
+                    </div>
+
+                </div>
+            </div> <!-- / .row -->
+        </div> <!-- / .container -->
+    </section>
+
+    <!-- TESTIMONIALS
+    ================================================== -->
+    <section class="pt-8 pt-md-11">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8 text-center">
+
+                    <!-- Heading -->
+                    <h2 class="font-weight-bold">
+                        What makes a great Kitchen or Bathroom project?
+                    </h2>
+
+                    <!-- Text -->
+                    <p class="text-muted mb-7 mb-md-9">
+                        We want you to be ecstatic with the outcome. Really, the whole process. We believe there are a few important ingredients needed to a execute a smooth project 
+                    </p>
+
+                </div>
+            </div> <!-- / .row -->
+            <div class="row">
+                <div class="col-12">
+
+                    <!-- Flickity -->
+                    <div class="flickity-viewport-visible pt-2 pb-9"
+                        data-flickity='{"cellAlign": "left", "imagesLoaded": true, "pageDots": false, "prevNextButtons": false, "contain": true}'>
+                        <div class="col-12 col-md-5 col-lg-4">
+
+                            <!-- Card -->
+                            <div class="card card-border shadow-light-lg lift lift-lg"
+                                style="border-top-color: #FF5A5F;">
+                                <div class="card-body text-center">
+
+                                    <!-- Icon -->
+                                    <div class="img-fluid mb-5 w-50 svg-shim mx-auto" style="color: #FF5A5F;">
+                                        <img src="/assets/img/icons/duotone-icons/Home/Building.svg"/>
+                                    </div>
+
+                                    <!-- Text -->
+                                    <p class="text-gray-700 mb-5">
+                                        <span class="font-weight-bold">Attention to details:</span> We don't like surprises. We bet you don't either. We want your project to go as smoothly as possible
+                                    </p>
+
+                                    <!-- Link -->
+                                   
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-12 col-md-5 col-lg-4">
+
+                            <!-- Card -->
+                            <div class="card card-border shadow-light-lg lift lift-lg"
+                                style="border-top-color: #B81D24;">
+                                <div class="card-body text-center">
+
+                                    <!-- Icon -->
+                                    <div class="img-fluid mb-5 w-50 svg-shim mx-auto" style="color: #B81D24;">
+                                        <img src="/assets/img/icons/duotone-icons/Home/Globe.svg"/>
+                                    </div>
+
+                                    <!-- Text -->
+                                    <p class="text-gray-700 mb-5">
+                                        <span class="font-weight-bold">Communications:</span> We'll let you know what is going on, and what to expect. If something comes up, we'll tell you about that too, so you don't have to guess.
+                                    </p>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-12 col-md-5 col-lg-4">
+
+                            <!-- Card -->
+                            <div class="card card-border shadow-light-lg lift lift-lg"
+                                style="border-top-color: #0081C9;">
+                                <div class="card-body text-center">
+
+                                    <!-- Icon -->
+                                    <div class="img-fluid mb-5 w-50 svg-shim mx-auto" style="color: #0081C9;">
+                                        <img src="/assets/img/icons/duotone-icons/Home/Box.svg"/>
+                                    </div>
+                                    
+
+                                    <!-- Text -->
+                                    <p class="text-gray-700 mb-5">
+                                        <span class="font-weight-bold">Integrity:</span> remodeling kitchens and bathrooms aren't things you do all the time. You have to trust that we strive to make your project successful at the best price possible.
+                                    </p>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                    </div>
+
+                </div>
+            </div> <!-- / .row -->
+        </div> <!-- / .container -->
+    </section>
+
+    <!-- ABOUT
+    ================================================== -->
+    <section class="pt-5 pt-md-7">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12 col-md-6">
+
+                    <!-- Heading -->
+                    <h2 class="font-weight-bold">
+                        About Us
+                    </h2>
+
+                    <!-- Text -->
+                    <p class="font-size-lg text-muted mb-5">
+                        We are not a big design shop with a huge expensive showroom. We are small so we can stay laser focused on your project. We try to keep costs under control so we can pass the savings along to you.
+                    </p>
+
+                    <!-- Button -->
+                    <a href="#!" class="btn btn-primary-desat mb-6 mb-md-0 lift">
+                        Contact Us <i class="fe fe-arrow-right ml-3"></i>
+                    </a>
+
+                </div>
+                <div class="col-12 col-md-6">
+
+                    <!-- iPhone + Macbook -->
+                    <div class="w-md-130">
+                        <div class="device-combo device-combo-iphonex-macbook">
+                            <img class="h-75 position-absolute left-0 mt-7" src="/assets/img/illustrations/illustration-7.png"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div> <!-- / .row -->
+        </div> <!-- / .container -->
+    </section>
+
+    
+    <!-- CTA
+    ================================================== -->
+    <section class="py-10 py-md-13 bg-gray-200 bg-between"
+        style="background-image: url(assets/img/illustrations/illustration-1-cropped.png), url(assets/img/illustrations/illustration-3-cropped.png);">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8 text-center">
+
+                    <!-- Heading -->
+                    <h2 class="font-weight-bold">
+                        Tell us about your project.
+                    </h2>
+
+                    <!-- Text -->
+                    <p class="font-size-lg text-muted mb-8 px-lg-9">
+                        We provide just the right amount of help. Get drawings that you can share with your builder, or have us set you up with a complete kitchen or bath installation. 
+                    </p>
+
+                    <!-- Button -->
+                    <a href="#!" class="btn btn-primary-desat lift">
+                        Get Started. 
+                    </a>
+
+                </div>
+            </div> <!-- / .row -->
+        </div> <!-- / .container -->
+    </section>
+
+    <!-- SHAPE
+    ================================================== -->
+    <div class="position-relative">
+        <div class="shape shape-bottom shape-fluid-x svg-shim text-dark">
+            <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- FOOTER
+    ================================================== -->
+    <footer class="py-8 py-md-11 bg-dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-4 col-lg-3">
+
+                    <!-- Brand -->
+                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="160 0 500 150"
+                        style="background-color: rgba(0, 0, 0, 0); background-position: initial initial; background-repeat: initial initial;">
+                        <defs>
+                            <linearGradient id="editing-outline-gradient" x1="-0.41354545764260087"
+                                x2="1.4135454576426008" y1="0.09326335692419985" y2="0.9067366430758002">
+                                <stop offset="0" stop-color="#ee4208"></stop>
+                                <stop offset="1" stop-color="#4139ff"></stop>
+                            </linearGradient>
+                            <filter id="editing-outline" x="-100%" y="-100%" width="300%" height="300%">
+                                <feMorphology in="SourceGraphic" operator="dilate" radius="2" result="outline">
+                                </feMorphology>
+                                <feComposite operator="out" in="outline" in2="SourceAlpha"></feComposite>
+                            </filter>
+                        </defs>
+                        <text x="250" y="75" filter="url(#editing-outline)" fill="url(#editing-outline-gradient)"
+                            style="font-size: 48px;">SJKB Design</text>
+                    </svg>
+                
+                </div>
+               
+                <div class="col-6 col-md-4 col-lg-2">
+
+                    <!-- Heading -->
+                    <h6 class="font-weight-bold text-uppercase text-gray-700">
+                        Services
+                    </h6>
+
+                    <!-- List -->
+                    <ul class="list-unstyled text-muted mb-6 mb-md-8 mb-lg-0">
+                        <li class="mb-3">
+                            <a href="#!" class="text-reset">
+                                Design Drawings
+                            </a>
+                        </li>
+                        <li class="mb-3">
+                            <a href="#!" class="text-reset">
+                                Cabinets
+                            </a>
+                        </li>
+                        <li class="mb-3">
+                            <a href="#!" class="text-reset">
+                                Countertops
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-reset">
+                                Island
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+                
+                <div class="col-6 col-md-4 col-lg-2">
+
+                    <!-- Heading -->
+                    <h6 class="font-weight-bold text-uppercase text-gray-700">
+                        Connect
+                    </h6>
+
+                    <!-- List -->
+                    <ul class="list-unstyled text-muted mb-0">
+                        <li class="mb-3">
+                            <a href="#!" class="text-reset">
+                                Homeowner
+                            </a>
+                        </li>
+                        <li class="mb-3">
+                            <a href="#!" class="text-reset">
+                                Builder
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-reset">
+                                Contractor
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div> <!-- / .row -->
+            <span class="text-muted">We don't use cookies, and we don't track. Kitchens will not start chasing you online from this site</span>
+        </div> <!-- / .container -->
+    </footer>
+
+    <!-- JAVASCRIPT
+    ================================================== -->
+    <!-- Libs JS -->
+    <script src="./assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="./assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./assets/libs/flickity/dist/flickity.pkgd.min.js"></script>
+    <script src="./assets/libs/flickity-fade/flickity-fade.js"></script>
+    <script src="./assets/libs/aos/dist/aos.js"></script>
+    <script src="./assets/libs/smooth-scroll/dist/smooth-scroll.min.js"></script>
+    <script src="./assets/libs/jarallax/dist/jarallax.min.js"></script>
+    <script src="./assets/libs/jarallax/dist/jarallax-video.min.js"></script>
+    <script src="./assets/libs/jarallax/dist/jarallax-element.min.js"></script>
+    <script src="./assets/libs/typed.js/lib/typed.min.js"></script>
+    <script src="./assets/libs/countup.js/dist/countUp.min.js"></script>
+    <script src="./assets/libs/highlightjs/highlight.pack.min.js"></script>
+    <script src="./assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.min.js"></script>
+
+    <!-- Theme JS -->
+    <script src="./assets/js/theme.min.js"></script>
+
+</body>
+
+</html>

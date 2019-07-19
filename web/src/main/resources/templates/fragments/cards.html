@@ -1,0 +1,216 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+</div>
+<div th:fragment="kitchen" th:remove="tag">
+    <div class="col-md-4" th:id="${cardModel.id}">
+        <div class="card">
+            <div th:include="::cardheader" th:remove="tag"></div>
+            <form action="javascript:addRowForCard(this)">
+                <div class="card-body card-body-room">
+                    <div class="form-group">
+                        <label for="lf">Counter Linear Feet</label>
+                        <input type="text" class="form-control" id="lf" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="ci">Island Dimension</label>
+                        <input type="text" class="form-control" id="ci" placeholder="L x W">
+                    </div>
+                    <div class="form-group">
+                        <label for="ch">Cabinet Height</label>
+                        <input type="text" class="form-control" id="ch" placeholder="8">
+                    </div>
+                    <div class="form-group">
+                        <label for="cabline">Cabinet Line</label>
+                        <select class="form-control" id="cabline">
+                            <option class="option" selected>JR Cabinet</option>
+                            <option class="option">KitchenCraft</option>
+                            <option class="option">Custom</option>
+                            <option class="option">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="material">Counter Top</label>
+                        <select class="form-control" id="material">
+                            <option th:each="mat:${mats}" selected th:text="${mat}">Concrete</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body card-body-room slider hidden">
+                    <div class="form-group">
+                        <label for="b1">Sink</label>
+                        <input type="checkbox" class="form-control" id="b1">
+                    </div>
+                    <div class="form-group">
+                        <label for="b2">Facuet / Drain</label>
+                        <input type="checkbox" class="form-control" id="b2">
+                    </div>
+                    <div class="form-group">
+                        <label for="b3">Under Cab Lightng</label>
+                        <input type="checkbox" class="form-control" id="b3">
+                    </div>
+                    <div class="form-group">
+                        <label for="b4">Center Island Appliances & Hood</label>
+                        <input type="checkbox" class="form-control" id="b4">
+                    </div>
+                    <div class="form-group">
+                        <label for="cabline">Appliances</label>
+                        <select multiple class="form-control" id="cabline">
+                            <option class="option">Dishwasher</option>
+                            <option class="option">Range</option>
+                            <option class="option">Microwave</option>
+                            <option class="option">Convection</option>
+                            <option class="option">Wine Cooler</option>
+                            <option class="option">Built In Coffee</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <div th:include="::cardfooter" th:remove="tag"></div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="bath" th:remove="tag">
+    <div class="col-md-4" th:id="${cardModel.id}">
+        <div class="card">
+
+            <div th:include="::cardheader" th:remove="tag"></div>
+            <form action="javascript:addRowForCard(this)">
+                <div class="card-body card-body-room">
+                    <div class="form-group">
+                        <label for="br">Type</label>
+                        <select id="br" class="form-control">
+                            <option class="option" selected>Master</option>
+                            <option class="option">Hall</option>
+                            <option class="option">Private</option>
+                            <option class="option">Upstairs</option>
+                            <option class="option">Downstairs</option>
+                            <option class="option">Guest</option>
+                            <option class="option">Shared</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ci">Counter Linear Feet</label>
+                        <input type="text" class="form-control" id="ci" placeholder="ft">
+                    </div>
+                    <div class="form-group">
+                        <label for="b5">Label</label>
+                        <input type="text" class="form-control" id="b5" placeholder="Bath">
+                    </div>
+                    <div class="form-group">
+                        <label for="cabline"></label>
+                        <select class="form-control" id="bethcabline">
+                            <option class="option" selected>JR Cabinet</option>
+                            <option class="option">KitchenCraft</option>
+                            <option class="option">Custom</option>
+                            <option class="option">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="material">Counter Top</label>
+                        <select class="form-control" id="material">
+                            <option th:each="mat:${mats}" selected th:text="${mat}">Concrete</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body card-body-room slider hidden">
+                    <div class="form-group">
+                        <label for="lf">Sink</label>
+                        <input type="checkbox" class="form-control" id="lf">
+                    </div>
+                    <div class="form-group">
+                        <label for="ci">Sink Faucet, Drain</label>
+                        <input type="checkbox" class="form-control" id="ci">
+                    </div>
+                    <div class="form-group">
+                        <label for="ch">Tub</label>
+                        <select class="form-control" id="tubtype">
+                            <option class="option" selected>Free Stand</option>
+                            <option class="option">FS w/ appron</option>
+                            <option class="option">Whirlpool</option>
+                            <option class="option">Whirlpool w/ appron</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cabline">Shower System</label>
+                        <select class="form-control" id="cabline">
+                            <option class="option" selected>PB Simple, rough trim, sh hd, arm, flange</option>
+                            <option class="option">Thermo. std head, arm, flange</option>
+                            <option class="option">Rainhead /w arm, flange</option>
+                            <option class="option">HH on arm, bar</option>
+                            <option class="option">Tub/Shower, PB rough, std SH, arm, flange</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="material">Counter Top</label>
+                        <select class="form-control" id="material">
+                            <option th:each="mat:${mats}" selected th:text="${mat}">Concrete</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        <div th:include="::cardfooter" th:remove="tag"></div>
+    </div>
+</div>
+</div>
+
+<div th:fragment="generic" th:remove="tag">
+    <div class="col-md-4" th:id="${cardModel.id}">
+        <div class="card">
+            <div th:include="::cardheader" th:remove="tag"></div>
+            <form action="javascript:addRowForCard(this)">
+                <div class="card-body card-body-room">
+                        <div class="form-group">
+                                <label for="g1">Label</label>
+                                <input type="text" class="form-control" id="b5" placeholder="Bath">
+                            </div>
+                    <div class="form-group">
+                        <label for="lf">Square Feet</label>
+                        <input type="text" class="form-control" id="lf" placeholder="l x w">
+                    </div>                   
+                    <div class="form-group">
+                        <label for="cabline">Cabinet Line</label>
+                        <select class="form-control" id="cabline">
+                            <option class="option" selected>JR Cabinet</option>
+                            <option class="option">KitchenCraft</option>
+                            <option class="option">Custom</option>
+                            <option class="option">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="material">Counter Top</label>
+                        <select class="form-control" id="material">
+                            <option th:each="mat:${mats}" selected th:text="${mat}">Concrete</option>
+                        </select>
+                    </div>
+                </div>
+                
+            <div th:include="::cardfooter" th:remove="tag"></div>
+        </div>
+    </div>
+</div>
+
+<div class="card-header" th:fragment="cardheader">
+    <div class="card-header">
+        <h3 class="d-inline" th:text="${cardModel.title}">Kitchen</h3>
+        <button class="float-right" th:data-id="${cardModel.id}"
+            onclick="removeCard(this.getAttribute('data-id'));"><img
+                src="/assets/img/icons/duotone-icons/General/Trash.svg" /></button>
+    </div>
+</div>
+
+<div th:fragment="cardfooter">
+    <div class="card-footer">
+        <div class="form-group float-right">
+            <label for="kitsink">More</label>
+            <button th:data-id="${cardModel.id}" onclick="toggleCard(this.getAttribute('data-id'))"><img
+                    src="/assets/img/icons/duotone-icons/Navigation/Arrows-h.svg" /></button>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</div>
+
+<div th:fragment="qqrow" th:remove="tag">
+    row
+</div>
+
+</html>

@@ -1,0 +1,200 @@
+<html>
+
+<head>
+    <link href="https://www.cisco.com/web/fw/cisco-ui/1.3.4/dist/css/cui-standard.min.css" rel="stylesheet"
+        type="text/css" />
+</head>
+
+<body class="cui cui--animated cui--headermargins cui--wide styleguide">
+    <div class="content-fluid">
+        <nav id="styleguideSidebar" class="sidebar sidebar--mini sidebar--indigo" role="navigation">
+            <div class="sidebar__header">
+                <a id="sidebar-toggle" class="sidebar-toggle hidden-xs hidden-sm">
+                    <span class="icon-toggle-menu"></span>
+                </a>
+                <div class="sidebar__header-title">ISP Transfer</div>
+            </div>
+            <ul id="rootSidebar" data-kss-ref="Layout">
+                <li class="sidebar__item" id="section-gettingStarted">
+                    <a onclick="doNav('/backstage/home.html')" title="Getting Started">
+                        <span class="icon-home"></span>
+                        <span>Home</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+        <main>
+            <header id="styleguideHeader" class="header header--compressed">
+                <div class="header-bar flex-center-sm container-fluid">
+                    <a id="mobile-sidebar-toggle" class="sidebar-toggle visible-xs visible-sm base-margin-right">
+                        <span class="icon-list-menu"></span>
+                    </a>
+                    <a class="header-bar__logo" href="http://www.cisco.com" target="_blank">
+                        <span class="icon-cisco"></span>
+                    </a>
+                    <div class="header-bar__main hidden-xs hidden-sm">
+                        <div class="header-heading">
+                            <h1 class="page-title">Request SCI additional Access</h1>
+
+                        </div>
+                    </div>
+                    <div class="header-toolbar hidden-xs hidden-sm hidden-md">
+
+
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+
+                <div id="layout-section">
+                    <div class="container-fluid">
+                        <div class="col-lg-6 col-xl-3">
+                            <div class="subheader">David Bradley</div>
+                            <div class="alert">
+                                <div class="alert__icon icon-info-outline"></div>
+                                <div class="alert__message"><b>LOW</b> Your risk rating</div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div id="grid1" class="grid grid--selectable grid--3up">
+                                <div class="card card--col-3">
+                                    <div class="card__header">
+                                        <div>
+                                            <h4 class="col-md-2">Current Access</h4>
+
+                                        </div>
+                                        <table style="margin-bottom: 20px"
+                                            class="table table-striped table--bordered center">
+                                            <thead class="text-center">
+                                                <tr>
+                                                    <th colspan="2">ACL</th>
+                                                </tr>
+                                                <th:block th:each="total:${totals}">
+                                                    <th>Permit</th>
+                                                    <th>Rource Group</th>
+                                                    <th>End Points</th>
+                                                </th:block>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th:block>
+                                                        <td>TCP 1743,443</td>
+                                                        <td>Labs</td>
+                                                        <td>RTP8 LabId 5662</td>
+                                                    </th:block>
+                                                </tr>
+                                                <tr>
+                                                    <th:block>
+                                                        <td>TCP 443</td>
+                                                        <td>CAE</td>
+                                                        <td>Instance 00-00-00</td>
+                                                    </th:block>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div th:each="aclcount:${aclCounts}">
+                                            <div><span th:text="${aclcount.partA}"></span><span
+                                                    th:text="${aclcount.partB}" class="text-default"></span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div th:each="card : ${reportcards}" class="card">
+                                    <div class="card__body">
+                                        <h4 th:text="${card.title}">Proposed New</h4>
+                                        <div class="col-md-12">
+                                            <table class="table table-striped center">
+                                                <thead class="text-center">
+                                                    <tr>
+                                                        <th th:each="card:${reportcards}" th:text="${card.title}"
+                                                            colspan="2">ACL</th>
+                                                    </tr>
+                                                    <th:block>
+                                                        <th>Permit</th>
+                                                        <th>Protocol</th>
+                                                        <th>Environment</th>
+                                                        <th>End Points</th>
+                                                    </th:block>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="form-group half-margin-bottom">
+
+                                                            <span class="form-group__text select">
+                                                                <select class="select">
+                                                                    <option>Any</option>
+                                                                    <option>TCP</option>
+                                                                    <option>UDP</option>
+                                                                </select>
+                                                            </span>
+
+                                                        <td class="form-group half-margin-bottom">
+                                                            <span class="form-group__text select">
+                                                                <select class="select">
+                                                                    <option>443 https</option>
+                                                                    <option>8443 https</option>
+                                                                    <option>3306 jdbc</option>
+                                                                </select></span></td>
+                                                        <td class="form-group half-margin-bottom"><span
+                                                                class="form-group__text select">
+                                                                <select class="select">
+                                                                    <option>Lab</option>
+                                                                    <option>CAE</option>
+                                                                    <option>DMZ</option>
+                                                                </select></span>
+                                                        </td>
+                                                        <td class="form-group half-margin-bottom">
+                                                            <span class="form-group__text select">
+                                                                <select class="select">
+                                                                    <option>Some Lab ID</option>
+                                                                    <option>Some CAE ID</option>
+                                                                    <option>DMZ Lab ID</option>
+                                                                </select></span>
+                                                        <td><button><span
+                                                                    class="icon-add icon-small"></span>Row</button>
+
+                                                        </td>
+                                                    <tr>
+
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <div style="margin-top:20"></div>
+                                            <button class="btn btn-normal">
+                                                Submit
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="footer footer--basic">
+                <div class="footer__links">
+                    <ul class="list">
+                        <li><a href="http://www.cisco.com/cisco/web/siteassets/contacts/index.html">Contacts</a></li>
+                        <li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a></li>
+                        <li><a href="https://www.cisco.com/c/en/us/about/help.html">Help</a></li>
+                        <li><a href="http://www.cisco.com/c/en/us/about/sitemap.html">Site Map</a></li>
+                        <li><a href="https://www.cisco.com/c/en/us/about/legal/terms-conditions.html">Terms &amp;
+                                Conditions</a></li>
+                        <li><a href="https://www.cisco.com/c/en/us/about/legal/privacy-full.html">Privacy Statement</a>
+                        </li>
+                        <li><a href="https://www.cisco.com/c/en/us/about/legal/privacy-full.html#cookies">Cookie
+                                Policy</a></li>
+                        <li><a href="https://www.cisco.com/c/en/us/about/legal/trademarks.html">Trademarks</a></li>
+                    </ul>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+</body>
+
+</html>
