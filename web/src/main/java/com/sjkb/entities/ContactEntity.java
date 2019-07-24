@@ -1,8 +1,13 @@
 package com.sjkb.entities;
 
+import java.sql.Timestamp;
+import java.util.UUID;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.sjkb.models.UserNewModel;
 
 @Entity(name="contact")
 @Table(name="contact")
@@ -16,14 +21,38 @@ public  class ContactEntity {
     private String email;
     private String phone;
     private String street;
+    private String street2;
     private String city;
     private String state;
+    private String zip;
     private String username;
     private String account;
     private String role;
     private String context;
+    private Timestamp lastLogin;
+    private Timestamp created;
 
-    public String getUid() {
+    public ContactEntity() {}
+
+    public ContactEntity(UserNewModel userNewModel) {
+        this.uid = UUID.randomUUID().toString();
+        this.username = userNewModel.getUsername();
+        this.firstname = userNewModel.getFirstname();
+        this.lastname = userNewModel.getLastname();
+        this.email = userNewModel.getEmail();
+        this.phone = userNewModel.getPhone();
+        this.role = userNewModel.getRole();
+        this.city = userNewModel.getCity();
+        this.state = userNewModel.getState();
+        this.created = new Timestamp(System.currentTimeMillis());
+        this.street = userNewModel.getStreet();
+        this.street2 = userNewModel.getStreet2();
+        this.zip = userNewModel.getZip();
+        this.created = new Timestamp(System.currentTimeMillis());
+
+	}
+
+	public String getUid() {
         return uid;
     }
 
@@ -125,6 +154,39 @@ public  class ContactEntity {
 
     public void setContext(String context) {
         this.context = context;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public Timestamp getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Timestamp lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+   
+    public String getStreet2() {
+        return street2;
+    }
+
+    public void setStreet2(String street2) {
+        this.street2 = street2;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
     }
 
     

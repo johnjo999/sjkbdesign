@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
 
 import com.sjkb.components.UserComponent;
-import com.sjkb.entities.UserEntity;
 import com.sjkb.repositores.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -44,17 +42,6 @@ public class LoginController {
     public String homelogint() {
         return "home";
     }
-
-    @RequestMapping(value = "newuser/{userid}/{pwd}")
-    public String newlogint(@PathVariable("userid") String userid, @PathVariable("pwd") String pwd) {
-        UserEntity user = new UserEntity();
-        user.encodePwd(pwd);
-        user.setUsername(userid);
-        userRepository.save(user);
-        return "home";
-    }
-
-
 
     @RequestMapping(value = "/loginFailed", method = RequestMethod.GET)
     public String loginError(Model model) {

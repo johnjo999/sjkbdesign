@@ -36,11 +36,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/", "/onstage/**", "/css/**", "/assets/**", "/img/**", "/js/**", "/fonts/**", "/error.*", "/home.*").permitAll()
                 .antMatchers("/backstage/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/protal/**").access("hasRole('ROLE_CUST')")
                 .anyRequest().authenticated()
                 .and().formLogin()
                     .loginProcessingUrl("/login.html")
                     .permitAll()
-                    .defaultSuccessUrl("/backstage/dashboard")
+                    .defaultSuccessUrl("/portal/dashboard")
                     .and()
                 .logout()
                     .permitAll();

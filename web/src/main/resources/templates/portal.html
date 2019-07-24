@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en xmlns=" http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"">
+
+<head>
+	<meta charset=" utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Kitchen Bath Design">
+
+<title>SJKB Design</title>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Libs CSS -->
+<link rel="stylesheet" href="/assets/fonts/Feather/feather.css">
+<link rel="stylesheet" href="/assets/libs/flickity/dist/flickity.min.css">
+<link rel="stylesheet" href="/assets/libs/flickity-fade/flickity-fade.css">
+<link rel="stylesheet" href="/assets/libs/aos/dist/aos.css">
+<link rel="stylesheet" href="/assets/libs/jarallax/dist/jarallax.css">
+<link rel="stylesheet" href="/assets/libs/highlightjs/styles/vs2015.css">
+<link rel="stylesheet" href="/assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.min.css">
+
+<!-- Theme CSS -->
+<link rel="stylesheet" href="/assets/css/theme.min.css">
+
+
+<style>
+    .hidden {
+        display: none;
+    }
+    
+</style>
+</head>
+
+<body>
+    <div class="wrapper">
+
+        <div class="main">
+
+            <main class="content">
+                <div th:include="fragments/sidecar::portalnav" th:remove="tag"></div>
+                <div class="container" style="margin-top: 135px">
+                    <section class="position-relative pt-12  pt-md mt-n11">
+                        <div class="row">
+                    <h2> Welcome, <span th:text="${user}"></span></h2>
+                </section>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+<script src="/js/app.js"></script>
+
+</html>

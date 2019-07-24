@@ -2,7 +2,6 @@ package com.sjkb.entities;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,7 +27,6 @@ public class UserEntity {
     private Date dateCreated;
     private String role;
     private boolean locked;
-    private String context;
 
     public Long getId() {
         return id;
@@ -78,20 +76,11 @@ public class UserEntity {
         this.locked = locked;
     }
 
-    public String getContext() {
-        return context;
-    }
-
-    public void setContext(String context) {
-        this.context = context;
-    }
-
 	public void encodePwd(String pwd) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         this.password = encoder.encode(pwd);
         this.locked = false;
         this.dateCreated = new Timestamp(System.currentTimeMillis());
-        this.setContext(UUID.randomUUID().toString());
         this.setRole("ROLE_USER");
         
 	}

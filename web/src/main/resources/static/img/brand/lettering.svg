@@ -1,0 +1,17 @@
+<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 150"
+                        style="background-color: rgba(0, 0, 0, 0); background-position: initial initial; background-repeat: initial initial;">
+                        <defs>
+                            <linearGradient id="editing-outline-gradient" x1="-0.41354545764260087"
+                                x2="1.4135454576426008" y1="0.09326335692419985" y2="0.9067366430758002">
+                                <stop offset="0" stop-color="#ee4208"></stop>
+                                <stop offset="1" stop-color="#4139ff"></stop>
+                            </linearGradient>
+                            <filter id="editing-outline" x="-100%" y="-100%" width="300%" height="300%">
+                                <feMorphology in="SourceGraphic" operator="dilate" radius="2" result="outline">
+                                </feMorphology>
+                                <feComposite operator="out" in="outline" in2="SourceAlpha"></feComposite>
+                            </filter>
+                        </defs>
+                        <text x="250" y="75" filter="url(#editing-outline)" fill="url(#editing-outline-gradient)"
+                            style="font-size: 42px;">SJKB Design</text>
+                    </svg>
