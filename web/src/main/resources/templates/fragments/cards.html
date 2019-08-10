@@ -148,9 +148,9 @@
                     </div>
                 </div>
             </form>
-        <div th:include="::cardfooter" th:remove="tag"></div>
+            <div th:include="::cardfooter" th:remove="tag"></div>
+        </div>
     </div>
-</div>
 </div>
 
 <div th:fragment="generic" th:remove="tag">
@@ -159,14 +159,14 @@
             <div th:include="::cardheader" th:remove="tag"></div>
             <form action="javascript:addRowForCard(this)">
                 <div class="card-body card-body-room">
-                        <div class="form-group">
-                                <label for="g1">Label</label>
-                                <input type="text" class="form-control" id="b5" placeholder="Bath">
-                            </div>
+                    <div class="form-group">
+                        <label for="g1">Label</label>
+                        <input type="text" class="form-control" id="b5" placeholder="Bath">
+                    </div>
                     <div class="form-group">
                         <label for="lf">Square Feet</label>
                         <input type="text" class="form-control" id="lf" placeholder="l x w">
-                    </div>                   
+                    </div>
                     <div class="form-group">
                         <label for="cabline">Cabinet Line</label>
                         <select class="form-control" id="cabline">
@@ -183,8 +183,8 @@
                         </select>
                     </div>
                 </div>
-                
-            <div th:include="::cardfooter" th:remove="tag"></div>
+
+                <div th:include="::cardfooter" th:remove="tag"></div>
         </div>
     </div>
 </div>
@@ -211,6 +211,27 @@
 
 <div th:fragment="qqrow" th:remove="tag">
     row
+</div>
+
+<!-- JOB CARD --------------------------------------->
+<div th:fragment="jobcard" th:remove="tag">
+    <div class="col-md-4" th:id="${card.id}">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="d-inline" th:text="${card.title}">Kitchen</h3>
+                <span style="border: 5px" th:text="${card.id}"></span>
+                <button class="float-right" th:data-id="${card.id}"
+                    onclick="addNote(event, this.getAttribute('data-id'));"><img
+                        src="/assets/img/icons/duotone-icons/Design/Pencil.svg" /></button>
+            </div>
+            <div class="card-body">
+            <span class="col-md-2 text-info" th:text="${card.statusDate}"></span><span class="col-=md-2" th:text="${card.status}"></span>
+            </div>
+            <div class="card-footer">
+                
+            </div>
+        </div>
+    </div>
 </div>
 
 </html>

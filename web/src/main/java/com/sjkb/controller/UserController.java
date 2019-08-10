@@ -1,17 +1,21 @@
 package com.sjkb.controller;
 
-import java.util.Optional;
+import java.util.Iterator;
 import java.util.UUID;
-import java.util.logging.Logger;
 
-import com.sjkb.entities.ContactEntity;
-import com.sjkb.entities.UserEntity;
+import com.dropbox.core.DbxException;
+import com.sjkb.exception.UsernameTakenException;
+import com.sjkb.models.UserDelModel;
 import com.sjkb.models.UserNewModel;
 import com.sjkb.models.UserRoleModel;
-import com.sjkb.repositores.ContactRepository;
 import com.sjkb.repositores.UserRepository;
+import com.sjkb.service.JobService;
+import com.sjkb.service.UserContactService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,15 +36,26 @@ public class UserController {
     UserRepository userRepository;
 
     @Autowired
-    ContactRepository contactRepository;
+    UserContactService userContactService;
 
-    private static final Logger log = Logger.getLogger(Class.class.getName());
+    @Autowired
+    JobService jobService;
+
 
     private String key = null;
 
+    private String getUser() {
+        SecurityContext holder = SecurityContextHolder.getContext();
+        final String uname = holder.getAuthentication().getName();
+        return uname;
+    }
+
     @RequestMapping(value = "/getall", method = RequestMethod.GET)
     public String getAllUsers(ModelMap map) {
-        map.addAttribute("users", contactRepository.findAll());
+        
+        map.addAttribute("users", userContactService.getAllUser());
+        map.addAttribute("user", getUser());
+        map.addAttribute("userDelModel", new UserDelModel());
         return "users_list";
     }
 
@@ -49,56 +64,53 @@ public class UserController {
         UserNewModel user = new UserNewModel();
         key = UUID.randomUUID().toString();
         user.setKey(key);
-        map.addAttribute("user", user);
-        map.addAttribute("roles", UserRoleModel.ROLES.values());
+        map.addAttribute("newuser", user);
+        map.addAttribute("user", getUser());
+        map.addAttribute("roles", UserRoleModel.getRolesLessThan(getRole()));
         return "users_new";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String postContact(ModelMap map, @ModelAttribute("user") final UserNewModel userNewModel) {
-        if (key.equals(userNewModel.getKey())) {
-            if (userNewModel.getUsername().length() == 0 && userNewModel.getEmail().length() > 3) {
-                userNewModel.setUsername(userNewModel.getEmail());
-            }
-            if (userNewModel.getUsername().length() > 2) {
-                Optional<UserEntity> user = userRepository.findByUsername(userNewModel.getUsername());
-                if (user.isPresent() == true) {
-                    return "users_error_taken";
-                }
-                if (userNewModel.getPassword().length() == 0) {
-                    int i = userNewModel.getUsername().length();
-                    int j = userNewModel.getPhone().length();
-                    if (i > 4)
-                        i = 4;
-                    if (j < 4)
-                        j = 4;
-                    String fn = userNewModel.getFirstname().substring(0, i).toLowerCase();
-                    String ph = userNewModel.getPhone().substring(j - 4);
-                    userNewModel.setPassword(fn+ph);                  
-                }
-                if (userNewModel.getPassword().length() > 2) {
-                    UserEntity userEntity = new UserEntity();
-                    userEntity.encodePwd(userNewModel.getPassword());
-                    userEntity.setUsername(userNewModel.getUsername());
-                    userEntity.setLocked(false);
-                    userEntity.setRole(UserRoleModel.getUserRole(userNewModel.getRole()));
-                    userRepository.save(userEntity);
-                }
-            }
-            ContactEntity contactEntity = new ContactEntity(userNewModel);
-            contactRepository.save(contactEntity);
-
-        }
+        SecurityContext holder = SecurityContextHolder.getContext();
+        final String uname = holder.getAuthentication().getName();
+        if (key.equals(userNewModel.getKey()))
+            try {
+                String jobid = userContactService.addNewUser(userNewModel, uname);
+                String contactId = userContactService.getContactByUserid(userNewModel.getUsername()).getUid();
+                if (jobid.length() > 3)
+                    jobService.createJob(jobid, uname, contactId);
+            } catch (UsernameTakenException e) {
+                return "users_error_taken";
+			}
+        
         return getAllUsers(map); 
     }
 
-    @RequestMapping(value = "newuser/{userid}/{pwd}")
-    public String newlogint(@PathVariable("userid") String userid, @PathVariable("pwd") String pwd) {
-        UserEntity user = new UserEntity();
-        user.encodePwd(pwd);
-        user.setUsername(userid);
-        userRepository.save(user);
-        return "home";
+    @RequestMapping(value = "/deluser/{type}", method = RequestMethod.POST)
+    public String delUser(ModelMap map, @ModelAttribute("userDelModel") UserDelModel userDelModel, @PathVariable final String type) {
+        userDelModel.setType(type);
+        SecurityContext holder = SecurityContextHolder.getContext();
+        final String emp = holder.getAuthentication().getName();
+        try {
+            userContactService.remove(emp, userDelModel);
+            return "redirect:/backstage/user/getall";
+        } catch (DbxException e) {
+            map.addAttribute("errMessage", String.format("<h5>Could not delete Dropbox folder</h5><p class='sjerror'>%s</p>", e.getMessage()));
+            return "op_error";
+		}
+        
+    }
+
+    /**
+     * 
+     * @return the role of the current logged in user
+     */
+
+    private String getRole() {
+        SecurityContext holder = SecurityContextHolder.getContext();
+        Iterator<? extends GrantedAuthority> roles = holder.getAuthentication().getAuthorities().iterator();
+        return roles.next().getAuthority();
     }
 
 }

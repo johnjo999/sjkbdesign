@@ -1,0 +1,69 @@
+.sjcheckbox {
+    background-color: transparent;
+    position: relative;
+    display: inline-block;
+    width:18px;
+    height:18px;
+    cursor: pointer;
+}
+
+.sjcheckbox::after {
+    content: "";
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    left: 0px;
+    top: 3px;
+    height: 18px;
+    width: 18px;
+    border-radius: 2px;
+    background-color: transparent;
+    border: solid green 1px;
+    opacity: 1;
+}
+
+input:checked ~ .sjcheckbox {
+    background-color: whitesmoke;
+    display: inline-block;
+    width:18px;
+    height:18px;
+    top: 3px;
+    border-radius: 8px;
+    border:  1px solid;
+    border-color: rgb(16, 58, 45);
+    box-sizing: border-box;
+    display: inline-block;
+}
+
+input:checked ~ .sjcheckbox::after {
+    width: 7px;
+    height: 16px;
+    top: -5px;
+    left: 6px;
+    border-color: red;
+    border-width: 0px 4px 4px 0px;
+    box-sizing: border-box;
+    transform: rotate(30deg);
+}
+
+input.sjhidden {
+    opacity: 0;
+    cursor: pointer;
+}
+
+.sjwhitespace {
+    height: 18px;
+}
+
+.filecard {
+    background-color: bisque;
+}
+
+.filecard-body {
+    background-color: antiquewhite;
+}
+
+.sjicon {
+    display: flexbox;
+    scale: 2;
+}

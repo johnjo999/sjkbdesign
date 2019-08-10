@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Kitchen and Bath Design & Remodels" />
+    <meta name=”geo.placename” content=”Raleigh, NC” />
+
+    <!-- Libs CSS -->
+    <link rel="stylesheet" href="/assets/fonts/Feather/feather.css">
+    <link rel="stylesheet" href="/assets/libs/flickity/dist/flickity.min.css">
+    <link rel="stylesheet" href="/assets/libs/flickity-fade/flickity-fade.css">
+    <link rel="stylesheet" href="/assets/libs/aos/dist/aos.css">
+    <link rel="stylesheet" href="/assets/libs/jarallax/dist/jarallax.css">
+    <link rel="stylesheet" href="/assets/libs/highlightjs/styles/vs2015.css">
+    <link rel="stylesheet" href="/assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.min.css">
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="/assets/css/theme.min.css">
+    <script src="/js/jquery.js"></script>
+    <title>SJKB Design</title>
+    <script>
+        function editStory(story) {
+            $(story).hide();
+            var id = $(story).attr("data-sindex");
+            var diag = ".ta[data-index='" + id + "']";
+            $(diag).width($(story).width());
+            $(diag).height($(story).height());
+            $(diag).show();
+        }
+        function fillta(item) {
+            var id = $(item).attr("data-sindex");
+            var diag = ".ta[data-index='" + id + "']";
+            $(diag).val($(item).text());
+        }
+
+        function fillform() {
+            var rr = Array.from($("*[contenteditable]"));
+            rr.forEach(fillta);
+        }
+
+        $(document).ready(function () {
+            $(".ta").hide();
+        });
+
+    </script>
+    <style>
+        body {
+            padding-top: 100px;
+            border: solid 3px;
+            border-color: orange;
+        }
+
+        .content-inline {
+            display: inline-flex;
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+    <!-- NAVBAR
+    ================================================== -->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+
+            <!-- Brand -->
+            <a class="navbar-brand" href="/home.html">
+                <span class="navbar-brand-img">
+                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 150"
+                        style="background-color: rgba(0, 0, 0, 0); background-position: initial initial; background-repeat: initial initial;">
+                        <defs>
+                            <linearGradient id="editing-outline-gradient" x1="-0.41354545764260087"
+                                x2="1.4135454576426008" y1="0.09326335692419985" y2="0.9067366430758002">
+                                <stop offset="0" stop-color="#ee4208"></stop>
+                                <stop offset="1" stop-color="#4139ff"></stop>
+                            </linearGradient>
+                            <filter id="editing-outline" x="-100%" y="-100%" width="300%" height="300%">
+                                <feMorphology in="SourceGraphic" operator="dilate" radius="2" result="outline">
+                                </feMorphology>
+                                <feComposite operator="out" in="outline" in2="SourceAlpha"></feComposite>
+                            </filter>
+                        </defs>
+                        <text x="250" y="75" filter="url(#editing-outline)" fill="url(#editing-outline-gradient)"
+                            style="font-size: 42px;">SJKB Design</text>
+                    </svg>
+                </span>
+            </a>
+        </div>
+        <div class="col-md-12">
+            <button style="transform: translateX(-20)" class="btn btn-warning" form="updated" onclick="fillform()"
+                type="submit" value="Submit">SAVE UPDATE</button>
+            <button class="btn btn-info" onclick="window.location.href='/backstage/dashboard';">Close</button>
+        </div>
+
+    </nav>
+
+    <!-- WELCOME
+    ================================================== -->
+
+    <form id="updated" th:action="@{/admin/setup/homeupdate}" th:object="${story}" method="post">
+
+        <section class="position-relative pt-12 pt-md-14 mt-n11">
+
+            <!-- Shape -->
+            <div class="shape shape-fluid-x shape-blur-2 svg-shim text-light">
+                <svg viewBox="0 0 1313 768" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M442.794 768C605.882 768 748.362 679.773 825.111 548.444L825.294 549C825.294 549 825.543 548.251 826.056 546.819C839.139 524.212 850.279 500.339 859.248 475.43C901.996 397.81 989.306 277.09 1144.29 206L1143.37 205.307C1230.34 171.296 1295.63 94.049 1312.83 0H1.29419V295.514C0.631105 305.423 0.294189 315.422 0.294189 325.5C0.294189 569.886 198.408 768 442.794 768Z"
+                        fill="currentColor" />
+                </svg>
+
+            </div>
+
+            <!-- Content -->
+            <div class="container">
+                <div class="row align-items-center text-center text-md-left">
+                    <div class="col-12 col-md-6">
+
+                        <!-- Image -->
+                        <img src="/img/backgrounds/arrangement-color.jpg" alt="..."
+                            class="img-fluid mw-130 float-right mb-6 mb-md-0" data-aos="fade-right">
+
+                    </div>
+                    <div class="col-12 col-md-6">
+
+                        <!-- Heading -->
+                        <h1 class="display-1 font-weight-bold">
+                            <div data-index="1" data-aos="fade-left"><textarea class="ta" th:field="*{t[1]}"
+                                    data-index="1"></textarea></div>
+                            <div data-aos="fade-left" contenteditable="true" th:text="${story.t[1]}" data-sindex="1">
+                                reimagine</div>
+                            <div data-index="2" data-aos="fade-left" data-aos-delay="100"><textarea class="ta"
+                                    th:field="*{t[2]}" data-index="2"></textarea></div>
+                            <div data-aos="fade-left" data-aos-delay="100" contenteditable="true"
+                                th:text="${story.t[2]}" data-sindex="2">Your
+                                Kitchen.</div>
+                        </h1>
+
+                        <!-- Text -->
+                        <p class="font-size-lg text-muted mb-0" data-aos="fade-left" data-aos-delay="200"
+                            contenteditable="true" th:text="${story.t[3]}" data-sindex="3">
+                            It has to be functional, and yet it has to look good. It's a workplace where conversations
+                            happen. Let's design a space that fits your style.
+                        </p>
+                        <textarea class="ta" data-index="3" th:field="*{t[3]}"></textarea>
+
+                    </div>
+                </div> <!-- / .row -->
+            </div> <!-- / .container -->
+
+        </section>
+
+        <!-- HUB
+    ================================================== -->
+        <section class="py-8 py-md-11">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-4 text-center" data-aos="fade-up">
+
+                        <!-- Icon -->
+                        <div class="icon text-primary mb-3">
+                            <?xml version="1.0" encoding="UTF-8"?>
+                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+                                <title>Stockholm-icons / General / Settings-1</title>
+                                <desc>Created with Sketch.</desc>
+                                <g id="Stockholm-icons-/-General-/-Settings-1" stroke="none" stroke-width="1"
+                                    fill="none" fill-rule="evenodd">
+                                    <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                    <path
+                                        d="M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z"
+                                        id="Combined-Shape" fill="#335EEA"></path>
+                                    <path
+                                        d="M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z"
+                                        id="Combined-Shape" fill="#335EEA" opacity="0.3"></path>
+                                </g>
+                            </svg>
+                        </div>
+
+                        <!-- Heading -->
+                        <h3 contenteditable="true" th:text="${story.t[4]}" data-sindex="4">
+                            Plan your Layout
+                        </h3>
+                        <textarea class="ta" data-index="4" th:field="*{t[4]}"></textarea>
+
+                        <!-- Text -->
+                        <p class="text-muted mb-6 mb-md-0" contenteditable="true" th:text="${story.t[5]}"
+                            data-sindex="5">
+                            Think about how you move around in your Kitchen. Where things are placed. Sure, the sink
+                            should be close to the dishwasher. That's easy. But let's talk through some other
+                            considerations.
+                        </p>
+                        <textarea class="ta" data-index="5" th:field="*{t[5]}"></textarea>
+
+                    </div>
+                    <div class="col-12 col-md-4 text-center" data-aos="fade-up" data-aos-delay="50">
+
+                        <!-- Icon -->
+                        <div class="icon text-primary mb-3">
+                            <?xml version="1.0" encoding="UTF-8"?>
+                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+                                <title>Stockholm-icons / Layout / Layout-arrange</title>
+                                <desc>Created with Sketch.</desc>
+                                <g id="Stockholm-icons-/-Layout-/-Layout-arrange" stroke="none" stroke-width="1"
+                                    fill="none" fill-rule="evenodd">
+                                    <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                    <path
+                                        d="M5.5,4 L9.5,4 C10.3284271,4 11,4.67157288 11,5.5 L11,6.5 C11,7.32842712 10.3284271,8 9.5,8 L5.5,8 C4.67157288,8 4,7.32842712 4,6.5 L4,5.5 C4,4.67157288 4.67157288,4 5.5,4 Z M14.5,16 L18.5,16 C19.3284271,16 20,16.6715729 20,17.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,17.5 C13,16.6715729 13.6715729,16 14.5,16 Z"
+                                        id="Combined-Shape" fill="#335EEA"></path>
+                                    <path
+                                        d="M5.5,10 L9.5,10 C10.3284271,10 11,10.6715729 11,11.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,11.5 C4,10.6715729 4.67157288,10 5.5,10 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,12.5 C20,13.3284271 19.3284271,14 18.5,14 L14.5,14 C13.6715729,14 13,13.3284271 13,12.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z"
+                                        id="Combined-Shape" fill="#335EEA" opacity="0.3"></path>
+                                </g>
+                            </svg>
+                        </div>
+
+                        <!-- Heading -->
+                        <h3 contenteditable="true" th:text="${story.t[6]}" data-sindex="6">
+                            Choose your Look
+                        </h3>
+                        <textarea class="ta" data-index="6" th:field="*{t[6]}"></textarea>
+                        <!-- Text -->
+                        <p class="text-muted mb-6 mb-md-0" contenteditable="true" th:text="${story.t[7]}"
+                            data-sindex="7">
+                            Do you want something modern, minimal, or industrial? Or do you prefer something more
+                            traditional? There are more choices than ever when selecting beautiful cabinets and
+                            countertops.
+                        </p>
+                        <textarea class="ta" data-index="7" th:field="*{t[7]}"></textarea>
+                    </div>
+                    <div class="col-12 col-md-4 text-center" data-aos="fade-up" data-aos-delay="100">
+
+                        <!-- Icon -->
+                        <div class="icon text-primary mb-3">
+                            <?xml version="1.0" encoding="UTF-8"?>
+                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+                                <title>Stockholm-icons / Code / Code</title>
+                                <desc>Created with Sketch.</desc>
+                                <g id="Stockholm-icons-/-Code-/-Code" stroke="none" stroke-width="1" fill="none"
+                                    fill-rule="evenodd">
+                                    <rect id="bound" x="0" y="0" width="24" height="24"></rect>
+                                    <path
+                                        d="M17.2718029,8.68536757 C16.8932864,8.28319382 16.9124644,7.65031935 17.3146382,7.27180288 C17.7168119,6.89328641 18.3496864,6.91246442 18.7282029,7.31463817 L22.7282029,11.5646382 C23.0906029,11.9496882 23.0906029,12.5503176 22.7282029,12.9353676 L18.7282029,17.1853676 C18.3496864,17.5875413 17.7168119,17.6067193 17.3146382,17.2282029 C16.9124644,16.8496864 16.8932864,16.2168119 17.2718029,15.8146382 L20.6267538,12.2500029 L17.2718029,8.68536757 Z M6.72819712,8.6853647 L3.37324625,12.25 L6.72819712,15.8146353 C7.10671359,16.2168091 7.08753558,16.8496835 6.68536183,17.2282 C6.28318808,17.6067165 5.65031361,17.5875384 5.27179713,17.1853647 L1.27179713,12.9353647 C0.909397125,12.5503147 0.909397125,11.9496853 1.27179713,11.5646353 L5.27179713,7.3146353 C5.65031361,6.91246155 6.28318808,6.89328354 6.68536183,7.27180001 C7.08753558,7.65031648 7.10671359,8.28319095 6.72819712,8.6853647 Z"
+                                        id="Combined-Shape" fill="#335EEA"></path>
+                                    <rect id="Rectangle-28" fill="#335EEA" opacity="0.3"
+                                        transform="translate(12.000000, 12.000000) rotate(-345.000000) translate(-12.000000, -12.000000) "
+                                        x="11" y="4" width="2" height="16" rx="1"></rect>
+                                </g>
+                            </svg>
+                        </div>
+
+                        <!-- Heading -->
+                        <h3 contenteditable="true" th:text="${story.t[8]}" data-sindex="8">
+                            Maximize your Investment
+                        </h3>
+                        <textarea class="ta" data-index="8" th:field="*{t[8]}"></textarea>
+                        <!-- Text -->
+                        <p class="text-muted mb-0" data-sindex="9" contenteditable="true" th:text="${story.t[9]}">
+                            Your kitchen is likely the most expensive room in your house. Let's create a design that
+                            will stand the test of time and maximize your home's value. A design that has impact at a
+                            reasonable cost.
+                        </p>
+                        <textarea class="ta" data-index="9" th:field="*{t[9]}"></textarea>
+                    </div>
+                </div> <!-- / .row -->
+            </div> <!-- / .container -->
+        </section>
+
+        <!-- ABOUT
+    ================================================== -->
+        <section class="py-8 py-md-11 bg-gray-200">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-10 col-lg-7 text-center">
+
+                        <!-- Heading -->
+                        <h2 class="font-weight-bold" data-sindex="10" contenteditable="true" th:text="${story.t[10]}">
+                            Spaces for your Family.
+                        </h2>
+                        <textarea class="ta" data-index="10" th:field="*{t[10]}"></textarea>
+
+                        <!-- Text -->
+                        <p class="font-size-lg text-muted mb-7 mb-md-9" data-sindex="11" contenteditable="true"
+                            th:text="${story.t[11]}">
+                            Kitchens and Bathrooms to fit your home.
+                        </p>
+                        <textarea class="ta" data-index="11" th:field="*{t[11]}"></textarea>
+                    </div>
+                </div> <!-- / .row -->
+                <div class="form-row">
+                    <div class="col-12 col-lg-6 d-lg-flex pb-1 mb-4">
+
+                        <!-- Card -->
+                        <div class="card shadow-light-lg overflow-hidden" data-aos="fade-up">
+                            <div class="row">
+                                <div class="col-md-4 position-relative">
+
+                                    <!-- Image -->
+                                    <img src="/assets/img/illustrations/illustration-8.png"
+                                        class="h-75 position-absolute right-0 mt-7 mr-n4" alt="...">
+
+                                </div>
+                                <div class="col-md-8">
+
+                                    <!-- Body -->
+                                    <div class="card-body py-7 py-md-9 text-center">
+
+                                        <!-- Heading -->
+                                        <h4 class="font-weight-bold" data-sindex="12" contenteditable="true"
+                                            th:text="${story.t[12]}">
+                                            New Designs
+                                        </h4>
+                                        <textarea class="ta" data-index="12" th:field="*{t[12]}"></textarea>
+                                        <!-- Text -->
+                                        <p class="text-muted mb-0" data-sindex="13" contenteditable="true"
+                                            th:text="${story.t[13]}">
+                                            If you are doing a major remodel, or starting a new home project, then the
+                                            choices are unlimited. The big decisions are fun, but the small details are
+                                            equally important.
+                                        </p>
+                                        <textarea class="ta" data-index="13" th:field="*{t[13]}"></textarea>
+                                    </div>
+
+                                </div>
+                            </div> <!-- / .row -->
+                        </div>
+
+                    </div>
+                    <div class="col-12 col-lg-6 d-lg-flex pb-1 mb-4">
+
+                        <!-- Card -->
+                        <div class="card shadow-light-lg overflow-hidden text-center" data-aos="fade-up">
+                            <div class="row">
+                                <div class="col-md-8">
+
+                                    <!-- Body -->
+                                    <div class="card-body py-7 py-md-9">
+
+                                        <!-- Heading -->
+                                        <h4 class="font-weight-bold" data-sindex="14" contenteditable="true"
+                                            th:text="${story.t[14]}">
+                                            Remodels
+                                        </h4>
+                                        <textarea class="ta" data-index="14" th:field="*{t[14]}"></textarea>
+                                        <!-- Text -->
+                                        <p class="text-muted mb-0" data-sindex="15" contenteditable="true"
+                                            th:text="${story.t[15]}">
+                                            Older homes did not provide as much room for Kitchens and Bathrooms. Space
+                                            may be limited. Let's figure out how to maximize what is available. Small
+                                            changes can have a big impact.
+                                        </p>
+                                        <textarea class="ta" data-index="15" th:field="*{t[15]}"></textarea>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+
+                                    <!-- Image -->
+                                    <img src="/assets/img/illustrations/illustration-6.png"
+                                        class="h-75 position-absolute left-0 mt-7" alt="...">
+
+                                </div>
+                            </div> <!-- / .row -->
+                        </div>
+
+                    </div>
+                </div> <!-- / .row -->
+                <div class="row">
+                    <div class="col-12">
+
+                        <!-- Card -->
+                        <div class="card shadow-light-lg overflow-hidden text-center text-lg-left" data-aos="fade-up">
+                            <div class="row">
+                                <div class="col-md-4 position-relative">
+
+                                    <!-- Image -->
+                                    <img src="/assets/img/illustrations/illustration-2.png"
+                                        class="h-75 position-absolute right-0 mt-6" alt="...">
+
+                                </div>
+                                <div class="col-md-8">
+
+                                    <!-- Body -->
+                                    <div class="card-body py-7 py-md-9">
+
+                                        <!-- Heading -->
+                                        <h4 class="font-weight-bold" data-sindex="16" contenteditable="true"
+                                            th:text="${story.t[16]}">
+                                            Working together.
+                                        </h4>
+                                        <textarea class="ta" data-index="16" th:field="*{t[16]}"></textarea>
+                                        <!-- Text -->
+                                        <p class="text-muted mb-0" data-sindex="17" contenteditable="true"
+                                            th:text="${story.t[17]}">
+                                            We will come visit you in your home and listen. Tell us what you have in
+                                            mind. We will work with you to capture that in a design that fits your
+                                            budget.
+                                            We will take some measurements and whip up some drawings. Once we've settled
+                                            on a plan and selected materials, we can work with your contractor
+                                            or send out one of our installers to make your new kitchen or bathroom a
+                                            reality.
+                                        </p>
+                                        <textarea class="ta" data-index="17" th:field="*{t[17]}"></textarea>
+                                    </div>
+
+                                </div>
+                            </div> <!-- / .row -->
+                        </div>
+
+                    </div>
+                </div> <!-- / .row -->
+            </div> <!-- / .container -->
+        </section>
+
+        <!-- TESTIMONIALS
+    ================================================== -->
+        <section class="pt-8 pt-md-11">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-10 col-lg-8 text-center">
+
+                        <!-- Heading -->
+                        <h2 class="font-weight-bold" data-sindex="18" contenteditable="true" th:text="${story.t[18]}">
+                            What makes a great Kitchen or Bathroom project?
+                        </h2>
+                        <textarea class="ta" data-index="18" th:field="*{t[18]}"></textarea>
+                        <!-- Text -->
+                        <p class="text-muted mb-7 mb-md-9" data-sindex="19" contenteditable="true"
+                            th:text="${story.t[19]}">
+                            We want you to be ecstatic with the outcome. Really, the whole process. We believe there are
+                            a few important ingredients needed to a execute a smooth project
+                        </p>
+                        <textarea class="ta" data-index="19" th:field="*{t[19]}"></textarea>
+                    </div>
+                </div> <!-- / .row -->
+                <div class="row">
+                    <div class="col-12 content-inline">
+
+                        <!-- Flickity -->
+
+                        <div class="col-4">
+
+                            <!-- Card -->
+                            <div class="card card-border shadow-light-lg lift lift-lg"
+                                style="border-top-color: #FF5A5F;">
+                                <div class="card-body text-center">
+
+                                    <!-- Icon -->
+                                    <div class="img-fluid mb-5 w-50 svg-shim mx-auto" style="color: #FF5A5F;">
+                                        <img src="/assets/img/icons/duotone-icons/Home/Building.svg" />
+                                    </div>
+
+                                    <!-- Text -->
+                                    <p class="text-gray-700 mb-5">
+
+                                        <span class="font-weight-bold" data-sindex="20" contenteditable="true"
+                                            th:text="${story.t[20]}">Attention to
+                                            details:</span>
+                                        <textarea class="ta" data-index="20" th:field="*{t[20]}"></textarea>
+                                        <div contenteditable="true" th:text="${story.t[21]}" data-sindex="21">We don't
+                                            like surprises.
+                                            We bet you don't either. We want your project to go as smoothly as
+                                            possible</div>
+                                    </p>
+
+                                    <textarea class="ta" data-index="21" th:field="*{t[21]}"></textarea>
+                                    <!-- Link -->
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-4">
+
+                            <!-- Card -->
+                            <div class="card card-border shadow-light-lg lift lift-lg"
+                                style="border-top-color: #B81D24;">
+                                <div class="card-body text-center">
+
+                                    <!-- Icon -->
+                                    <div class="img-fluid mb-5 w-50 svg-shim mx-auto" style="color: #B81D24;">
+                                        <img src="/assets/img/icons/duotone-icons/Home/Globe.svg" />
+                                    </div>
+
+                                    <!-- Text -->
+                                    <p class="text-gray-700 mb-5">
+                                        <span class="font-weight-bold" data-sindex="22" contenteditable="true"
+                                            th:text="${story.t[22]}">Communications:</span>
+                                        <textarea class="ta" data-index="22" th:field="*{t[22]}"></textarea>
+                                        <div contenteditable="true" th:text="${story.t[23]}" data-sindex="23">We'll let
+                                            you know what is
+                                            going on, and what to
+                                            expect. If something comes up, we'll tell you about that too, so you
+                                            don't
+                                            have to guess.</div>
+                                    </p>
+
+                                    <textarea class="ta" data-index="23" th:field="*{t[23]}"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-4">
+
+                            <!-- Card -->
+                            <div class="card card-border shadow-light-lg lift lift-lg"
+                                style="border-top-color: #0081C9;">
+                                <div class="card-body text-center">
+
+                                    <!-- Icon -->
+                                    <div class="img-fluid mb-5 w-50 svg-shim mx-auto" style="color: #0081C9;">
+                                        <img src="/assets/img/icons/duotone-icons/Home/Box.svg" />
+                                    </div>
+
+
+                                    <!-- Text -->
+                                    <p class="text-gray-700 mb-5">
+                                        <span class="font-weight-bold" data-sindex="24" contenteditable="true"
+                                            th:text="${story.t[24]}">Integrity:</span>
+                                        <textarea class="ta" data-index="24" th:field="*{t[24]}"></textarea>
+                                        <div contenteditable="true" th:text="${story.t[25]}" data-sindex="25">remodeling
+                                            kitchens and
+                                            bathrooms aren't things
+                                            you do all the time. You have to trust that we strive to make your
+                                            project
+                                            successful at the best price possible.</div>
+                                    </p>
+
+                                    <textarea class="ta" data-index="25" th:field="*{t[25]}"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div> <!-- / .row -->
+            </div> <!-- / .container -->
+        </section>
+
+        <!-- ABOUT
+    ================================================== -->
+        <section class="pt-5 pt-md-7">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-6">
+
+                        <!-- Heading -->
+                        <h2 class="font-weight-bold" data-sindex="26" contenteditable="true" th:text="${story.t[26]}">
+                            About Us
+                        </h2>
+                        <textarea class="ta" data-index="26" th:field="*{t[26]}"></textarea>
+                        <!-- Text -->
+                        <p class="font-size-lg text-muted mb-5" data-sindex="27" contenteditable="true"
+                            th:text="${story.t[27]}">
+                            We are not a big design shop with a
+                            huge expensive showroom.
+                            We are small so we can stay laser focused on your project. We try to keep costs under
+                            control so we can pass the savings along to you.
+                        </p>
+                        <textarea class="ta" data-index="27" th:field="*{t[27]}"></textarea>
+                        <!-- Button -->
+                        <a href="#" class="btn btn-primary-desat mb-6 mb-md-0 lift">
+                            Contact Us <i class="fe fe-arrow-right ml-3"></i>
+                        </a>
+
+                    </div>
+                    <div class="col-12 col-md-6">
+
+                        <!-- iPhone + Macbook -->
+                        <div class="w-md-130">
+                            <div class="device-combo device-combo-iphonex-macbook">
+                                <img class="h-75 position-absolute left-0 mt-7"
+                                    src="/assets/img/illustrations/illustration-7.png"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div> <!-- / .row -->
+            </div> <!-- / .container -->
+        </section>
+
+
+        <!-- CTA
+    ================================================== -->
+        <section class="py-10 py-md-13 bg-gray-200 bg-between"
+            style="background-image: url(assets/img/illustrations/illustration-1-cropped.png), url(assets/img/illustrations/illustration-3-cropped.png);">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-10 col-lg-8 text-center">
+
+                        <!-- Heading -->
+                        <h2 class="font-weight-bold" data-sindex="28" contenteditable="true" th:text="${story.t[28]}">
+                            Tell us about your project.
+                        </h2>
+                        <textarea class="ta" data-index="28" th:field="*{t[28]}"></textarea>
+                        <!-- Text -->
+                        <p class="font-size-lg text-muted mb-8 px-lg-9" data-sindex="29" contenteditable="true"
+                            th:text="${story.t[29]}">
+                            We provide just the right amount of help. Get drawings that you can share with your builder,
+                            or have us set you up with a complete kitchen or bath installation.
+                        </p>
+                        <textarea class="ta" data-index="29" th:field="*{t[29]}"></textarea>
+                        <!-- Button -->
+                        <a href="#" class="btn btn-primary-desat lift">
+                            Get Started.
+                        </a>
+
+                    </div>
+                </div> <!-- / .row -->
+            </div> <!-- / .container -->
+        </section>
+    </form>
+
+    <!-- SHAPE
+    ================================================== -->
+    <div class="position-relative">
+        <div class="shape shape-bottom shape-fluid-x svg-shim text-dark">
+            <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- FOOTER
+    ================================================== -->
+    <footer class="py-8 py-md-11 bg-dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-4 col-lg-3">
+
+                    <!-- Brand -->
+                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="160 0 500 150"
+                        style="background-color: rgba(0, 0, 0, 0); background-position: initial initial; background-repeat: initial initial;">
+                        <defs>
+                            <linearGradient id="editing-outline-gradient" x1="-0.41354545764260087"
+                                x2="1.4135454576426008" y1="0.09326335692419985" y2="0.9067366430758002">
+                                <stop offset="0" stop-color="#ee4208"></stop>
+                                <stop offset="1" stop-color="#4139ff"></stop>
+                            </linearGradient>
+                            <filter id="editing-outline" x="-100%" y="-100%" width="300%" height="300%">
+                                <feMorphology in="SourceGraphic" operator="dilate" radius="2" result="outline">
+                                </feMorphology>
+                                <feComposite operator="out" in="outline" in2="SourceAlpha"></feComposite>
+                            </filter>
+                        </defs>
+                        <text x="250" y="75" filter="url(#editing-outline)" fill="url(#editing-outline-gradient)"
+                            style="font-size: 48px;">SJKB Design</text>
+                    </svg>
+
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+
+                    <!-- Heading -->
+                    <h6 class="font-weight-bold text-uppercase text-gray-700">
+                        Services
+                    </h6>
+
+                    <!-- List -->
+                    <ul class="list-unstyled text-muted mb-6 mb-md-8 mb-lg-0">
+                        <li class="mb-3">
+                            <a href="#!" class="text-reset">
+                                Design Drawings
+                            </a>
+                        </li>
+                        <li class="mb-3">
+                            <a href="#!" class="text-reset">
+                                Cabinets
+                            </a>
+                        </li>
+                        <li class="mb-3">
+                            <a href="#!" class="text-reset">
+                                Countertops
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-reset">
+                                Island
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+
+                    <!-- Heading -->
+                    <h6 class="font-weight-bold text-uppercase text-gray-700">
+                        Connect
+                    </h6>
+
+                    <!-- List -->
+                    <ul class="list-unstyled text-muted mb-0">
+                        <li class="mb-3">
+                            <a href="#!" class="text-reset">
+                                Homeowner
+                            </a>
+                        </li>
+                        <li class="mb-3">
+                            <a href="#!" class="text-reset">
+                                Builder
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-reset">
+                                Contractor
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div> <!-- / .row -->
+            <span class="text-muted">We don't use cookies, and we don't track. Kitchens will not start chasing you
+                online from this site</span>
+        </div> <!-- / .container -->
+    </footer>
+
+    <!-- JAVASCRIPT
+    ================================================== -->
+    <!-- Libs JS -->
+    <script src="/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/libs/flickity/dist/flickity.pkgd.min.js"></script>
+    <script src="/assets/libs/flickity-fade/flickity-fade.js"></script>
+    <script src="/assets/libs/aos/dist/aos.js"></script>
+    <script src="/assets/libs/smooth-scroll/dist/smooth-scroll.min.js"></script>
+    <script src="/assets/libs/jarallax/dist/jarallax.min.js"></script>
+    <script src="/assets/libs/jarallax/dist/jarallax-video.min.js"></script>
+    <script src="/assets/libs/jarallax/dist/jarallax-element.min.js"></script>
+    <script src="/assets/libs/typed.js/lib/typed.min.js"></script>
+    <script src="/assets/libs/countup.js/dist/countUp.min.js"></script>
+    <script src="/assets/libs/highlightjs/highlight.pack.min.js"></script>
+    <script src="/assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.min.js"></script>
+
+    <!-- Theme JS -->
+    <script src="/assets/js/theme.min.js"></script>
+
+</body>
+
+</html>

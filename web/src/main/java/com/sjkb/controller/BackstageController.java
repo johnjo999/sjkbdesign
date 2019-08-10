@@ -5,10 +5,15 @@ import com.sjkb.models.BathCardModel;
 import com.sjkb.models.CardModel;
 import com.sjkb.models.KitchenCardModel;
 import com.sjkb.models.QuickQuoteModel;
+import com.sjkb.service.JobService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,8 +22,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(value = "/backstage")
 public class BackstageController {
 
+    @Autowired
+    JobService jobService;
+
+    private String getUser() {
+        SecurityContext holder = SecurityContextHolder.getContext();
+        final String uname = holder.getAuthentication().getName();
+        return uname;
+    }
+
     @RequestMapping(value = "dashboard")
-    public String dashboard() {
+    public String dashboard(ModelMap map) {
+        map.addAttribute("user", getUser());
         return "dashboard";
     }
 
@@ -26,6 +41,7 @@ public class BackstageController {
     public String doQuote(ModelMap map) {
         map.addAttribute("quote", new QuickQuoteModel());
         map.addAttribute("mats", Material.getList());
+        map.addAttribute("user", getUser());
         return "doquickquote";
     }
 
@@ -50,6 +66,7 @@ public class BackstageController {
         }
         map.addAttribute("mats", Material.getList());
         map.addAttribute("cardModel", cardModel);
+        map.addAttribute("user", getUser());
         return viewModel;
     }
 
@@ -60,4 +77,13 @@ public class BackstageController {
     public String addRoomToQuickQuote(ModelMap map, @ModelAttribute("cardModel") final CardModel cardModel) {
         return "fragments/cards::qqrow";
     }
+
+    @RequestMapping(value = "get/jobs/{type}")
+    public String getJobs(ModelMap map, @PathVariable("type") final String type) {
+        SecurityContext holder = SecurityContextHolder.getContext();
+        final String uname = holder.getAuthentication().getName();
+        map.addAttribute("cards", jobService.getAllJobsForUser(uname));
+        return "jobs_list";
+    }
+
 }

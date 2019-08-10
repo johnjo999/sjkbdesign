@@ -29,6 +29,7 @@ public  class ContactEntity {
     private String account;
     private String role;
     private String context;
+    private int branch;
     private Timestamp lastLogin;
     private Timestamp created;
 
@@ -189,5 +190,14 @@ public  class ContactEntity {
         this.created = created;
     }
 
+    public int getBranch() {
+        return branch;
+    }
+
+    public void setBranch(int branch) {
+        this.branch = branch;
+    }
+
+    
     
 }

@@ -75,7 +75,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <scope>annotationProcessor</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -88,6 +88,12 @@
        <version>5.1.39</version>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+        <groupId>com.dropbox.core</groupId>
+        <artifactId>dropbox-core-sdk</artifactId>
+        <version>3.1.1</version>
+        <scope>compile</scope>
+      </dependency>
   </dependencies>
   <dependencyManagement>
     <dependencies>
@@ -98,18 +104,7 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-dependencies</artifactId>
-        <version>Greenwich.BUILD-SNAPSHOT</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.dropbox.core</groupId>
-        <artifactId>dropbox-core-sdk</artifactId>
-        <version>3.1.1</version>
-      </dependency>
+      
     </dependencies>
   </dependencyManagement>
   <build>
@@ -150,4 +145,10 @@
       <url>https://repo.spring.io/milestone</url>
     </pluginRepository>
   </pluginRepositories>
+  <distributionManagement>
+    <repository>
+      <id>ssh-repository</id>
+      <url>scpexe://repository.mycompany.com/repository</url>
+    </repository>
+  </distributionManagement>
 </project>

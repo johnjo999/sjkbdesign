@@ -19,9 +19,13 @@ public class JobEntity {
 
     private Timestamp createDate;
 
+    private Timestamp activityDate;
+
     private String state;
 
     private String context;
+
+    private String pocId;
 
     public String getJobid() {
         return jobid;
@@ -69,6 +73,22 @@ public class JobEntity {
 
     public void setContext(String context) {
         this.context = context;
+    }
+
+    public String getPocId() {
+        return pocId;
+    }
+
+    public void setPocId(String pocId) {
+        this.pocId = pocId;
+    }
+
+    public Timestamp getActivityDate() {
+        return activityDate;
+    }
+
+    public void setActivityDate(Timestamp activityDate) {
+        this.activityDate = activityDate;
     }
 
     

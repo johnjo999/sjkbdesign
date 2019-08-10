@@ -27,6 +27,9 @@ public class UserEntity {
     private Date dateCreated;
     private String role;
     private boolean locked;
+    @Column(name="dbx_folder")
+    private String dbxFolder;
+    private String sponsor;
 
     public Long getId() {
         return id;
@@ -84,7 +87,23 @@ public class UserEntity {
         this.setRole("ROLE_USER");
         
 	}
-    
-    
 
+    public String getDbxFolder() {
+        return dbxFolder;
+    }
+
+    public void setDbxFolder(String dbxFolder) {
+        this.dbxFolder = dbxFolder;
+    }
+
+    public String getSponsor() {
+        return sponsor;
+    }
+
+    public void setSponsor(String sponsor) {
+        this.sponsor = sponsor;
+    }
+
+    
+    
 }

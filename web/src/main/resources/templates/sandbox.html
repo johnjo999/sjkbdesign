@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en xmlns=" http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"">
+
+<head>
+	<meta charset=" utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Kitchen Bath Design">
+
+<title>SJKB Design</title>
+<!---
+<link href="/css/classic.css" rel="stylesheet">
+<script src="/js/jquery.js"></script>
+<script src="/js/jquery-ui.js"></script>
+-->
+
+
+<style>
+    .hidden {
+        display: none;
+    }
+
+    .sjcheckbox {
+        background-color: transparent;
+        position: relative;
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+
+    .sjcheckbox::after {
+        content: "";
+        display: inline-block;
+        position: relative;
+        box-sizing: border-box;
+        left: 0px;
+        top: 3px;
+        height: 18px;
+        width: 18px;
+        border-radius: 2px;
+        background-color: transparent;
+        border: solid green 1px;
+        opacity: 1;
+    }
+
+    input:checked~.sjcheckbox {
+        background-color: warning;
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        top: 4px;
+        border-radius: 100%;
+        border: 1px solid;
+        border-color: darkslategray;
+        box-sizing: border-box;
+        display: inline-block;
+
+
+    }
+
+    input:checked~.sjcheckbox::after {
+        width: 7px;
+        top: -7px;
+        left: 6px;
+        border-width: 0px 2px 2px 0px;
+        box-sizing: border-box;
+        transform: rotate(30deg);
+        transition: all 200ms ease-in-out;
+    }
+
+    input.sjhidden {
+        opacity: 0;
+        cursor: pointer;
+    }
+</style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div th:include="fragments/sidecar::sidenav" th:remove="tag"></div>
+        <div class="main">
+
+            <div th:include="fragments/sidecar::topnav" th:remove="tag"></div>
+            <main class="content">
+                <div class="container-fluid">
+                    <div class="row mt-3">
+                        <label>
+                            <input type="checkbox" class="sjhidden"><span class="sjcheckbox"></span></input>
+                            Delete this thing
+                        </label>
+                        <label>
+                            <input type="checkbox" class="sjhidden"><span class="sjcheckbox"></span></input>
+                            Delete other thing
+                        </label>
+                    </div>
+                </div>
+            </main>
+        </div>
+</body>
+
+
+</html>
