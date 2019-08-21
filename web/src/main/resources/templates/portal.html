@@ -28,8 +28,11 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
+    var token = "not";
     $(document).ready(function () {
-        var token = /*[[${token}]]*/ 'x';
+        $("#pdf-wrapper").hide();
+        $("#preview").hide();
+        token = /*[[${token}]]*/ 'x';
         $.ajax({
             url: ("/portal/shared/" + token),
             type: "GET",
@@ -40,6 +43,72 @@
         /*]]>*/
 
     })
+
+    function closePreview() {
+        document.getElementById('iframe-pdf-shower').contentWindow.document.clear();
+        $("#pdf-wrapper").hide();
+        $("#preview").hide();
+        $("#files").show();
+
+    }
+    function getBin(filename) {
+        var m = Math.random();
+        var d = "?token=" + token;
+        var t = filename.split(".");
+        $("#files").hide();
+
+        $(".pdfitem").hide();
+        $("#preview").show();
+        $("#pdf-wrapper").show();
+        if (t.length == 2) {
+            if (t[1] === ('jpg')) {
+                $("#object-jpg-shower").attr("src", "/portal/gettoken" + d + "&m=" + m);
+                $("#object-jpg-shower").show();
+            } else {
+                $("#object-pdf-shower").attr("data", "/portal/gettoken" + d + "&m=" + m);
+                $("#object-pdf-shower").show();
+            }
+
+        }
+    }
+
+    function getFile(filename) {
+        var d = '{"token": "' + token + '", "filename": "' + filename + '"}';
+        $.ajax({
+            data: d,
+            url: ("/portal/getfile"),
+            type: "POST",
+            contentType: "application/json",
+            success: function (data) {
+                var filepath = $(data).find("#filepath");
+                if (filepath.length != 0) {
+                    var fpath = $(filepath).attr('data-path');
+                    if (fpath === "getBinFile") {
+                        getBin(filename)
+                    } else {
+                        window.location.href = fpath;
+                    }
+                    return;
+                }
+                $("#files").hide();
+                var doc = document.getElementById('iframe-pdf-shower').contentWindow.document;
+                doc.open();
+                doc.write(data);
+                doc.close();
+                $(doc).ready(function () {
+                    var h = 1000;
+                    console.log(h);
+                    $("#pdf-wrapper").height(h);
+                    $("#iframe-pdf-shower").height('100%');
+                    $("#iframe-pdf-shower").show();
+                });
+                $("#preview").show();
+                $("#pdf-wrapper").show();
+                $("#object-pdf-shower").hide();
+
+            }
+        })
+    }
 </script>
 
 <style>
@@ -50,6 +119,26 @@
     .sjimg {
         display: flexbox;
         transform: scale(3, 3);
+    }
+
+    .clickable {
+        cursor: pointer;
+    }
+
+    .pdfitem {
+        height: 1000px;
+        width: 90%;
+    }
+
+    .pdfbox {
+        display: grid;
+        position: relative;
+        content: center;
+
+    }
+
+    .pdfwrapper {
+        display: block;
     }
 </style>
 </head>
@@ -73,6 +162,17 @@
                     </div>
                     <div id="files" class="row">
 
+                    </div>
+                </section>
+                <section id="preview" class="pdfbox">
+                    <div>
+                        <button class="btn btn-success btn-inline mr-3 ml-3" onclick="closePreview()" )>Close</button>
+                        <button class="btn btn-info btn-inline">Download</button>
+                    </div>
+                    <div id="pdf-wrapper" style="margin: 20px">
+                        <iframe class="pdfitem" id="iframe-pdf-shower" name="iframe-pdf-shower"></iframe>
+                        <object class="pdfitem" id="object-pdf-shower" type="application/pdf"></object>
+                        <img class="pdfitem" id="object-jpg-shower"></img>
                     </div>
                 </section>
             </main>

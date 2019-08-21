@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.sjkb.models.UserNewModel;
+import com.sjkb.models.UserViewModel;
 
 @Entity(name="contact")
 @Table(name="contact")
@@ -35,21 +35,20 @@ public  class ContactEntity {
 
     public ContactEntity() {}
 
-    public ContactEntity(UserNewModel userNewModel) {
+    public ContactEntity(UserViewModel userModel) {
         this.uid = UUID.randomUUID().toString();
-        this.username = userNewModel.getUsername();
-        this.firstname = userNewModel.getFirstname();
-        this.lastname = userNewModel.getLastname();
-        this.email = userNewModel.getEmail();
-        this.phone = userNewModel.getPhone();
-        this.role = userNewModel.getRole();
-        this.city = userNewModel.getCity();
-        this.state = userNewModel.getState();
+        this.username = userModel.getUsername();
+        this.firstname = userModel.getFirstname();
+        this.lastname = userModel.getLastname();
+        this.email = userModel.getEmail();
+        this.phone = userModel.getPhone();
+        this.role = userModel.getRole();
+        this.city = userModel.getCity();
+        this.state = userModel.getState();
         this.created = new Timestamp(System.currentTimeMillis());
-        this.street = userNewModel.getStreet();
-        this.street2 = userNewModel.getStreet2();
-        this.zip = userNewModel.getZip();
-        this.created = new Timestamp(System.currentTimeMillis());
+        this.street = userModel.getStreet();
+        this.street2 = userModel.getStreet2();
+        this.zip = userModel.getZip();
 
 	}
 
@@ -197,6 +196,21 @@ public  class ContactEntity {
     public void setBranch(int branch) {
         this.branch = branch;
     }
+
+	public void copyFromContact(UserViewModel userModel) {
+
+        this.username = userModel.getUsername();
+        this.firstname = userModel.getFirstname();
+        this.lastname = userModel.getLastname();
+        this.email = userModel.getEmail();
+        this.phone = userModel.getPhone();
+        this.role = userModel.getRole();
+        this.city = userModel.getCity();
+        this.state = userModel.getState();
+        this.street = userModel.getStreet();
+        this.street2 = userModel.getStreet2();
+        this.zip = userModel.getZip();
+	}
 
     
     

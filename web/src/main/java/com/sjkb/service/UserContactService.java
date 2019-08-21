@@ -21,14 +21,16 @@ public interface UserContactService {
 	 * @return JobId, also the dropbox folder
 	 * @throws UsernameTakenException
 	 */
-	public String addNewUser(UserNewModel userNewModel, String createdBy) throws UsernameTakenException;
+	public String addNewUser(UserViewModel userNewModel, String createdBy) throws UsernameTakenException;
 
-	public List<ContactEntity> getAllUser();
+//	public List<ContactEntity> getAllUser();
 
 	public void remove(String empId, UserDelModel userDelModel) throws DeleteErrorException, DbxException;
 
 	public ContactEntity getContactByUserid(String username);
 
 	public ContactEntity getSponserFor(String username);
+
+	public UserViewModel getByToken(String token);
 
 }

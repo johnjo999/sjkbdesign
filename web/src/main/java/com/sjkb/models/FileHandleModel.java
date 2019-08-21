@@ -29,5 +29,4 @@ public class FileHandleModel {
         this.size = size;
     }
 
-    
 }

@@ -12,7 +12,7 @@
 <body>
     <div th:fragment="file" th:remove="tag">
         <div class="col-md-3" th:each="card:${files}" th:id="${card.filename}">
-            <div class="card text-center card-border border-success">
+            <div class="card text-center card-border border-success clickable" th:data-file="${card.filename}" th:onclick="getFile(this.getAttribute('data-file'))">
                 <div class="card-header">
                     <h3 class="d-inline" th:text="${card.filename}">name</h3>
                 </div>
@@ -25,5 +25,16 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div th:fragment="pdf_viewer">
+            <object data="http://yoursite.com/the.pdf" type="application/pdf" width="750px" height="750px">
+    </div>
+
+    <div th:fragment="redirect">
+        <div id="filepath" th:data-path="${link}"></div>
+    </div>
+    <div th:fragment="linepreview" th:remove="tag">
+        [(${preview})]
     </div>
 </body>

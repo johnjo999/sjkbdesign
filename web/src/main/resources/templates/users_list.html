@@ -20,8 +20,12 @@
     }
 
     function deluser(type) {
-        $("#deluserform").attr("action", "/backstage/user/deluser/" + type);
+        $("#deluserform").attr("action", "/backstage/user/delete/" + type);
         $("#deluserform").submit()
+    }
+
+    function userdet(usertoken) {
+        window.location.href = "/backstage/user/edit/"+usertoken;
     }
 
 </script>
@@ -33,6 +37,10 @@
 
     label {
         margin: 8px;
+    }
+
+    tr:hover {
+        cursor: pointer;
     }
 </style>
 </head>
@@ -100,7 +108,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="user:${users}">
+                                <tr th:each="user:${users}" th:data-det="${user.token}" onclick="userdet(this.getAttribute('data-det'));">
                                     <td th:text="${user.username}"></td>
                                     <td th:text="${user.firstname}"></td>
                                     <td th:text="${user.lastname}"></td>

@@ -1,19 +1,27 @@
 package com.sjkb.models;
 
+import java.util.UUID;
+
 import com.sjkb.entities.ContactEntity;
 
 public class UserViewModel {
     private String username;
+    private String password;
     private String firstname;
     private String lastname;
     private String phone;
     private String email;
     private String lastLogin;
     private String street;
+    private String street2;
     private String city;
     private String state;
     private String zip;
     private boolean disabled;
+    private String key;
+    private String company;
+    private String token;
+    private String role;
 
     public UserViewModel() {};
 
@@ -24,10 +32,11 @@ public class UserViewModel {
         this.phone = contact.getPhone();
         this.email = contact.getEmail();
         this.street = contact.getStreet();
+        this.street2 = contact.getStreet2();
         this.city = contact.getCity();
         this.state = contact.getState();
         this.zip = contact.getZip();
-
+        this.token = UUID.randomUUID().toString().replaceAll("-", "");
     }
 
     public String getUsername() {
@@ -117,7 +126,58 @@ public class UserViewModel {
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
     }
- 
+
+	public String getToken() {
+		return token;
+	}
+
+    public UserViewModel setToken(String token) {
+        this.token = token;
+        return this;
+    }
+
+    public String getPassword() {
+       return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getStreet2() {
+        return street2;
+    }
+
+    public void setStreet2(String street2) {
+        this.street2 = street2;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public UserViewModel setKey(String key) {
+        this.key = key;
+        return this;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    
     
     
 }

@@ -1,7 +1,9 @@
 package com.sjkb.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.dropbox.core.DbxException;
@@ -19,6 +21,8 @@ import com.sjkb.repositores.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.qos.logback.core.joran.conditional.ElseAction;
+
 @Service
 class UserContactServiceImpl implements UserContactService {
 
@@ -31,25 +35,31 @@ class UserContactServiceImpl implements UserContactService {
     @Autowired
     DropboxService dropboxService;
 
+    private Map<String, UserViewModel> userTokenMap = new HashMap<>();
+
     @Override
     public List<UserViewModel> getAllUsers() {
         List<UserViewModel> result = new ArrayList<>();
         List<ContactEntity> contacts = contactRepository.findAll();
         if (contacts != null) {
+            userTokenMap.clear();
             for (ContactEntity contact : contacts) {
-                result.add(new UserViewModel(contact));
+                UserViewModel userModel = new UserViewModel(contact);
+                userTokenMap.put(userModel.getToken(), userModel);
+                result.add(userModel);
             }
         }
         return result;
     }
 
     @Override
-    public String addNewUser(UserNewModel userNewModel, String createdBy) throws UsernameTakenException {
+    public String addNewUser(UserViewModel userNewModel, String createdBy) throws UsernameTakenException {
         Optional<UserEntity> optemp = userRepository.findByUsername(createdBy);
         long empid = 0L;
         int locid = 0;
         int year = 19;
         UserEntity userEntity = null;
+        ContactEntity contactEntity = null;
         String jobid = "";
         if (optemp.isPresent()) {
             UserEntity emp = optemp.get();
@@ -63,7 +73,12 @@ class UserContactServiceImpl implements UserContactService {
         if (userNewModel.getUsername().length() > 2) {
             Optional<UserEntity> user = userRepository.findByUsername(userNewModel.getUsername());
             if (user.isPresent() == true) {
-                throw new UsernameTakenException(String.format("user %s not found", userNewModel.getUsername()));
+                if (userNewModel.getToken() == null) {
+                    throw new UsernameTakenException(String.format("user %s not found", userNewModel.getUsername()));
+                } else {
+                    userRepository.delete(user.get());
+                    contactEntity = contactRepository.findByUsername(userNewModel.getUsername());
+                }
             }
             if (userNewModel.getPassword().length() == 0) {
                 int i = userNewModel.getFirstname().length();
@@ -86,31 +101,37 @@ class UserContactServiceImpl implements UserContactService {
                 userRepository.save(userEntity);
             }
         }
-        ContactEntity contactEntity = new ContactEntity(userNewModel);
+        if (contactEntity == null)
+            contactEntity = new ContactEntity(userNewModel);
+        else {
+            contactEntity.copyFromContact(userNewModel);
+        }
         contactEntity.setBranch(1);
         if (userNewModel.getRole().equals(UserRoleModel.ROLES.customer.toString())) {
-            String foldername = String.format("%s_%02d%02d-%d", userNewModel.getLastname(), year, locid, empid).toLowerCase();
+            String foldername = String.format("%s_%02d%02d-%d", userNewModel.getLastname(), year, locid, empid)
+                    .toLowerCase();
             jobid = foldername;
-            try {
-                dropboxService.createFolder(createdBy, foldername);
-                if (userEntity != null) {
-                    userEntity.setDbxFolder(foldername);
-                }
+            if (userNewModel.getToken() == null) {
+                try {
+                    dropboxService.createFolder(createdBy, foldername);
+                    if (userEntity != null) {
+                        userEntity.setDbxFolder(foldername);
+                    }
 
-            } catch (DbxException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                } catch (DbxException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         }
         contactRepository.save(contactEntity);
         return jobid;
     }
 
-    @Override
-    public List<ContactEntity> getAllUser() {
-        return contactRepository.findAll();
-    }
-
+    /*
+     * @Override public List<ContactEntity> getAllUser() { return
+     * contactRepository.findAll(); }
+     */
     @Override
     public void remove(String empId, UserDelModel userDelModel) throws DeleteErrorException, DbxException {
         Optional<UserEntity> userEntityOpt = userRepository.findByUsername(userDelModel.getUsername());
@@ -144,6 +165,11 @@ class UserContactServiceImpl implements UserContactService {
             result = contactRepository.findByUsername(userOpt.get().getSponsor());
         }
         return result;
+    }
+
+    @Override
+    public UserViewModel getByToken(String token) {
+        return userTokenMap.get(token);
     }
 
 }

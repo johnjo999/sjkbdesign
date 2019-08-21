@@ -8,6 +8,7 @@ import com.sjkb.exception.UsernameTakenException;
 import com.sjkb.models.UserDelModel;
 import com.sjkb.models.UserNewModel;
 import com.sjkb.models.UserRoleModel;
+import com.sjkb.models.UserViewModel;
 import com.sjkb.repositores.UserRepository;
 import com.sjkb.service.JobService;
 import com.sjkb.service.UserContactService;
@@ -52,8 +53,8 @@ public class UserController {
 
     @RequestMapping(value = "/getall", method = RequestMethod.GET)
     public String getAllUsers(ModelMap map) {
-        
-        map.addAttribute("users", userContactService.getAllUser());
+       
+        map.addAttribute("users", userContactService.getAllUsers());
         map.addAttribute("user", getUser());
         map.addAttribute("userDelModel", new UserDelModel());
         return "users_list";
@@ -71,13 +72,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String postContact(ModelMap map, @ModelAttribute("user") final UserNewModel userNewModel) {
+    public String postContact(ModelMap map, @ModelAttribute("user") final UserViewModel userModel) {
         SecurityContext holder = SecurityContextHolder.getContext();
         final String uname = holder.getAuthentication().getName();
-        if (key.equals(userNewModel.getKey()))
+        if (key.equals(userModel.getKey()))
             try {
-                String jobid = userContactService.addNewUser(userNewModel, uname);
-                String contactId = userContactService.getContactByUserid(userNewModel.getUsername()).getUid();
+                String jobid = userContactService.addNewUser(userModel, uname);
+                String contactId = userContactService.getContactByUserid(userModel.getUsername()).getUid();
                 if (jobid.length() > 3)
                     jobService.createJob(jobid, uname, contactId);
             } catch (UsernameTakenException e) {
@@ -87,7 +88,7 @@ public class UserController {
         return getAllUsers(map); 
     }
 
-    @RequestMapping(value = "/deluser/{type}", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete/{type}", method = RequestMethod.POST)
     public String delUser(ModelMap map, @ModelAttribute("userDelModel") UserDelModel userDelModel, @PathVariable final String type) {
         userDelModel.setType(type);
         SecurityContext holder = SecurityContextHolder.getContext();
@@ -101,6 +102,16 @@ public class UserController {
 		}
         
     }
+
+    @RequestMapping(value = "/edit/{token}", method = RequestMethod.GET)
+    public String editUser(ModelMap map, @PathVariable final String token) {
+        key = UUID.randomUUID().toString();
+        map.addAttribute("newuser", userContactService.getByToken(token).setKey(key).setToken(token));
+        map.addAttribute("user", getUser());
+        map.addAttribute("roles", UserRoleModel.getRolesLessThan(getRole()));
+        return "users_new";
+    }
+
 
     /**
      * 
