@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+</div>
+<div th:fragment="contractor-form" th:remove="tag">
+    <form id="contractor-form" th:action="@{/backstage/job/set/contractor}" th:object="${assignExpenseModel}"
+        class="form" method="post">
+        <label for="contractor"></label>
+        <select id="contractor" th:field="*{contId}" class="input-group custom-select mb-5">
+            <option th:each="cont : ${allCont}" th:value="${cont.id}" th:text="${cont.name}">cont</option>
+        </select>
+        <label for="le">Low Estimate</label>
+        <input id="le" type="number" class="input-group mb-3" th:field="*{lowEstimate}"></input>
+        <label for="le">High Estimate</label>
+        <input id="he" type="number" class="input-group mb-3" th:field="*{highEstimate}"></input>
+        <label for="le">Quote</label>
+        <input id="q" type="number" class="input-group mb-3" th:field="*{quote}"></input>
+        <input type="text" name="folder" class="hidden foldervar" th:value="*{folder}"></input>
+    </form>
+</div>
+
+<div th:fragment="installer-form" th:remove="tag">
+    <form id="installer-form" th:action="@{/backstage/job/set/installer}" th:object="${assignExpenseModel}"
+        class="form" method="post">
+        <label for="contractor"></label>
+        <select id="contractor" th:field="*{contId}" class="input-group custom-select mb-5">
+            <option th:each="cont : ${allCont}" th:value="${cont.id}" th:text="${cont.name}">cont</option>
+        </select>
+        <label for="le">Low Estimate</label>
+        <input id="le" type="number" class="input-group mb-3" th:field="*{lowEstimate}"></input>
+        <label for="le">High Estimate</label>
+        <input id="he" type="number" class="input-group mb-3" th:field="*{highEstimate}"></input>
+        <label for="le">Quote</label>
+        <input id="q" type="number" class="input-group mb-3" th:field="*{quote}"></input>
+        <label for="le">Target Date</label>
+        <input id="d" type="text" class="input-group hasdatepicker" th:field="*{date}"></input>
+        <input type="text" name="folder" class="hidden foldervar" th:value="*{folder}"></input>
+    </form>
+</div>
+
+
+<div th:fragment="cabinet-form" th:remove="tag">
+    <form id="cabinet-form" th:action="@{/backstage/job/set/cabinet}" th:object="${assignExpenseModel}"
+        class="form" method="post">
+        <label for="contractor"></label>
+        <select id="contractor" th:field="*{contId}" class="input-group custom-select mb-5">
+            <option th:each="cont : ${allCont}" th:value="${cont.id}" th:text="${cont.name}">cont</option>
+        </select>
+        <label for="le">Quote</label>
+        <input id="q" type="number" class="input-group mb-3" th:field="*{quote}"></input>
+        <label for="le">Ship Date</label>
+        <input id="d" type="date" class="input-group hasdatepicker" th:field="*{Date}"></input>
+        <input type="text" name="folder" class="hidden foldervar" th:field="*{folder}"></input>
+    </form>
+</div>

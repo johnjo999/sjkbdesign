@@ -45,9 +45,15 @@ public class UserController {
 
     private String key = null;
 
+    private String context = null;;
+
     private String getUser() {
         SecurityContext holder = SecurityContextHolder.getContext();
         final String uname = holder.getAuthentication().getName();
+        if (context == null) {
+            context = userContactService.getContactByUserid(uname).getContext();
+            userContactService.setContext(context);
+        }
         return uname;
     }
 
@@ -67,6 +73,7 @@ public class UserController {
         user.setKey(key);
         map.addAttribute("newuser", user);
         map.addAttribute("user", getUser());
+        map.addAttribute("action", "/backstage/user/add");
         map.addAttribute("roles", UserRoleModel.getRolesLessThan(getRole()));
         return "users_new";
     }
@@ -79,7 +86,7 @@ public class UserController {
             try {
                 String jobid = userContactService.addNewUser(userModel, uname);
                 String contactId = userContactService.getContactByUserid(userModel.getUsername()).getUid();
-                if (jobid.length() > 3)
+                if (jobid.length() > 3 && userModel.getRole().equals("customer"))
                     jobService.createJob(jobid, uname, contactId);
             } catch (UsernameTakenException e) {
                 return "users_error_taken";

@@ -8,7 +8,7 @@ public class UserRoleModel {
 
     // Admin managed roles must be at the higher ordinals
     public enum ROLES {
-        customer, contractor, vendor, installer, partner, employee
+        customer, contractor, vendor, installer, partner, employee, administrator
     };
 
     public static String getUserRole(String roleString) {
@@ -17,6 +17,9 @@ public class UserRoleModel {
         switch (role) {
         case employee:
             result = "ROLE_USER";
+            break;
+        case administrator:
+            result = "ROLE_ADMIN";
             break;
         default:
             result = "ROLE_CUST";
@@ -30,6 +33,7 @@ public class UserRoleModel {
         arrayList.addAll(Arrays.asList(ROLES.values()));
         if (role.equals("ROLE_ADMIN") == false) {
             // from largest ordnal to smallest, in sequence - no gaps
+            arrayList.remove(ROLES.administrator.ordinal());
             arrayList.remove(ROLES.employee.ordinal());
             arrayList.remove(ROLES.partner.ordinal());
         }

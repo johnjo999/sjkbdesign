@@ -1,5 +1,7 @@
 package com.sjkb.entities;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -11,7 +13,9 @@ public class ContextEntity {
 
     private String name;
 
-    private String admin;
+	private String admin;
+	
+	private Timestamp created;
 
 	public String getUid() {
 		return uid;
@@ -35,6 +39,14 @@ public class ContextEntity {
 
 	public void setAdmin(String admin) {
 		this.admin = admin;
+	}
+
+	public Timestamp getCreated() {
+		return created;
+	}
+
+	public void setCreated(Timestamp created) {
+		this.created = created;
 	}
 
     

@@ -40,7 +40,7 @@
                         <input type="checkbox" class="form-control" id="b1">
                     </div>
                     <div class="form-group">
-                        <label for="b2">Facuet / Drain</label>
+                        <label for="b2">Faucet / Drain</label>
                         <input type="checkbox" class="form-control" id="b2">
                     </div>
                     <div class="form-group">
@@ -216,7 +216,7 @@
 <!-- JOB CARD --------------------------------------->
 <div th:fragment="jobcard" th:remove="tag">
     <div class="col-md-4" th:id="${card.id}">
-        <div class="card">
+        <div class="card" th:data-id="${card.id}" onclick="getfolder(this.getAttribute('data-id'));">
             <div class="card-header">
                 <h3 class="d-inline" th:text="${card.title}">Kitchen</h3>
                 <span style="border: 5px" th:text="${card.id}"></span>
@@ -225,11 +225,36 @@
                         src="/assets/img/icons/duotone-icons/Design/Pencil.svg" /></button>
             </div>
             <div class="card-body">
-            <span class="col-md-2 text-info" th:text="${card.statusDate}"></span><span class="col-=md-2" th:text="${card.status}"></span>
+                <span class="col-md-2 text-info" th:text="${card.statusDate}"></span><span class="col-=md-2"
+                    th:text="${card.status}"></span>
             </div>
             <div class="card-footer">
-                
+
             </div>
+        </div>
+    </div>
+</div>
+<!-- CONTACT CARD  --------------------------------->
+<div th:fragment="contactcard" th:remove="tag">
+    <div th:id="${contact.uid}">
+        <div class="card" th:data-id="${contact.uid}" onclick="getcontact(this.getAttribute('data-id'));">
+            <div class="card-header">
+               
+                <h3>Contact</h3>
+            </div>
+            <div class="card-body">
+                    <h4><span th:text="${contact.firstname}"></span> <span th:text="${contact.lastname}"></span></h4>
+                <div th:text="${contact.street}"></div>
+                <div th:text="${contact.street2}"></div>
+                <div><span class="mr-3" th:text="${contact.city}"></span>
+                    <span th:text="${#strings.toUpperCase(contact.state)}"></span>
+                    <span class="ml-3" th:text="${contact.zip}"></span>
+                </div>
+            </div>
+                <div class="card-footer">
+                        <div style="border: 5px" th:text="${contact.phone}"></div>
+                        <div style="border: 5px" th:text="${contact.email}"></div>
+                </div>
         </div>
     </div>
 </div>

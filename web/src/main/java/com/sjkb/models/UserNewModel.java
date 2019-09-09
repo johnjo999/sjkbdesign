@@ -15,6 +15,7 @@ public class UserNewModel {
     private String role;
     private String key;
     private String company;
+    private String token;  // used by view page as temp ID reference.  not used
 
     public String getUsername() {
         return username;
@@ -126,6 +127,14 @@ public class UserNewModel {
 
     public void setCompany(String company) {
         this.company = company;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     

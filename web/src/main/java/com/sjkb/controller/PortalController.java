@@ -25,7 +25,6 @@ import com.sjkb.service.UserContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -63,6 +62,7 @@ public class PortalController {
     public String dashboard(ModelMap map, @RequestHeader Map<String, String> header, Authentication authentication) {
 
         boolean emp = false;
+        boolean sys = false;
 
         String username = authentication.getName();
         Collection<? extends GrantedAuthority> grants = authentication.getAuthorities();
@@ -71,9 +71,13 @@ public class PortalController {
             GrantedAuthority auth = iter.next();
             if (auth.getAuthority().equals("ROLE_USER") || auth.getAuthority().equals("ROLE_ADMIN"))
                 emp = true;
+            else if (auth.getAuthority().equals("ROLE_SYS"))
+                sys = true;
         }
         if (emp)
             return "redirect:/backstage/dashboard";
+        if (sys)
+            return "redirect:/sysadm/dashboard";
         ContactEntity contact = contactRepository.findByUsername(username);
         map.addAttribute("token", portalToken);
         ContactEntity sponsor = userService.getSponserFor(username);

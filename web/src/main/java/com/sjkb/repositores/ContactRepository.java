@@ -7,9 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ContactRepository extends JpaRepository<ContactEntity, String>  {
 
-    List<ContactEntity>findAll();
+    List<ContactEntity>findByContext(String context);
 
     ContactEntity findByUsername(String username);
+
+    ContactEntity findByUid(String uid);
+
+	List<ContactEntity> findByRoleAndContext(String string, String context);
 
 
 }

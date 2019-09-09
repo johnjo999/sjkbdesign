@@ -39,20 +39,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers("/", "/onstage/**", "/css/**", "/assets/**", "/img/**", "/js/**", "/fonts/**", "/error",
-                        "/home.*", "favicon.ico", "/admin/grabtoken")
-                .permitAll().antMatchers("/backstage/**").access("hasRole('ROLE_USER')")
-                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')").antMatchers("/protal/**")
-                .access("hasRole('ROLE_CUST')").anyRequest().authenticated().and().formLogin()
+                        "/home.*", "favicon.ico", "/admin/grabtoken").permitAll()
+                .antMatchers("/backstage/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/sysadm/**").access("hasRole('ROLE_SYS')")
+                .antMatchers("/protal/**").access("hasRole('ROLE_CUST')")
+                .anyRequest().authenticated().and().formLogin()
                 .loginProcessingUrl("/login.html").permitAll().defaultSuccessUrl("/portal/dashboard").and().logout()
                 .permitAll();
         http.authorizeRequests().expressionHandler(webExpressionHandler());
-       // http.requiresChannel().anyRequest().requiresSecure();
+        http.requiresChannel().anyRequest().requiresSecure();
     }
 
     @Bean
     public RoleHierarchyImpl roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
+        roleHierarchy.setHierarchy("ROLE_SYS > ROLE_ADMIN > ROLE_USER > ROLE_CUST");
         return roleHierarchy;
     }
 

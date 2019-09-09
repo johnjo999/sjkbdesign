@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Libs CSS -->
+    <link rel="stylesheet" href="/assets/fonts/Feather/feather.css">
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="/assets/css/theme.min.css">
+
+    <title>SJKB Design</title>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="/home.html">SJKB</a>
+        <div class="navbar-expand" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="/logout.html">Logout</a>
+
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- CONTENT
+    ================================================== -->
+    <section class="section-border border-primary">
+
+        <div class="container d-flex flex-column">
+            <div class="row min-vh-100">
+                <div class="col-md-12">
+
+                    <!-- Heading -->
+                    <h2 class="display-3 font-weight-bold">
+                        System Administration
+                    </h2>
+                    <button onclick="window.location.href='/sysadm/context/add'" class="btn btn-pill btn-info"><span
+                            data-feather="plus"></span> Add New</button>
+                    <hr />
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <td>Context</td>
+                                <td>PoC</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="context:${contexts}">
+                                <td th:text="${context.company}"></td>
+                                <td th:text="${context.poc}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div> <!-- / .row -->
+        </div> <!-- / .container -->
+    </section>
+
+    <!-- JAVASCRIPT
+    ================================================== -->
+    <!-- Libs JS -->
+    <script src="/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Theme JS -->
+    <script src="/assets/js/theme.min.js"></script>
+
+</body>
+
+</html>

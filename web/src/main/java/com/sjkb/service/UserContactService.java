@@ -6,8 +6,8 @@ import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.files.DeleteErrorException;
 import com.sjkb.entities.ContactEntity;
 import com.sjkb.exception.UsernameTakenException;
+import com.sjkb.models.ContractorSelectRow;
 import com.sjkb.models.UserDelModel;
-import com.sjkb.models.UserNewModel;
 import com.sjkb.models.UserViewModel;
 
 public interface UserContactService {
@@ -32,5 +32,18 @@ public interface UserContactService {
 	public ContactEntity getSponserFor(String username);
 
 	public UserViewModel getByToken(String token);
+
+	public ContactEntity getContactByUid(String pocId);
+
+	public List<ContractorSelectRow> getContratorSelectRows();
+
+	public List<ContractorSelectRow> getInstallerSelectRows();
+
+	public void setContext(String context);
+
+	public String createContextForNewUser(UserViewModel userModel, String uname) throws UsernameTakenException;
+
+	public String getUidForUsername(String username);
+
 
 }

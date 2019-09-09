@@ -6,6 +6,7 @@ import com.sjkb.models.CardModel;
 import com.sjkb.models.KitchenCardModel;
 import com.sjkb.models.QuickQuoteModel;
 import com.sjkb.service.JobService;
+import com.sjkb.service.UserContactService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
@@ -25,9 +26,18 @@ public class BackstageController {
     @Autowired
     JobService jobService;
 
+    @Autowired
+    UserContactService userContactService;
+
+    private String context = null;
+
     private String getUser() {
         SecurityContext holder = SecurityContextHolder.getContext();
         final String uname = holder.getAuthentication().getName();
+        if (context == null) {
+            context = userContactService.getContactByUserid(uname).getContext();
+            userContactService.setContext(context);
+        }
         return uname;
     }
 

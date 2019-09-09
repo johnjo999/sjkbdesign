@@ -17,6 +17,8 @@ public class JobEntity {
 
     private Integer budget;
 
+    private Integer quote;
+
     private Timestamp createDate;
 
     private Timestamp activityDate;
@@ -25,6 +27,7 @@ public class JobEntity {
 
     private String context;
 
+    // ContactEntity.id
     private String pocId;
 
     public String getJobid() {
@@ -89,6 +92,14 @@ public class JobEntity {
 
     public void setActivityDate(Timestamp activityDate) {
         this.activityDate = activityDate;
+    }
+
+    public Integer getQuote() {
+        return quote;
+    }
+
+    public void setQuote(Integer quote) {
+        this.quote = quote;
     }
 
     

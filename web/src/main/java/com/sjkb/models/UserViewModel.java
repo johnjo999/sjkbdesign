@@ -36,6 +36,8 @@ public class UserViewModel {
         this.city = contact.getCity();
         this.state = contact.getState();
         this.zip = contact.getZip();
+        this.role = contact.getRole();
+        this.company = contact.getCompany();
         this.token = UUID.randomUUID().toString().replaceAll("-", "");
     }
 

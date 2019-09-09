@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en xmlns=" http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"">
+
+<head>
+	<meta charset=" utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Kitchen Bath Design">
+
+<title>SJKB Design</title>
+
+<link href="/css/classic.css" rel="stylesheet">
+<link href="/css/sjkbcss.css" rel="stylesheet">
+<link href="/css/jquery-ui.min.css" rel="stylesheet">
+
+<script src="/js/jquery.js"></script>
+<script src="/js/app.js"></script>
+<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+
+
+<script>
+
+    function addContractor() {
+        var d = $("#folderid").data('fid');
+        $("#addContractor").modal('show');
+        $.ajax({
+            url: ("/backstage/job/get/form/"+d+"/contractor"),
+            type: "GET",
+            success: function (data) {
+                $("#contractor-form").replaceWith(data);
+                var d = $("#folderid").data('fid');
+                $(".foldervar").attr("value", d);
+            }
+        })
+    }
+
+    function addInstaller() {
+        var d = $("#folderid").data('fid');
+        $("#addInstaller").modal('show');
+        $.ajax({
+            url: ("/backstage/job/get/form/"+d+"/installer"),
+            type: "GET",
+            success: function (data) {
+                $("#installer-form").replaceWith(data);
+                $(".hasdatepicker").datepicker();
+                var d = $("#folderid").data('fid');
+                $(".foldervar").attr("value", d);
+            }
+        })
+    }
+    function addCabinets() {
+        var d = $("#folderid").data('fid');
+        $("#addCabinet").modal('show');
+        $.ajax({
+            url: ("/backstage/job/get/form/cabinet"),
+            type: "GET",
+            success: function (data) {
+                $("#cabinet-form").replaceWith(data);
+                $(".hasdatepicker").datepicker();
+            }
+        })
+    }
+
+
+</script>
+
+<style>
+    .hidden {
+        display: none;
+    }
+
+    .text-bold {
+        font-weight: bold;
+        width: 120px;
+    }
+
+    .folder-tab {
+        background: rgb(235, 240, 245);
+        margin-bottom: 0px;
+        padding: 20px;
+        width: 30%;
+        border-radius: 20px;
+    }
+
+    .folder {
+        padding: 20px;
+        background: rgb(235, 240, 245);
+        min-height: 700px;
+        margin-top: -10px;
+    }
+</style>
+</head>
+
+<body>
+    <div class="modal fade" id="addContractor" tabindex="-1" role="dialog" aria-labelledby="modalAddContractor"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Assign a contractor</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="contractor-form"></form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" form="contractor-form" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="addInstaller" tabindex="-1" role="dialog" aria-labelledby="modalAddContractor"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Assign an installer</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="installer-form"></form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" form="installer-form" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="addCabinet" tabindex="-1" role="dialog" aria-labelledby="modalAddContractor"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cabinet Order</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="cabinet-form"></form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" form="contractor-form" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <div th:include="fragments/sidecar::sidenav" th:remove="tag"></div>
+        <div class="main">
+
+            <div th:include="fragments/sidecar::topnav" th:remove="tag"></div>
+            <main class="content">
+                <div class="folder-tab">
+                    <h2 id="folderid" th:data-fid="${job.jobid}" th:text="${job.jobid}">title</h2>
+                </div>
+                <div class="card-deck folder">
+                    <div th:include="fragments/cards::contactcard" class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Financials</h3>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="text-bold d-inline-block">Designer: </div><span
+                                    th:text="${job.user}"></span>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="text-bold d-inline-block">Start Date: </div><span
+                                    th:text="${job.createDate}"></span>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="text-bold d-inline-block">Budget: </div><span
+                                    th:text="${job.budget}"></span>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="text-bold d-inline-block">Quote: </div><span th:text="${job.quote}"></span>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="text-bold d-inline-block">Projected Cost: </div>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="text-bold d-inline-block">Margin : </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Expenses</h3>
+                            </div>
+                            <div class="card-body">
+                                <div>
+                                    <button class="btn btn-info mb-3" onclick="addContractor()">Contractor</button>
+                                    <button class="btn btn-info mb-3" onclick="addInstaller()">Installer</button>
+                                    <button class="btn btn-info mb-3" onclick="addCabinets()">Cabinets</button>
+                                    <button class="btn btn-info mb-3">Misc</button>
+                                </div>
+                                <hr/>
+                                <div>
+                                    <div class="col-md-10 mt-5">
+                                        <div class="text-bold d-inline-block">Contractor: </div>
+                                        <button class="btn btn-default"
+                                            th:data-id="${jobAttribute.contractorId}"
+                                            th:text="${jobAttribute.contractor}"></button>
+
+                                            <div class="text-bold d-inline-block">Installer: </div>
+                                            <button class="btn btn-default"
+                                                th:data-id="${jobAttribute.installerId}"
+                                                th:text="${jobAttribute.installer}"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Events</h3>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-info mb-3">Note</button>
+                                <button class="btn btn-info mb-3">Quote</button>
+                                <button class="btn btn-info mb-3">Signoff</button>
+                                <button class="btn btn-info mb-3">Order</button>
+                                <button class="btn btn-info mb-3">Ship</button>
+                                <button class="btn btn-info mb-3">Install</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>History</h3>
+                                </div>
+                                <div class="card-body">                                  
+                                    <div th:utext="${history}"></div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </main>
+        </div>
+</body>
+
+
+</html>

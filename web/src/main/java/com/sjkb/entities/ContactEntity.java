@@ -49,6 +49,7 @@ public  class ContactEntity {
         this.street = userModel.getStreet();
         this.street2 = userModel.getStreet2();
         this.zip = userModel.getZip();
+        this.company = userModel.getCompany();
 
 	}
 
@@ -133,6 +134,9 @@ public  class ContactEntity {
     }
 
     public String getCompany() {
+        if (company == null || company.length() == 0) {
+            return this.lastname;
+        }
         return company;
     }
 
@@ -210,6 +214,7 @@ public  class ContactEntity {
         this.street = userModel.getStreet();
         this.street2 = userModel.getStreet2();
         this.zip = userModel.getZip();
+        this.company = userModel.getCompany();
 	}
 
     

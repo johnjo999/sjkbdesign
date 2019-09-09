@@ -10,8 +10,7 @@
 <title>SJKB Design</title>
 
 <link href="/css/classic.css" rel="stylesheet">
-<script src="/js/jquery.js"></script>
-<script src="/js/jquery-ui.js"></script>
+
 <script>
     function cardGetter(card) {
         $.ajax({
@@ -56,7 +55,7 @@
         margin-top: -8px;
     }
     .card-body-room {
-        min-height: 500px;
+        min-height: 300px;
     }
 </style>
 </head>
@@ -102,7 +101,7 @@
                                 </div>
                                 <div class="card-footer">
                                     <button class="button" onclick="triggerCardGetter()"><span><img
-                                                src="/assets/img/icons/duotone-icons/Navigation/plus.svg" /></span></button>
+                                                src="/assets/img/icons/duotone-icons/Navigation/Plus.svg" /></span></button>
                                 </div>
                             </div>
                         </div>
@@ -114,5 +113,8 @@
             </main>
         </div>
 </body>
+<!-- scripts must come in this order for ui toggle to work properly-->
 <script src="/js/app.js"></script>
+<script src="/js/jquery.js"></script>
+<script src="/js/jquery-ui.js"></script>
 </html>

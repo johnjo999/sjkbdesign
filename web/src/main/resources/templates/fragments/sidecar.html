@@ -23,12 +23,14 @@
                         <i class="align-middle" data-feather="layout"></i> <span class="align-middle">Folders</span>
                     </a>
                     <ul id="pages" class="sidebar-dropdown list-unstyled collapse ">
-
-                        <li class="sidebar-item"><a class="sidebar-link" href="/backstage/doquote.html">Quotes</a></li>
-                        <li class="sidebar-item"><a class="sidebar-link" href="/backstage/get/jobs/active.html">Active</a></li>
-                        <li class="sidebar-item"><a class="sidebar-link" href="/backstage/get/jobs/lost.html">Lost</a></li>
-                        <li class="sidebar-item"><a class="sidebar-link" href="/backstage/get/jobs/closed.html">Complete</a></li>
-                        <li class="sidebar-item"><a class="sidebar-link" href="/backstage/get/jobs/all.html">All</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link"
+                                href="/backstage/get/jobs/active.html">Active</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" href="/backstage/get/jobs/lost.html">Lost</a>
+                        </li>
+                        <li class="sidebar-item"><a class="sidebar-link"
+                                href="/backstage/get/jobs/closed.html">Complete</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" href="/backstage/get/jobs/all.html">All</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="sidebar-header">
@@ -46,17 +48,27 @@
                     </ul>
                 </li>
 
-
                 <li class="sidebar-item">
                     <a href="#insaller" data-toggle="collapse" class="sidebar-link collapsed">
                         <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Installers</span>
                     </a>
-                    <ul id="imstaller" class="sidebar-dropdown list-unstyled collapse show">
-                        <li class="sidebar-item"><a class="sidebar-link" href="#">The guy</a></li>
+
+                </li>
+                <li class="sidebar-header">
+                    Product
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link collapsed" href="#components" data-toggle="collapse">
+                        <i class="align-middle" data-feather="paperclip"></i><span
+                            class="align-middle">Catalog</span>
+                    </a>
+                    <ul id="components" class="sidebar-dropdown list-unstyled collapse">
+                        <li class="sidebar-item"><a class="sidebar-link" href="/backstage/catalog/getall">List</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" href="#">Add Category</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" href="#">Add Item</a></li>
                     </ul>
                 </li>
-                <li class="sidebar-item"><a class="sidebar-link" href="#">
-                        <i class="align-middle" data-feather="paperclip"></i><span>Components</span></a></li>
+
                 <li sec:authorize="hasRole('ROLE_ADMIN')" class="sidebar-item">
                     <a href="#setup" data-toggle="collapse" class="sidebar-link collapsed">
                         <i class="align-middle" data-feather="setup"></i> <span class="align-middle">Admin</span>
@@ -65,8 +77,8 @@
                         <li class="sidebar-item"><a class="sidebar-link" href="/admin/setup/dropbox">Dropbox</a></li>
                     </ul>
                     <ul id="setup" class="sidebar-dropdown list-unstyled collapse show">
-                            <li class="sidebar-item"><a class="sidebar-link" href="/admin/setup/home">Homepage</a></li>
-                        </ul>
+                        <li class="sidebar-item"><a class="sidebar-link" href="/admin/setup/home">Homepage</a></li>
+                    </ul>
                 </li>
             </ul>
 
@@ -103,14 +115,14 @@
                             </div>
                         </div>
                         <div class="list-group">
-                        
+
                         </div>
                         <div class="dropdown-menu-footer">
                             <a href="#" class="text-muted">Show all messages</a>
                         </div>
                     </div>
                 </li>
-                
+
 
                 <li class="nav-item dropdown">
                     <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-toggle="dropdown">
@@ -118,12 +130,12 @@
                     </a>
 
                     <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown">
-                        <img src="/img/avatars/avatar.png" class="avatar img-fluid rounded-circle mr-1"/>
+                        <img src="/img/avatars/avatar.png" class="avatar img-fluid rounded-circle mr-1" />
                         <span class="text-dark" th:text="${user}">Shelly</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="#"><i class="align-middle mr-1"
-                                data-feather="user"></i> Profile</a>
+                        <a class="dropdown-item" href="#"><i class="align-middle mr-1" data-feather="user"></i>
+                            Profile</a>
                         <a class="dropdown-item" href="#"><i class="align-middle mr-1" data-feather="pie-chart"></i>
                             Analytics</a>
                         <div class="dropdown-divider"></div>
@@ -206,8 +218,7 @@
                                         </p>
 
                                         <!-- Button -->
-                                        <a href="/overview.html"
-                                            class="btn btn-sm btn-white shadow-dark fonFt-size-sm">
+                                        <a href="/overview.html" class="btn btn-sm btn-white shadow-dark fonFt-size-sm">
                                             Explore
                                         </a>
 
