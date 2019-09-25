@@ -9,6 +9,7 @@ import com.sjkb.models.UserDelModel;
 import com.sjkb.models.UserNewModel;
 import com.sjkb.models.UserRoleModel;
 import com.sjkb.models.UserViewModel;
+import com.sjkb.models.VendorModel;
 import com.sjkb.repositores.UserRepository;
 import com.sjkb.service.JobService;
 import com.sjkb.service.UserContactService;
@@ -42,12 +43,11 @@ public class UserController {
     @Autowired
     JobService jobService;
 
-
     private String key = null;
 
     private String context = null;;
 
-    private String getUser() {
+    public String getUser() {
         SecurityContext holder = SecurityContextHolder.getContext();
         final String uname = holder.getAuthentication().getName();
         if (context == null) {
@@ -59,7 +59,7 @@ public class UserController {
 
     @RequestMapping(value = "/getall", method = RequestMethod.GET)
     public String getAllUsers(ModelMap map) {
-       
+
         map.addAttribute("users", userContactService.getAllUsers());
         map.addAttribute("user", getUser());
         map.addAttribute("userDelModel", new UserDelModel());
@@ -82,21 +82,39 @@ public class UserController {
     public String postContact(ModelMap map, @ModelAttribute("user") final UserViewModel userModel) {
         SecurityContext holder = SecurityContextHolder.getContext();
         final String uname = holder.getAuthentication().getName();
+        String jobid = "";
         if (key.equals(userModel.getKey()))
             try {
-                String jobid = userContactService.addNewUser(userModel, uname);
-                String contactId = userContactService.getContactByUserid(userModel.getUsername()).getUid();
-                if (jobid.length() > 3 && userModel.getRole().equals("customer"))
-                    jobService.createJob(jobid, uname, contactId);
+                String contactId = userContactService.addNewUser(userModel, uname);
+                if (userModel.isNewUser()) {
+                    switch (userModel.getRole()) {
+                    case "customer":
+                        jobid = userContactService.createDbxFolder(userModel, uname);
+                        if (jobid.length() > 3) {
+                            jobService.createJob(jobid, uname, contactId);
+                        }
+                        break;
+                    case "salesRep":
+                        VendorModel vendorModel = new VendorModel();
+                        vendorModel.setPocId(contactId);
+                        vendorModel.setName(userModel.getCompany());
+                        vendorModel.setPostNextAction("/backstage/catalog/newVendor?na=/backstage/user/getall");
+                        map.addAttribute("vendor", vendorModel);
+                        map.addAttribute("user", getUser());
+                        return "create_vendor";
+
+                    }
+                }
             } catch (UsernameTakenException e) {
                 return "users_error_taken";
-			}
-        
-        return getAllUsers(map); 
+            }
+
+        return getAllUsers(map);
     }
 
     @RequestMapping(value = "/delete/{type}", method = RequestMethod.POST)
-    public String delUser(ModelMap map, @ModelAttribute("userDelModel") UserDelModel userDelModel, @PathVariable final String type) {
+    public String delUser(ModelMap map, @ModelAttribute("userDelModel") UserDelModel userDelModel,
+            @PathVariable final String type) {
         userDelModel.setType(type);
         SecurityContext holder = SecurityContextHolder.getContext();
         final String emp = holder.getAuthentication().getName();
@@ -104,10 +122,11 @@ public class UserController {
             userContactService.remove(emp, userDelModel);
             return "redirect:/backstage/user/getall";
         } catch (DbxException e) {
-            map.addAttribute("errMessage", String.format("<h5>Could not delete Dropbox folder</h5><p class='sjerror'>%s</p>", e.getMessage()));
+            map.addAttribute("errMessage",
+                    String.format("<h5>Could not delete Dropbox folder</h5><p class='sjerror'>%s</p>", e.getMessage()));
             return "op_error";
-		}
-        
+        }
+
     }
 
     @RequestMapping(value = "/edit/{token}", method = RequestMethod.GET)
@@ -118,7 +137,6 @@ public class UserController {
         map.addAttribute("roles", UserRoleModel.getRolesLessThan(getRole()));
         return "users_new";
     }
-
 
     /**
      * 

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en xmlns=" http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"">
+
+<head>
+	<meta charset=" utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Kitchen Bath Design">
+
+<title>SJKB Design</title>
+
+<link href="/css/classic.css" rel="stylesheet">
+<link href="/css/sjkbcss.css" rel="stylesheet">
+<script src="/js/jquery.js"></script>
+<script src="/js/jquery-ui.js"></script>
+<script>
+
+</script>
+
+<style>
+    .hidden {
+        display: none;
+    }
+
+    label {
+        margin: 8px;
+    }
+
+    tr:hover {
+        cursor: pointer;
+    }
+</style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div th:include="fragments/sidecar::sidenav" th:remove="tag"></div>
+        <div class="main">
+            <div th:include="fragments/sidecar::topnav" th:remove="tag"></div>
+            <main class="content">
+                <div class="container-fluid">
+                    <div th:each="cat : ${catalog}">
+                        <div class="card"></div>
+                        <div class="card-header">
+                            <h3 th:text="${cat.catname}">Contact</h3>
+                        </div>
+                        <div class="card-body">
+                            <table id="datatable" class="table table-striped dataTable no-footer dtr-inline"
+                                role="grid">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting" tabindex="0" aria-controls="datatables-basic" rowspan="1"
+                                            colspan="1">Item</th>
+                                        <th class="sorting" tabindex="0">Item ID</th>
+                                        <th class="sorting" tabindex="0">Low</th>
+                                        <th class="sorting" tabindex="0">High</th>
+                                        <th class="sorting" tabindex="0">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr role="row" th:each="catrow : ${cat.table}">
+                                        <td th:text="${catrow.name}"></td>
+                                        <td th:text="${catrow.itemId}"></td>
+                                        <td th:text="${catrow.listLow}"></td>
+                                        <td th:text="${catrow.listHigh}"></td>
+                                        <td th:text="${catrow.description}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                    </div>
+                </div>
+            </main>
+        </div>
+</body>
+<script src="/js/app.js"></script>
+<script>
+    $(function () {
+        $("#datatable").DataTable({
+            responsive: true
+        });
+    });
+</script>
+
+</html>

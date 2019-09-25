@@ -41,6 +41,13 @@ public class BackstageController {
         return uname;
     }
 
+    public String getContext() {
+        if (context == null) {
+            getUser();
+        }
+        return context;
+    }
+
     @RequestMapping(value = "dashboard")
     public String dashboard(ModelMap map) {
         map.addAttribute("user", getUser());

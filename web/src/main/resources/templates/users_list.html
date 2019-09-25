@@ -14,9 +14,10 @@
 <script src="/js/jquery.js"></script>
 <script src="/js/jquery-ui.js"></script>
 <script>
-    function delusermodal(user) {
+    function delusermodal(event, user) {
         $("#deluser").modal();
         $("#useris").val(user);
+        event.stopPropagation();
     }
 
     function deluser(type) {
@@ -71,7 +72,7 @@
                                 Remove Dropbox folder
                             </label>
                         </div>
-                        <input class="hidden" id="useris" th:field="*{username}"></input>
+                        <input class="hidden" id="useris" th:field="*{uid}"></input>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -98,9 +99,9 @@
                             <thead>
                                 <tr role="row">
                                     <th class="sorting" tabindex="0" aria-controls="datatables-basic" rowspan="1"
-                                        colspan="1">Username</th>
+                                        colspan="1">Last</th>
                                     <th class="sorting" tabindex="0">First</th>
-                                    <th class="sorting" tabindex="0">Last</th>
+                                    <th class="sorting" tabindex="0">Username</th>
                                     <th class="sorting" tabindex="0">email</th>
                                     <th class="sorting" tabindex="0">Phone</th>
                                     <th class="sorting" tabindex="0">Street</th>
@@ -109,14 +110,14 @@
                             </thead>
                             <tbody>
                                 <tr th:each="user:${users}" th:data-det="${user.token}" onclick="userdet(this.getAttribute('data-det'));">
-                                    <td th:text="${user.username}"></td>
-                                    <td th:text="${user.firstname}"></td>
                                     <td th:text="${user.lastname}"></td>
+                                    <td th:text="${user.firstname}"></td>
+                                    <td th:text="${user.username}"></td>
                                     <td th:text="${user.email}"></td>
                                     <td th:text="${user.phone}"></td>
                                     <td th:text="${user.street}"></td>
-                                    <td><button class="btn btn-info fas fa-trash-alt" th:data-rid="${user.username}"
-                                            onclick="delusermodal(this.getAttribute('data-rid'));"></button></td>
+                                    <td><button class="btn btn-info fas fa-trash-alt" th:data-uid="${user.token}"
+                                            onclick="delusermodal(event, this.getAttribute('data-uid'));"></button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -128,7 +129,7 @@
 <script src="/js/app.js"></script>
 <script>
     $(function () {
-        $("#datatables").DataTable({
+        $("#datatable").DataTable({
             responsive: true
         });
     });

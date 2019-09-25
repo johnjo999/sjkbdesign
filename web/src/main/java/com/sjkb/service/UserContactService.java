@@ -41,6 +41,8 @@ public interface UserContactService {
 
 	public void setContext(String context);
 
+	public String createDbxFolder(UserViewModel userModel, String uname);
+
 	public String createContextForNewUser(UserViewModel userModel, String uname) throws UsernameTakenException;
 
 	public String getUidForUsername(String username);

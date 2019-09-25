@@ -42,7 +42,7 @@ class UserContactServiceImpl implements UserContactService {
     @Override
     public List<UserViewModel> getAllUsers() {
         List<UserViewModel> result = new ArrayList<>();
-        List<ContactEntity> contacts = contactRepository.findByContext(context);
+        List<ContactEntity> contacts = contactRepository.findByContextOrderByLastname(context);
         if (contacts != null) {
             userTokenMap.clear();
             for (ContactEntity contact : contacts) {
@@ -53,8 +53,11 @@ class UserContactServiceImpl implements UserContactService {
         }
         return result;
     }
+
     /**
-     * Stores a new user to the spring security user table.  Creates a default password if none is present
+     * Stores a new user to the spring security user table. Creates a default
+     * password if none is present
+     * 
      * @param userNewModel
      * @param createdBy
      * @return true is user the user account was updated rather than created
@@ -97,25 +100,17 @@ class UserContactServiceImpl implements UserContactService {
         return result;
     }
 
+    /**
+     * Creates new User in Contact DB
+     */
+
     @Override
     public String addNewUser(UserViewModel userNewModel, String createdBy) throws UsernameTakenException {
-        Optional<UserEntity> optemp = userRepository.findByUsername(createdBy);
-        long empid = 0L;
-        int locid = 0;
-        int year = 19;
-        
         ContactEntity contactEntity = null;
-        String jobid = "";
-        if (optemp.isPresent()) {
-            UserEntity emp = optemp.get();
-            empid = emp.getId();
-            ContactEntity sponsor = contactRepository.findByUsername(createdBy);
-            locid = sponsor.getBranch();
-        }
         if (userNewModel.getUsername().length() == 0 && userNewModel.getEmail().length() > 3) {
             userNewModel.setUsername(userNewModel.getEmail());
         }
-        if (createUserAccount(userNewModel, createdBy) == false) { 
+        if (createUserAccount(userNewModel, createdBy) == false) {
             contactEntity = contactRepository.findByUsername(userNewModel.getUsername());
         }
         if (contactEntity == null)
@@ -125,11 +120,25 @@ class UserContactServiceImpl implements UserContactService {
         }
         contactEntity.setBranch(1);
         contactEntity.setContext(context);
+        contactRepository.save(contactEntity);
+        return contactEntity.getUid();
+    }
+
+    public String createDbxFolder(UserViewModel userNewModel, String createdBy) {
+        long empid = 0L;
+        int locid = 0;
+        int year = 19;
+        String foldername = "";
+        Optional<UserEntity> optemp = userRepository.findByUsername(createdBy);
+        if (optemp.isPresent()) {
+            UserEntity emp = optemp.get();
+            empid = emp.getId();
+            ContactEntity sponsor = contactRepository.findByUsername(createdBy);
+            locid = sponsor.getBranch();
+        }
         if (userNewModel.getRole().equals(UserRoleModel.ROLES.customer.toString())) {
-            String foldername = String.format("%s_%02d%02d-%d", userNewModel.getLastname(), year, locid, empid)
-                    .toLowerCase();
-            jobid = foldername;
-            if (userNewModel.getToken() == null) {
+            foldername = String.format("%s_%02d%02d-%d", userNewModel.getLastname(), year, locid, empid).toLowerCase();
+            if (userNewModel.isNewUser()) {
                 try {
                     dropboxService.createFolder(createdBy, foldername);
                     Optional<UserEntity> optionalUserEntity = userRepository.findByUsername(userNewModel.getUsername());
@@ -145,8 +154,7 @@ class UserContactServiceImpl implements UserContactService {
                 }
             }
         }
-        contactRepository.save(contactEntity);
-        return jobid;
+        return foldername;
     }
 
     /*
@@ -155,17 +163,23 @@ class UserContactServiceImpl implements UserContactService {
      */
     @Override
     public void remove(String empId, UserDelModel userDelModel) throws DeleteErrorException, DbxException {
-        Optional<UserEntity> userEntityOpt = userRepository.findByUsername(userDelModel.getUsername());
-        if (userEntityOpt.isPresent()) {
+        ContactEntity contact = contactRepository.findByUid(userDelModel.getUid());
+        if (contact == null)
+            return;
+        String uname = contact.getUsername();
+
+        Optional<UserEntity> userEntityOpt = userRepository.findByUsername(uname);
+
+        if ("s".equals(userDelModel.getType()) && userEntityOpt.isPresent()) {
             UserEntity userEntity = userEntityOpt.get();
-            ContactEntity contact = contactRepository.findByUsername(userDelModel.getUsername());
-            if ("s".equals(userDelModel.getType())) {
-                userEntity.setLocked(true);
-                userRepository.save(userEntity);
-            }
-            if ("d".equals(userDelModel.getType())) {
+            userEntity.setLocked(true);
+            userRepository.save(userEntity);
+        }
+        if ("d".equals(userDelModel.getType())) {
+            contactRepository.delete(contact);
+            if (userEntityOpt.isPresent()) {
+                UserEntity userEntity = userEntityOpt.get();
                 userRepository.delete(userEntity);
-                contactRepository.delete(contact);
                 if (userDelModel.isDelDropbox() && userEntity.getDbxFolder() != null) {
                     dropboxService.removeFolderFor(empId, userEntity.getDbxFolder());
                 }
@@ -254,7 +268,7 @@ class UserContactServiceImpl implements UserContactService {
         if (userNewModel.getUsername().length() == 0 && userNewModel.getEmail().length() > 3) {
             userNewModel.setUsername(userNewModel.getEmail());
         }
-        if (createUserAccount(userNewModel, uname) == false) { 
+        if (createUserAccount(userNewModel, uname) == false) {
             contactEntity = contactRepository.findByUsername(userNewModel.getUsername());
         }
         if (contactEntity == null)

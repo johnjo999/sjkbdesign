@@ -9,6 +9,8 @@ public interface ContactRepository extends JpaRepository<ContactEntity, String> 
 
     List<ContactEntity>findByContext(String context);
 
+    List<ContactEntity>findByContextOrderByLastname(String context);
+
     ContactEntity findByUsername(String username);
 
     ContactEntity findByUid(String uid);

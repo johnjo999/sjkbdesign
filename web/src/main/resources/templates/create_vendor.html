@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en xmlns=" http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"">
+
+<head>
+	<meta charset=" utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Kitchen Bath Design">
+
+<title>SJKB Design</title>
+
+<link href="/css/classic.css" rel="stylesheet">
+<script src="/js/jquery.js"></script>
+<script src="/js/jquery-ui.js"></script>
+<script>
+    function getNextAction(act) {
+        var targ = act.split("?na=")[1];
+        var regex = new RegExp('-','g');
+        var targuri = targ.replace(regex, '/');
+        this.window.location.href=targuri;
+    }
+   
+</script>
+
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div th:include="fragments/sidecar::sidenav" th:remove="tag"></div>
+        <div class="main">
+
+            <div th:include="fragments/sidecar::topnav" th:remove="tag"></div>
+            <main class="content">
+                <div class="container-fluid">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">Supplier Details</h5>
+                            </div>
+                            <div class="card-body">
+                                <form th:action="@{${postNextAction}}" th:object="${vendor}" method="post">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label for="name">Company Name</label>
+                                            <input type="text" th:field="*{name}" class="form-control"
+                                                placeholder="">
+                                        </div>
+                                        
+                                        <div class="form-group col-md-4">
+                                            <label for="accountId">Account ID</label>
+                                            <input type="text" th:field="*{accountId}" class="form-control"
+                                                placeholder="">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label for="url">Url</label>
+                                            <input type="text" th:field="*{url}" class="form-control"
+                                                placeholder="optional">
+                                        </div>
+                                        
+                                        <div class="form-group col-md-4 hidden ac">
+                                            <label for="multiplier">Multiplier</label>
+                                            <input type="number" th:field="*{multiplier}" class="form-control"
+                                                placeholder="Username">
+                                        </div>                                       
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="button" class="btn btn-info" th:data-nextact="${vendor.postNextAction}" onclick="getNextAction(this.getAttribute('data-nextact'))">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+</body>
+<script src="/js/app.js"></script>
+
+</html>

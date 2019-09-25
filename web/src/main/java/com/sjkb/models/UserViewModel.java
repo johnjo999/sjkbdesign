@@ -1,6 +1,5 @@
 package com.sjkb.models;
 
-import java.util.UUID;
 
 import com.sjkb.entities.ContactEntity;
 
@@ -22,6 +21,7 @@ public class UserViewModel {
     private String company;
     private String token;
     private String role;
+    private boolean newUser = true;;
 
     public UserViewModel() {};
 
@@ -38,7 +38,8 @@ public class UserViewModel {
         this.zip = contact.getZip();
         this.role = contact.getRole();
         this.company = contact.getCompany();
-        this.token = UUID.randomUUID().toString().replaceAll("-", "");
+        this.token = contact.getUid();
+        this.newUser = false;
     }
 
     public String getUsername() {
@@ -177,6 +178,14 @@ public class UserViewModel {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public boolean isNewUser() {
+        return newUser;
+    }
+
+    public void setNewUser(boolean newUser) {
+        this.newUser = newUser;
     }
 
     

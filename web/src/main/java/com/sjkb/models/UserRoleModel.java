@@ -8,7 +8,7 @@ public class UserRoleModel {
 
     // Admin managed roles must be at the higher ordinals
     public enum ROLES {
-        customer, contractor, vendor, installer, partner, employee, administrator
+        customer, contractor, salesRep, installer, partner, employee, administrator
     };
 
     public static String getUserRole(String roleString) {

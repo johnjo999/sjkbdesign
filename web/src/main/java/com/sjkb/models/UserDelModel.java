@@ -1,19 +1,12 @@
 package com.sjkb.models;
 
 public class UserDelModel {
-    private String username;
+    private String uid;
     private boolean delJobs;
     private boolean delDropbox;
     private String type;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
+    
     public boolean isDelJobs() {
         return delJobs;
     }
@@ -36,6 +29,14 @@ public class UserDelModel {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
 }
