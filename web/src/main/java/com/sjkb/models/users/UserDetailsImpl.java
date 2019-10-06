@@ -1,4 +1,4 @@
-package com.sjkb.models;
+package com.sjkb.models.users;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -12,10 +12,10 @@ import com.dropbox.core.v2.files.DeleteErrorException;
 import com.sjkb.entities.ContactEntity;
 import com.sjkb.entities.UserEntity;
 import com.sjkb.exception.UsernameTakenException;
-import com.sjkb.models.ContractorSelectRow;
-import com.sjkb.models.UserDelModel;
-import com.sjkb.models.UserRoleModel;
-import com.sjkb.models.UserViewModel;
+import com.sjkb.models.category.ContractorSelectRow;
+import com.sjkb.models.users.UserDelModel;
+import com.sjkb.models.users.UserRoleModel;
+import com.sjkb.models.users.UserViewModel;
 import com.sjkb.repositores.ContactRepository;
 import com.sjkb.repositores.UserRepository;
 

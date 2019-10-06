@@ -1,4 +1,4 @@
-package com.sjkb.models;
+package com.sjkb.models.users;
 
 import java.util.ArrayList;
 import java.util.Arrays;

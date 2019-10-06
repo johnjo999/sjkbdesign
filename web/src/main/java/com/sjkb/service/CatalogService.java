@@ -1,15 +1,22 @@
 package com.sjkb.service;
 
 import java.util.List;
-import java.util.Map;
 
-import com.sjkb.entities.CatalogEntity;
-import com.sjkb.models.CategoryModel;
+import com.sjkb.entities.FlexPathEntity;
+import com.sjkb.models.category.CategoryModel;
+import com.sjkb.models.category.TreePath;
+import com.sjkb.models.category.TreeStringModel;
 
 public interface CatalogService {
 
-	Map<String, List<CatalogEntity>> getCatalogForContext(String context);
+	List<TreePath> getCatalogForContext(String context, Long pathid);
 
-	List<CategoryModel> getCatalogTreeForContext(String context);
+	List<CategoryModel> getDefaultCatalogTreeForContext(String context);
+
+	List<TreePath> getChildrenOf(FlexPathEntity parent);
+
+	void addCategory(String context, CategoryModel category);
+
+	List<TreeStringModel> getCatalogTreeAsString(String context, long l);
     
 }

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import com.sjkb.entities.ContactEntity;
 import com.sjkb.entities.JobEntity;
 import com.sjkb.models.AssignExpenseModel;
-import com.sjkb.models.ContractorSelectRow;
 import com.sjkb.models.JobAttributeModel;
+import com.sjkb.models.category.ContractorSelectRow;
 import com.sjkb.service.JobService;
 import com.sjkb.service.UserContactService;
 

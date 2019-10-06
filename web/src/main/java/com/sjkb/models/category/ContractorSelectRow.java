@@ -1,4 +1,4 @@
-package com.sjkb.models;
+package com.sjkb.models.category;
 
 import com.sjkb.entities.ContactEntity;
 

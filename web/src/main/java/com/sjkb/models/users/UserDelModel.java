@@ -1,4 +1,4 @@
-package com.sjkb.models;
+package com.sjkb.models.users;
 
 public class UserDelModel {
     private String uid;

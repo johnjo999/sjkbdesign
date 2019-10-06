@@ -43,7 +43,7 @@
                     <div th:each="cat : ${catalog}">
                         <div class="card"></div>
                         <div class="card-header">
-                            <h3 th:text="${cat.catname}">Contact</h3>
+                            <h3 th:text="${cat.flexEntity.name}">Contact</h3>
                         </div>
                         <div class="card-body">
                             <table id="datatable" class="table table-striped dataTable no-footer dtr-inline"
@@ -59,7 +59,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr role="row" th:each="catrow : ${cat.table}">
+                                    <tr role="row" th:each="catrow : ${cat.catalogItems}">
                                         <td th:text="${catrow.name}"></td>
                                         <td th:text="${catrow.itemId}"></td>
                                         <td th:text="${catrow.listLow}"></td>

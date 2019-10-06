@@ -5,11 +5,11 @@ import java.util.UUID;
 
 import com.dropbox.core.DbxException;
 import com.sjkb.exception.UsernameTakenException;
-import com.sjkb.models.UserDelModel;
-import com.sjkb.models.UserNewModel;
-import com.sjkb.models.UserRoleModel;
-import com.sjkb.models.UserViewModel;
-import com.sjkb.models.VendorModel;
+import com.sjkb.models.users.UserDelModel;
+import com.sjkb.models.users.UserNewModel;
+import com.sjkb.models.users.UserRoleModel;
+import com.sjkb.models.users.UserViewModel;
+import com.sjkb.models.users.VendorModel;
 import com.sjkb.repositores.UserRepository;
 import com.sjkb.service.JobService;
 import com.sjkb.service.UserContactService;

@@ -1,7 +1,5 @@
 package com.sjkb.entities;
 
-import java.util.Comparator;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,12 +18,11 @@ public class CatalogEntity {
     private String name;
     private String itemId;
     private String description;
-    private int level;
     private int listLow;
     private int listHigh;
     private String vendorId;
     private String url;
-    private String category;
+    private Long defaultFlexPath;
 
     
 
@@ -61,14 +58,6 @@ public class CatalogEntity {
         this.description = description;
     }
 
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
     public int getListLow() {
         return listLow;
     }
@@ -101,12 +90,8 @@ public class CatalogEntity {
         this.url = url;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
+    public Long getDefaultFlexPath() {
+        return defaultFlexPath;
     }
 
     public long getUid() {
@@ -117,18 +102,8 @@ public class CatalogEntity {
         this.uid = uid;
     }
 
-    static public final Comparator<CatalogEntity> OrderByLevel = new Comparator<CatalogEntity>() {
-
-        @Override
-        public int compare(CatalogEntity o1, CatalogEntity o2) {
-            if (o1.getLevel() > o2.getLevel())
-                return 1;
-            if (o1.getLevel() < o2.getLevel())
-                return -1;
-            return 0;
-        }
-
-    };
-    
+    public void setDefaultFlexPath(Long defaultFlexPath) {
+        this.defaultFlexPath = defaultFlexPath;
+    }
 
 }

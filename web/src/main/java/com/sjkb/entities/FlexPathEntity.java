@@ -1,10 +1,17 @@
 package com.sjkb.entities;
 
+import java.util.Comparator;
+import java.util.Random;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.sjkb.models.category.CategoryModel;
+
+import org.springframework.data.annotation.Transient;
 
 
 
@@ -14,17 +21,19 @@ public class FlexPathEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long iid;
-
-    private String pathId;
     
-    private String path;
+    // path to root, hex of ancestor iid (in hex) with - between pathids, ie 1-a-b indicates a is root, c is parent
+    private Long parent;
     
+    // name of this foler, branch
     private String name;
     
+    // the particular object on this branch
     private Long itemUid;
     
     private String context;
     
+    // hops to root, with root at 0
     private int depth;
 
     public Long getIid() {
@@ -35,21 +44,7 @@ public class FlexPathEntity {
         this.iid = iid;
     }
 
-    public String getPathId() {
-        return pathId;
-    }
-
-    public void setPathId(String pathId) {
-        this.pathId = pathId;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
+    
 
     public String getName() {
         return name;
@@ -83,5 +78,36 @@ public class FlexPathEntity {
         this.depth = depth;
     }
 
+    public Long getParent() {
+        return parent;
+    }
+
+    public void setParent(Long parent) {
+        this.parent = parent;
+    }
+
+    @Transient
+    public void test() {
+        iid = new Random().nextLong();
+    }
+
+	public void getFromCategory(CategoryModel category) {
+        this.name = category.getName();
+        this.depth = category.getLevel();
+        this.parent = (long) category.getParent();
+    }
     
+    static public final Comparator<FlexPathEntity> OrderByLevel = new Comparator<FlexPathEntity>() {
+
+        @Override
+        public int compare(FlexPathEntity o1, FlexPathEntity o2) {
+            if (o1.getDepth() > o2.getDepth())
+                return 1;
+            if (o1.getDepth() < o2.getDepth())
+                return -1;
+            return 0;
+        }
+
+    };
+
 }

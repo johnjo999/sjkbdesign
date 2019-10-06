@@ -6,9 +6,9 @@ import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.files.DeleteErrorException;
 import com.sjkb.entities.ContactEntity;
 import com.sjkb.exception.UsernameTakenException;
-import com.sjkb.models.ContractorSelectRow;
-import com.sjkb.models.UserDelModel;
-import com.sjkb.models.UserViewModel;
+import com.sjkb.models.category.ContractorSelectRow;
+import com.sjkb.models.users.UserDelModel;
+import com.sjkb.models.users.UserViewModel;
 
 public interface UserContactService {
 

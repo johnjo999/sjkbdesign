@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
@@ -23,6 +23,10 @@
     <script src="/js/jquery.js"></script>
     <title>SJKB Design</title>
     <script>
+        String.prototype.replaceAll = function (search, replacement) {
+            var target = this;
+            return target.replace(new RegExp(search, 'g'), replacement);
+        };
         function editStory(story) {
             $(story).hide();
             var id = $(story).attr("data-sindex");
@@ -42,8 +46,25 @@
             rr.forEach(fillta);
         }
 
+        function updateFont() {
+            var f = $("#fontchooser").val();
+            var l = f.replaceAll(" ", "+");
+            if (l === "default") {
+                $('body').css('font-family', "");
+            } else {
+                if ($('head').html().toString().indexOf(l) < 0) {
+                    var lnk = '<link href="https://fonts.googleapis.com/css?family=' + l + '&display=swap" rel="stylesheet">';
+                    $('head').append(lnk);
+                }
+                $('body').css('font-family', f);
+                $("#hfont").val(f);
+            }
+
+        }
+
         $(document).ready(function () {
             $(".ta").hide();
+            updateFont();
         });
 
     </script>
@@ -93,9 +114,15 @@
             </a>
         </div>
         <div class="col-md-12">
-            <button style="transform: translateX(-20)" class="btn btn-warning" form="updated" onclick="fillform()"
-                type="submit" value="Submit">SAVE UPDATE</button>
-            <button class="btn btn-info" onclick="window.location.href='/backstage/dashboard';">Close</button>
+            <nav class="navbar navbar-dark bg-dark">
+                <button style="transform: translateX(-20)" class="btn btn-warning" form="updated" onclick="fillform()"
+                    type="submit" value="Submit">SAVE UPDATE</button>
+                <button class="btn btn-info" onclick="window.location.href='/backstage/dashboard';">Close</button>
+                <select class="form-control col-3 mr-5" id="fontchooser" onchange="updateFont()">
+                    <option th:each="font : ${fonts}" th:value="${font.family}" th:text="${font.family}"
+                        th:selected="${font.homepage}">cont</option>
+                </select>
+            </nav>
         </div>
 
     </nav>
@@ -104,7 +131,8 @@
     ================================================== -->
 
     <form id="updated" th:action="@{/admin/setup/homeupdate}" th:object="${story}" method="post">
-
+        <input type="text" class="hidden" th:field="*{homeFont}" id="hfont"></input>
+        <input type="text" class="hidden" th:field="*{oldFont}" id="ofont"></input>
         <section class="position-relative pt-12 pt-md-14 mt-n11">
 
             <!-- Shape -->
@@ -128,7 +156,6 @@
 
                     </div>
                     <div class="col-12 col-md-6">
-
                         <!-- Heading -->
                         <h1 class="display-1 font-weight-bold">
                             <div data-index="1" data-aos="fade-left"><textarea class="ta" th:field="*{t[1]}"

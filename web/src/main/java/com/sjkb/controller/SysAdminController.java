@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import com.sjkb.entities.ContextEntity;
 import com.sjkb.exception.UsernameTakenException;
-import com.sjkb.models.UserNewModel;
-import com.sjkb.models.UserViewModel;
+import com.sjkb.models.users.UserNewModel;
+import com.sjkb.models.users.UserViewModel;
 import com.sjkb.service.UserContactService;
 import com.sjkb.service.sysadmin.SysAdminService;
 

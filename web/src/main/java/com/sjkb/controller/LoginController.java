@@ -7,8 +7,10 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
 
 import com.sjkb.components.UserComponent;
+import com.sjkb.entities.FontFamilyEntity;
 import com.sjkb.entities.HomePageStoryEntity;
 import com.sjkb.models.admin.HomeStoryModel;
+import com.sjkb.repositores.FontRepository;
 import com.sjkb.repositores.HomeStoryRepository;
 import com.sjkb.repositores.UserRepository;
 
@@ -32,9 +34,12 @@ public class LoginController {
 
     @Autowired
     UserRepository userRepository;
-    
+
     @Autowired
     HomeStoryRepository homeStoryRepository;
+
+    @Autowired
+    FontRepository fontRepository;
 
     private static final Logger log = Logger.getLogger(Class.class.getName());
 
@@ -50,6 +55,11 @@ public class LoginController {
 
     @RequestMapping(value = "/home")
     public String homelogint(ModelMap map) {
+        List<FontFamilyEntity> font = fontRepository.findByHomepageTrue();
+        if (font.size() > 0) {
+            map.addAttribute("homefont", font.get(0));
+            map.addAttribute("homefontlink", font.get(0).getFamily().replaceAll(" ", "+"));
+        }
         List<HomePageStoryEntity> stories = homeStoryRepository.findAll();
         HomeStoryModel storyModel = new HomeStoryModel();
         int x = 1;

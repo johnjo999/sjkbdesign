@@ -3,10 +3,12 @@ package com.sjkb.controller;
 import java.util.List;
 
 import com.sjkb.entities.DropboxTokenEntity;
+import com.sjkb.entities.FontFamilyEntity;
 import com.sjkb.entities.HomePageStoryEntity;
 import com.sjkb.models.admin.DropboxReturnToken;
 import com.sjkb.models.admin.DropboxTokenModel;
 import com.sjkb.models.admin.HomeStoryModel;
+import com.sjkb.repositores.FontRepository;
 import com.sjkb.repositores.HomeStoryRepository;
 import com.sjkb.service.DropboxService;
 
@@ -37,6 +39,9 @@ public class AdminController {
 
     @Autowired
     HomeStoryRepository homeStoryRepository;
+
+    @Autowired
+    FontRepository fontRepository;
 
     private String getUser() {
         SecurityContext holder = SecurityContextHolder.getContext();
@@ -95,12 +100,50 @@ public class AdminController {
         for (; x < 30; x++) {
             t.add(x, "");
         }
+        List<FontFamilyEntity> oldFont = fontRepository.findByHomepageTrue();
+        List<FontFamilyEntity> availableFonts = fontRepository.findAll();
+        FontFamilyEntity defaultFont = new FontFamilyEntity();
+        defaultFont.setFamily("default");
+        availableFonts.add(0, defaultFont);
+        if (oldFont.size() > 0) {
+            storyModel.setOldFont(oldFont.get(0).getFamily());
+        }
         map.addAttribute("story", storyModel);
+        map.addAttribute("fonts", availableFonts);
         return "admin/home_markup";
     }
 
     @RequestMapping(value = "setup/homeupdate", method = RequestMethod.POST)
     public String updateHomePut(ModelMap map, @ModelAttribute("story") final HomeStoryModel storyModel) {
+
+        if (storyModel.getHomeFont() != null) {
+            if (storyModel.getHomeFont().equals("default")) {
+                // setting to default
+                if (storyModel.getOldFont() != null) {
+                    FontFamilyEntity old = fontRepository.getOne(storyModel.getOldFont());
+                    old.setHomepage(false);
+                    fontRepository.save(old);
+                }
+            } else if (storyModel.getOldFont() != null) {
+                if (storyModel.getOldFont().equals(storyModel.getHomeFont()) == false) {
+                    if (fontRepository.existsById(storyModel.getOldFont())) {
+                        FontFamilyEntity old = fontRepository.getOne(storyModel.getOldFont());
+                        old.setHomepage(false);
+                        fontRepository.save(old);
+                    }
+                    if (fontRepository.existsById(storyModel.getHomeFont())) {
+                        FontFamilyEntity current = fontRepository.getOne(storyModel.getHomeFont());
+                        current.setHomepage(true);
+                        fontRepository.save(current);
+                    }
+                }
+            } else {
+                FontFamilyEntity current = fontRepository.getOne(storyModel.getHomeFont());
+                current.setHomepage(true);
+                fontRepository.save(current);
+            }
+        }
+
         List<HomePageStoryEntity> stories = homeStoryRepository.findAll();
         int x = 0;
         storyModel.getT().remove(0);

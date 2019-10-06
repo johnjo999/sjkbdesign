@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.sjkb.models.UserViewModel;
+import com.sjkb.models.users.UserViewModel;
 
 @Entity(name="contact")
 @Table(name="contact")
