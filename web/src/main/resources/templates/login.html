@@ -1,5 +1,7 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,74 +10,123 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
     <title>SJKB Design</title>
 
-    <link href="/css/classic.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/bootstrap.css">
+    <!-- Libs CSS -->
+    <link rel="stylesheet" href="/assets/fonts/Feather/feather.css">
+    <link rel="stylesheet" href="/assets/libs/flickity/dist/flickity.min.css">
+    <link rel="stylesheet" href="/assets/libs/flickity-fade/flickity-fade.css">
+    <link rel="stylesheet" href="/assets/libs/aos/dist/aos.css">
+    <link rel="stylesheet" href="/assets/libs/jarallax/dist/jarallax.css">
+    <link rel="stylesheet" href="/assets/libs/highlightjs/styles/vs2015.css">
+    <link rel="stylesheet" href="/assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.min.css">
 
-    <style>
-        body {
-            opacity: 0;
-        }
-    </style>
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="/assets/css/theme.min.css">
 
 </head>
 
 <body>
-    <main class="main h-100 w-100">
-        <div class="container h-100">
-            <div class="row h-100">
-                <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
-                    <div class="d-table-cell align-middle">
+    <div class="modal fade" id="signin" tabindex="-1" role="dialog" aria-labelledby="modalSigninHorizontalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="card card-row">
+                    <div class="row no-gutters">
+                        <div class="col-12 col-md-6 bg-cover card-img-left"
+                            style="background-image: url(/assets/img/photos/photo-5.jpg);">
 
-                        <div class="text-center mt-4">
-                            <h1 class="h2">SJKB Design</h1>
-                            <p class="lead">
-                                Sign in to your account to continue
-                            </p>
+                            <!-- Image (placeholder) -->
+                            <img src="/assets/img/photos/photo-5.jpg" alt="..." class="img-fluid d-md-none invisible">
+
+                            <!-- Shape -->
+                            <div class="shape shape-right shape-fluid-y svg-shim text-white d-none d-md-block">
+                                <svg viewBox="0 0 112 690" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M116 0H51V172C76 384 0 517 0 517V690H116V0Z" fill="currentColor" />
+                                </svg>
+                            </div>
+
                         </div>
-
-                        <div class="card">
-                            
+                        <div class="col-12 col-md-6">
                             <div class="card-body">
-                                <div class="m-sm-4">
-                                    <div class="text-center">
-                                        <img src="/img/avatars/avatar.png" alt="SJKB" class="img-fluid rounded-circle" width="132" height="132" />
+
+                                <!-- Close -->
+                                <button type="button" class="modal-close close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+
+                                <!-- Heading -->
+                                <h2 class="mb-0 font-weight-bold text-center" id="modalSigninHorizontalTitle">
+                                    Sign In
+                                </h2>
+
+                                <!-- Text -->
+                                <p class="mb-6 text-center text-muted">
+                                    Check in on your project.
+                                </p>
+
+                                <!-- Form -->
+                                <form class="mb-6" th:action="@{/login.html}" method="post">
+
+                                    <!-- Email -->
+                                    <div class="form-group">
+                                        <label class="sr-only" for="modalSigninHorizontalEmail">
+                                            Your email
+                                        </label>
+                                        <input type="text" name="username" class="form-control"
+                                            id="modalSigninHorizontalEmail" placeholder="Your email">
                                     </div>
-                                    <div th:if="${param.error}">
-                                            Invalid username and password.
-                                        </div>
-                                        <div th:if="${param.logout}">
-                                            You have been logged out.
-                                        </div>
-                                    <form th:action="@{/login}" method="post">
-                                        <div class="form-group">
-                                            <label>Username</label>
-                                            <input class="form-control form-control-lg" type="text" name="username" placeholder="Enter your username" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Password</label>
-                                            <input class="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" />
-                                            <small>
-                                                <a href="pages-reset-password.html">Forgot password?</a>
-                                            </small>
-                                        </div>
-                                        <div>
-                                            <div class="custom-control custom-checkbox align-items-center">
-                                                <input type="checkbox" class="custom-control-input" value="remember-me" name="remember-me" checked>
-                                                <label class="custom-control-label text-small">Remember me next time</label>
-                                            </div>
-                                        </div>
-                                        <div class="text-center mt-3">
-                                            <div><input class="btn btn-lg btn-primary" type="submit" value="Sign In"/></div>                           
-                                        </div>
-                                    </form>
-                                </div>
+
+                                    <!-- Password -->
+                                    <div class="form-group mb-5">
+                                        <label class="sr-only" for="modalSigninHorizontalPassword">
+                                            Password
+                                        </label>
+                                        <input type="password" name="password" class="form-control"
+                                            id="modalSigninHorizontalPassword" placeholder="password">
+                                    </div>
+
+                                    <!-- Submit -->
+                                    <button class="btn btn-block btn-primary" type="submit">
+                                        Sign in
+                                    </button>
+
+                                </form>
+
+                                <!-- Text -->
+                                <p class="mb-0 font-size-sm text-center text-muted">
+                                    Don't have an account yet? <a data-toggle="modal" href="#modalSignupHorizontal"
+                                        onclick='$("#modalSigninHorizontal").hide()'>Ask your designer to create
+                                        one</a>.
+                                </p>
+
                             </div>
                         </div>
 
-                    </div>
+                    </div> <!-- / .row -->
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+
+
+    <!-- Theme JS -->
+    <script src="/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/libs/flickity/dist/flickity.pkgd.min.js"></script>
+    <script src="/assets/libs/flickity-fade/flickity-fade.js"></script>
+    <script src="/assets/libs/aos/dist/aos.js"></script>
+    <script src="/assets/libs/smooth-scroll/dist/smooth-scroll.min.js"></script>
+    <script src="/assets/libs/countup.js/dist/countUp.min.js"></script>
+    <script src="/assets/libs/highlightjs/highlight.pack.min.js"></script>
+    <script src="/assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.min.js"></script>
+
+    <!-- Theme JS -->
+    <script src="/assets/js/theme.min.js"></script>
+
+    <script>
+        
+        $("#signin").modal("show");
+    </script>
+<div style="background-color: white;"> </div>
 </body>
+
 </html>

@@ -1,6 +1,7 @@
 package com.sjkb.models.category;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +112,14 @@ public class TreePath {
         if (flexEntity == null || flexEntity.getName() == null)
             return "annoymous";
         return flexEntity.getName();
+    }
+
+    public Collection<TreePath> getAllChildren() {
+        return children.values();
+    }
+
+    public int getDepth() {
+        return flexEntity.getDepth();
     }
     
     

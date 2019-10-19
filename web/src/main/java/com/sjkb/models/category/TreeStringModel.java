@@ -2,6 +2,7 @@ package com.sjkb.models.category;
 
 public class TreeStringModel {
     private String name;
+    private Long id;
 
     public String getName() {
         return name;
@@ -11,6 +12,12 @@ public class TreeStringModel {
         this.name = name;
     }
 
-    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
 }

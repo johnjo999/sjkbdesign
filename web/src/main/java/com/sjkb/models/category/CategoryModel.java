@@ -1,18 +1,18 @@
 package com.sjkb.models.category;
 
 public class CategoryModel {
-    private int parent;
+    private long parent;
     private String name;
     private int level;
     private String description;
     private int high;
     private int low;
 
-    public int getParent() {
+    public long getParent() {
         return parent;
     }
 
-    public void setParent(int parent) {
+    public void setParent(long parent) {
         this.parent = parent;
     }
 

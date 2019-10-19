@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.sjkb.entities.FlexPathEntity;
 import com.sjkb.models.category.CategoryModel;
+import com.sjkb.models.category.HeritageModel;
 import com.sjkb.models.category.TreePath;
 import com.sjkb.models.category.TreeStringModel;
 
@@ -18,5 +19,9 @@ public interface CatalogService {
 	void addCategory(String context, CategoryModel category);
 
 	List<TreeStringModel> getCatalogTreeAsString(String context, long l);
+
+	TreePath getChildrenOfPath(Long id);
+
+	HeritageModel getHeritage(Long iid);
     
 }

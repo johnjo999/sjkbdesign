@@ -41,11 +41,19 @@ public class LoginController {
     @Autowired
     FontRepository fontRepository;
 
+    @Autowired
+    BackstageController backstageController;
+
     private static final Logger log = Logger.getLogger(Class.class.getName());
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String testlogin() {
         return "dashboard";
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String dummylogin() {
+        return "login";
     }
 
     @RequestMapping(value = "/")
@@ -102,6 +110,7 @@ public class LoginController {
     public String logout(SessionStatus session) {
         SecurityContextHolder.getContext().setAuthentication(null);
         session.setComplete();
+        backstageController.clearContext();
         return "logout_success";
     }
 

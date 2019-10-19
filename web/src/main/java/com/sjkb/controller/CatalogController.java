@@ -3,6 +3,7 @@ package com.sjkb.controller;
 import java.util.List;
 
 import com.sjkb.models.category.CategoryModel;
+import com.sjkb.models.category.HeritageModel;
 import com.sjkb.models.category.TreePath;
 import com.sjkb.service.CatalogService;
 
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -52,8 +54,22 @@ public class CatalogController {
     @RequestMapping(value = "addcat", method = RequestMethod.POST)
     public String postCatagory(ModelMap map, @ModelAttribute("cat") final CategoryModel category) {
         catalogService.addCategory(context, category);
-        return "redirect:/backstage/catalog/getall";
+        return getChildrenOf(map, String.valueOf(category.getParent()));
 
     }
+
+    @RequestMapping(value = "getChildren/{id}", method = RequestMethod.GET)
+    public String getChildrenOf(ModelMap map, @PathVariable("id") final String id) {
+    Long iid = 0l;
+        try {
+            iid = Long.valueOf(id);
+        } catch (NumberFormatException ex) {
+            return "error";
+        }
+        HeritageModel heritage = catalogService.getHeritage(iid);
+        map.addAttribute("heritage", heritage);
+        return "fragments/catalog::childrow";
+    }
+
 
 }

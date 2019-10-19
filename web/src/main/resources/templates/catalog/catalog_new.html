@@ -14,7 +14,57 @@
 <script src="/js/jquery.js"></script>
 <script src="/js/jquery-ui.js"></script>
 <script>
+    function selectMe(a) {
+        event.stopPropagation();
+        var name = $(a).text();
+        var current = $(".selectedcat");
+        $(".selectedcat").each(function(q) {
+            if ($(this).attr("id") != $(a).attr("id"))
+                $(this).removeClass("selectedcat");
+                $(this).removeClass("selectedChild");
+        });
+        $(a).toggleClass('selectedcat');
+        $(a).removeClass('selectedChild');
+        $(a).children().addClass('selectedChild');
+        $("#cattitle").text("add Category to "+ name);
+        var parent = parseInt($(a).prop("id").replace("titleid", ""));
+        if (isNaN(parent)) {
+            parent = $(a).data("flexid");
+        }
+        $("#parent").val(parent);
+        getChildren(parent);
 
+
+    }
+
+    function getChildren(id) {
+        $.ajax({
+            url: ("/backstage/catalog/getChildren/" + id),
+            type: "GET",
+            success: function (data) {
+                var kids = $("#flexid"+id).children()
+                
+                if (kids.length == 0)
+                    $("#flexid"+id).append(data);
+            }
+        });
+    }
+
+    function subform() {
+        f = $("#newcatform");
+        u = f.attr('action');
+        $.ajax({
+            type: "POST",
+            url: u,
+            data: f.serialize(),
+            success: function(data) {
+                var sc = $(".selectedcat").children();
+                $(sc).replaceWith(data);
+            } 
+        })
+        
+
+    }
 </script>
 
 <style>
@@ -29,6 +79,21 @@
     tr:hover {
         cursor: pointer;
     }
+
+    .selectable {
+        cursor: pointer;
+        padding: 3px;
+    }
+
+    .selectedcat {
+        background-color: rgb(57,64,82);
+        color: whitesmoke;
+    }
+
+    .selectedChild {
+        background-color: white;
+        color: rgb(57,64,82);
+    }
 </style>
 </head>
 
@@ -42,7 +107,7 @@
                 <div class="container-fluid">
                     <div class="card">
                         <div class="card-header">
-                            <h5>Add Category</h5>
+                            <h5 id="cattitle">Add Category</h5>
                         </div>
                         <div class="card-body">
                             <form id="newcatform" class="form" th:action="@{/backstage/catalog/addcat}"
@@ -55,6 +120,7 @@
                                         <label for="catdesc">Description</label>
                                         <input id="catndesc" type="text" class="form-control" placeholder=""
                                             th:field="*{description}"></input>
+                                            <input class="hidden" id="parent" type="text" th:field="*{parent}"></input>
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -75,7 +141,7 @@
                             </form>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary" form="newcatform">Submit</button>
+                            <button type="button" class="btn btn-primary" onclick="subform()">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -84,7 +150,10 @@
                         <div th:each="tree: ${trees}" class="col-md-4">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 th:text="${tree.name}"></h5>
+                                    <h5 th:text="${tree.name}" th:id="'titleid'+${tree.id}" onclick="selectMe(this)" class="selectable"></h5>
+                                </div>
+                                <div class="card-body">
+                                    <div th:id="'flexid'+${tree.id}"></div>
                                 </div>
                             </div>
                         </div>

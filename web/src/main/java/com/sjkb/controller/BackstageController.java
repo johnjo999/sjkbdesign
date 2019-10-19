@@ -103,4 +103,8 @@ public class BackstageController {
         return "jobs_list";
     }
 
+	public void clearContext() {
+        this.context = null;
+	}
+
 }

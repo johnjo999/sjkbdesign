@@ -14,7 +14,14 @@
 <script src="/js/jquery.js"></script>
 <script src="/js/jquery-ui.js"></script>
 <script>
-
+    $(document).ready(function () {
+        var rows = $("tr");
+        $(rows).each(function(i,e) {
+            var depth = $(e).data("depth");
+            if (isNaN(depth) === false)
+                $(e).css({'transform' : 'translate('+depth*20+'px,0)'});
+        });
+    });
 </script>
 
 <style>
@@ -45,7 +52,7 @@
                         <div class="card-header">
                             <h3 th:text="${cat.flexEntity.name}">Contact</h3>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body display-block">
                             <table id="datatable" class="table table-striped dataTable no-footer dtr-inline"
                                 role="grid">
                                 <thead>
@@ -59,12 +66,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr role="row" th:each="catrow : ${cat.catalogItems}">
-                                        <td th:text="${catrow.name}"></td>
-                                        <td th:text="${catrow.itemId}"></td>
-                                        <td th:text="${catrow.listLow}"></td>
-                                        <td th:text="${catrow.listHigh}"></td>
-                                        <td th:text="${catrow.description}"></td>
+                                    <tr role="row" th:each="catrow : ${cat.allChildren}" th:data-depth="${catrow.depth}">
+                                        <td th:replace="~{fragments/catalog::catrow(${catrow})}">
                                     </tr>
                                 </tbody>
                             </table>
