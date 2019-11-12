@@ -18,41 +18,37 @@
         event.stopPropagation();
         var name = $(a).text();
         var current = $(".selectedcat");
-        $(".selectedcat").each(function (q) {
-            if ($(this).attr("id") != $(a).attr("id")) {
+        $(".selectedcat").each(function(q) {
+            if ($(this).attr("id") != $(a).attr("id"))
                 $(this).removeClass("selectedcat");
-                $(this).parent().find("button").hide();
-            }
-            $(this).removeClass("selectedChild");
+                $(this).removeClass("selectedChild");
         });
         $(a).toggleClass('selectedcat');
-        $(a).parent().find("button").show();
         $(a).removeClass('selectedChild');
         $(a).children().addClass('selectedChild');
-        $("#cattitle").text("add Category to " + name);
+        $("#cattitle").text("add Category to "+ name);
         // keep the form parent object current with selection
         var parent = parseInt($(a).prop("id").replace("titleid", ""));
+        if ($(a).hasClass('selectedcat') == false)
+            parent = 0;
         if (isNaN(parent)) {
             parent = $(a).data("flexid");
         }
-        if ($(a).hasClass('selectedcat') == false) {
-            $(a).parent().find("button").hide();
-            parent = 0;
-        }
         $("#parent").val(parent);
-        if ($(a).hasClass('selectedcat') == true)
-            getChildren(parent);
+        getChildren(parent);
+
 
     }
 
     function getChildren(id) {
         $.ajax({
-            url: ("/backstage/catalog/getChildrenEditable/" + id),
+            url: ("/backstage/catalog/getChildren/" + id),
             type: "GET",
             success: function (data) {
-                var kids = $("#flexid" + id).children()
+                var kids = $("#flexid"+id).children()
+                
                 if (kids.length == 0)
-                    $("#flexid" + id).append(data);
+                    $("#flexid"+id).append(data);
             }
         });
     }
@@ -64,24 +60,12 @@
             type: "POST",
             url: u,
             data: f.serialize(),
-            success: function (data) {
-                var s = $(".selectedcat");
-                if (s.length == 0) {
-                    location.reload(true);
-                } else {
-                    sc = $(s).children();
-                    if (sc.length > 0) {
-                        $(sc).replaceWith(data);
-                    } else {
-                        var fid = '#' + $(s).data("flexid");
-                        $(fid).replaceWith(data);
-                    }
-
-
-                }
-            }
+            success: function(data) {
+                var sc = $(".selectedcat").children();
+                $(sc).replaceWith(data);
+            } 
         })
-
+        
 
     }
 </script>
@@ -105,13 +89,13 @@
     }
 
     .selectedcat {
-        background-color: rgb(57, 64, 82);
+        background-color: rgb(57,64,82);
         color: whitesmoke;
     }
 
     .selectedChild {
         background-color: white;
-        color: rgb(57, 64, 82);
+        color: rgb(57,64,82);
     }
 </style>
 </head>
@@ -126,20 +110,20 @@
                 <div class="container-fluid">
                     <div class="card">
                         <div class="card-header">
-                            <h5 id="cattitle">Add Category</h5>
+                            <h5 id="cattitle">Add Item</h5>
                         </div>
                         <div class="card-body">
-                            <form id="newcatform" class="form" th:action="@{/backstage/catalog/addcat}"
-                                th:object="${cat}" method="post">
+                            <form id="newitemform" class="form" th:action="@{/backstage/catalog/additem}"
+                                th:object="${item}" method="post">
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <label for="catname">Name</label>
-                                        <input id="catname" type="text" class="form-control" placeholder=""
+                                        <label for="itemname">Name</label>
+                                        <input id="itemname" type="text" class="form-control" placeholder=""
                                             th:field="*{name}"></input>
-                                        <label for="catdesc">Description</label>
-                                        <input id="catdesc" type="text" class="form-control" placeholder=""
+                                        <label for="itemdesc">Description</label>
+                                        <input id="itemdesc" type="text" class="form-control" placeholder=""
                                             th:field="*{description}"></input>
-                                        <input class="hidden" id="parent" type="text" th:field="*{parent}"></input>
+                                            <input class="hidden" id="parent" type="text" th:field="*{parent}"></input>
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -169,9 +153,7 @@
                         <div th:each="tree: ${trees}" class="col-md-4">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 th:text="${tree.name}" th:id="'titleid'+${tree.id}"
-                                        th:data-flexid="|flexid${tree.id}|" onclick="selectMe(this)" class="selectable">
-                                    </h5>
+                                    <h5 th:text="${tree.name}" th:id="'titleid'+${tree.id}" onclick="selectMe(this)" class="selectable"></h5>
                                 </div>
                                 <div class="card-body">
                                     <div th:id="'flexid'+${tree.id}"></div>
@@ -180,6 +162,7 @@
                         </div>
                     </div>
                 </div>
+
         </div>
         </main>
     </div>

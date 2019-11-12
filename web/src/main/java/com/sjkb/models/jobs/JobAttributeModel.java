@@ -1,4 +1,4 @@
-package com.sjkb.models;
+package com.sjkb.models.jobs;
 /**
  * Attributes are created by scraping the eventlog for this job
  */
@@ -7,6 +7,7 @@ public class JobAttributeModel {
     private String contractorId;
     private String installer;
     private String installerId;
+    private int expectedCost = 0;
 
     public String getContractor() {
         return contractor;
@@ -39,6 +40,18 @@ public class JobAttributeModel {
     public void setInstallerId(String installerId) {
         this.installerId = installerId;
     }
+
+    public int getExpectedCost() {
+        return expectedCost;
+    }
+
+    public void setExpectedCost(int expectedCost) {
+        this.expectedCost = expectedCost;
+    }
+
+	public void addCost(int cost) {
+        this.expectedCost += cost;
+	}
 
     
 

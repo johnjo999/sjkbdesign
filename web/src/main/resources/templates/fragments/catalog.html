@@ -7,12 +7,25 @@
     </tr>
 </div>
 <div th:fragment="childrow" th:id="flexid">
-    <div th:each="row: ${heritage.myself.allChildren}">
-        <div th:id="'collapse'+${row.id}">
-            <div class="selectable selectedChild ml-5" onclick="selectMe(this)" th:id="'flexid'+${row.id}" th:data-flexid="${row.id}"
+    <div th:if="${heritage.myself}" th:each="row: ${heritage.myself?.allChildren}">
+        <div th:id="'collapse'+${row.id}" class="d-inline-flex">
+            <div class="selectable selectedChild ml-5 flex-fill" onclick="selectMe(this)" th:id="'flexid'+${row.id}" th:data-flexid="${row.id}"
                 th:text="${row.flexEntity.name}">
             </div>
         </div>
     </div>
 </div>
+
+<div th:fragment="childrowbutton" th:id="|flexid${heritage.myself.id}|">
+    <div th:each="row: ${heritage.myself?.allChildren}">
+        <div th:id="'collapse'+${row.id}" class="d-flex justify-content-between">
+            <div class="selectable selectedChild ml-5" onclick="selectMe(this)" th:id="'flexid'+${row.id}" th:data-flexid="${row.id}"
+                th:text="${row.flexEntity.name}">
+            </div><button class="btn btn-normal fas fa-trash-alt" th:data-flexid="${row.id}" style="display: none"
+            onclick="delusermodal(event, this.getAttribute('data-flexid'));"></button>
+        </div>
+    </div>
+</div>
+
+
 </html>

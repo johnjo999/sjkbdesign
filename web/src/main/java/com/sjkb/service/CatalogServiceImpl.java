@@ -147,8 +147,13 @@ public class CatalogServiceImpl implements CatalogService {
      */
     @Override
     public HeritageModel getHeritage(Long iid) {
+        FlexPathEntity myself = null;
         HeritageModel result = new HeritageModel();
-        FlexPathEntity myself = flexPathRepository.getOne(iid);
+        Optional<FlexPathEntity> myselfOption = flexPathRepository.findById(iid);
+        if (myselfOption.isPresent() == false) 
+            return result;
+        else
+            myself = myselfOption.get();
         result.setMyself(new TreePath(myself));
         addDirectChildrenOf(result.getMyself());
         int depth = myself.getDepth();

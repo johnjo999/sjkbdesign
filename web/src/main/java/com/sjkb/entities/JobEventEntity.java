@@ -103,14 +103,21 @@ public class JobEventEntity {
         if (timestamp != null)
             date = timestamp.toString().split(" ")[0];
         String result = String.format("%s (%s): ", date, this.creatorId);
-        if (highEnd != 0 && highEnd == lowEnd)
-            result += String.format("%s updated, quote %d", type, highEnd);
-        else
-            result += String.format("%s updated, high %d, low %d", type, highEnd, lowEnd);
-        if (scheduled != null) {
-            result += " for "+scheduled.toString().split(" ")[0];
+        switch (type) {
+        case "invoice":
+                result += String.format("Posted invoice %s for %d", objid, lowEnd);
+            break;
+        default:
+            if (highEnd != 0 && highEnd == lowEnd)
+                result += String.format("%s updated, quote %d", type, highEnd);
+            else
+                result += String.format("%s updated, high %d, low %d", type, highEnd, lowEnd);
+            if (scheduled != null) {
+                result += " for " + scheduled.toString().split(" ")[0];
+            }
         }
         return result;
+
     }
 
     public Timestamp getScheduled() {

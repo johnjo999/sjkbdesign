@@ -18,6 +18,7 @@ import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.GetTemporaryLinkResult;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
+import com.dropbox.core.v2.files.UploadUploader;
 import com.sjkb.entities.DropboxTokenEntity;
 import com.sjkb.models.FileHandleModel;
 import com.sjkb.models.admin.DropboxTokenModel;
@@ -36,8 +37,8 @@ public class DropboxServiceImpl implements DropboxService {
     DropboxTokenRepository dropboxRepository;
 
     @Override
-    public List<DropboxTokenModel> getAllUserTokens() {
-        List<DropboxTokenEntity> tokens = dropboxRepository.findAll();
+    public List<DropboxTokenModel> getAllUserTokens(String context) {
+        List<DropboxTokenEntity> tokens = dropboxRepository.findByContext(context);
         List<DropboxTokenModel> result = new ArrayList<>();
         for (DropboxTokenEntity token : tokens) {
             result.add(new DropboxTokenModel(token));
@@ -116,29 +117,30 @@ public class DropboxServiceImpl implements DropboxService {
     }
 
     @Override
-    public InputStreamResource getFile(String user, String folder, String filename, HttpHeaders headers) throws DbxException {
+    public InputStreamResource getFile(String user, String folder, String filename, HttpHeaders headers)
+            throws DbxException {
         String path = "/" + folder + "/shared/" + filename;
         DbxClientV2 client = getClientFor(user);
         DbxDownloader<FileMetadata> handle = client.files().download(path);
-     //   String[] mt = handle.getContentType().split("/");
-     //   headers.setContentType(new MediaType(mt[0], mt[1]));
-       MediaType type = MediaType.APPLICATION_OCTET_STREAM;
+        // String[] mt = handle.getContentType().split("/");
+        // headers.setContentType(new MediaType(mt[0], mt[1]));
+        MediaType type = MediaType.APPLICATION_OCTET_STREAM;
         headers.setContentType(type);
         InputStreamResource inputStreamResource = null;
 
-            InputStream instream = handle.getInputStream();
-            inputStreamResource = new InputStreamResource(instream);
-            headers.setContentLength(handle.getResult().getSize());
+        InputStream instream = handle.getInputStream();
+        inputStreamResource = new InputStreamResource(instream);
+        headers.setContentLength(handle.getResult().getSize());
 
         return inputStreamResource;
     }
 
     @Override
-    public String getFileLink(String user, String folder, String filename) throws DbxException {
+    public GetTemporaryLinkResult getFileLink(String user, String folder, String filename) throws DbxException {
         String path = "/" + folder + "/shared/" + filename;
         DbxClientV2 client = getClientFor(user);
         GetTemporaryLinkResult link = client.files().getTemporaryLink(path);
-        return link.getLink();
+        return link;
     }
 
     @Override
@@ -165,18 +167,35 @@ public class DropboxServiceImpl implements DropboxService {
     }
 
     @Override
-    public InputStreamResource getPreviewOf(String user, String folder, String filename, HttpHeaders headers) throws DbxException {
+    public InputStreamResource getPreviewOf(String user, String folder, String filename, HttpHeaders headers)
+            throws DbxException {
         String path = "/" + folder + "/shared/" + filename;
         DbxClientV2 client = getClientFor(user);
         DbxDownloader<FileMetadata> handle = client.files().getPreview(path);
-       String[] mt = handle.getContentType().split("/");
-       headers.setContentType(new MediaType(mt[0], mt[1]));
+        String[] mt = handle.getContentType().split("/");
+        headers.setContentType(new MediaType(mt[0], mt[1]));
         InputStreamResource inputStreamResource = null;
 
-            InputStream instream = handle.getInputStream();
-            inputStreamResource = new InputStreamResource(instream);
+        InputStream instream = handle.getInputStream();
+        inputStreamResource = new InputStreamResource(instream);
 
         return inputStreamResource;
     }
+
+    /**
+     * Gets an output stream from dropbox that can be used to write files
+     * @param: dbxFoler,  The directory path
+     * @param: filename, The name of the file
+     * user:  The dropbox user account holding the auth token
+     */
+    @Override
+    public UploadUploader getOutputFileStream(String dbxFolder, String filename, String user) throws DbxException {
+        String path = "/" + dbxFolder + "/shared/" + filename;
+        DbxClientV2 client = getClientFor(user);
+        UploadUploader handle = client.files().upload(path);
+        return handle;
+    }
+
+    
 
 }

@@ -13,6 +13,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletResponse;
 
 import com.dropbox.core.DbxException;
+import com.dropbox.core.v2.files.GetTemporaryLinkResult;
 import com.sjkb.entities.ContactEntity;
 import com.sjkb.entities.UserEntity;
 import com.sjkb.models.FileHandleModel;
@@ -117,7 +118,7 @@ public class PortalController {
         }
         // dbx supported previews
         String[] pdfFiles = { ".pdf", ".ai", ".doc", ".docm", ".docx", ".eps", ".gdoc", ".gslides", ".odp", ".odt",
-                ".pps", ".ppsm", ".ppsx", ".ppt", ".pptm", ".pptx", ".rtf", ".jpg"};
+                ".pps", ".ppsm", ".ppsx", ".ppt", ".pptm", ".pptx", ".rtf", ".jpg" };
         String[] htmlPreview = { "csv", ".ods", ".xls", ".xlsm", ".gsheet", ".xlsx" };
         Set<String> byteResponse = new HashSet<>(Arrays.asList(pdfFiles));
         Set<String> multilineResponse = new HashSet<>(Arrays.asList(htmlPreview));
@@ -130,18 +131,22 @@ public class PortalController {
                 return "";
             }
             try {
-                if (byteResponse.contains(filename.substring(fn))) {
-                    map.addAttribute("link", "getBinFile");
+                GetTemporaryLinkResult filelink = dropboxService.getFileLink(sharePath[0], sharePath[1], filename);
+                map.addAttribute("download", filelink.getLink());
+                // see if we can preview this as a pdf binary
+                if (byteResponse.contains(filename.substring(fn)) && filelink.getMetadata().getSize() < 5000000) {
+                    map.addAttribute("link", "getBinFile");                    
                     fileOnDeck = filename;
                     result = "fragments/portal_templates::redirect";
+                // check to see if we can display the text file rdirectly
                 } else if (multilineResponse.contains(filename.substring(fn))) {
                     String preview = dropboxService.getPreviewOf(sharePath[0], sharePath[1], filename);
                     map.addAttribute("preview", preview);
                     result = "/fragments/portal_templates::linepreview";
                 } else {
-                    String filelink = dropboxService.getFileLink(sharePath[0], sharePath[1], filename);
+                    // punt, lets get the link from dropbox and have the user download the file rather than preview
                     if (filelink != null) {
-                        map.addAttribute("link", filelink);
+                        map.addAttribute("link", filelink.getLink());
                         result = "fragments/portal_templates::redirect";
                     }
                 }

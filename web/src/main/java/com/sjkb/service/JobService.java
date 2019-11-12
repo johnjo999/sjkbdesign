@@ -2,10 +2,12 @@ package com.sjkb.service;
 
 import java.util.List;
 
+import com.sjkb.entities.InvoiceEntity;
 import com.sjkb.entities.JobEntity;
 import com.sjkb.models.AssignExpenseModel;
-import com.sjkb.models.JobAttributeModel;
-import com.sjkb.models.JobCardModel;
+import com.sjkb.models.jobs.AddInvoiceModel;
+import com.sjkb.models.jobs.JobAttributeModel;
+import com.sjkb.models.jobs.JobCardModel;
 
 public interface JobService {
 
@@ -22,5 +24,9 @@ public interface JobService {
 	AssignExpenseModel getCurrentExpenseFor(String jobid, String role);
 
 	String getJobHistory(JobEntity job);
+
+	void addInvoice(InvoiceEntity invoice);
+
+	void addInvoice(AddInvoiceModel invoiceModel, String user);
 
 }

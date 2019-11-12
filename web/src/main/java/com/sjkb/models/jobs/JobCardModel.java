@@ -1,4 +1,4 @@
-package com.sjkb.models;
+package com.sjkb.models.jobs;
 
 public class JobCardModel {
     private String id;

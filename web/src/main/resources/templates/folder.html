@@ -24,7 +24,7 @@
         var d = $("#folderid").data('fid');
         $("#addContractor").modal('show');
         $.ajax({
-            url: ("/backstage/job/get/form/"+d+"/contractor"),
+            url: ("/backstage/job/get/form/" + d + "/contractor"),
             type: "GET",
             success: function (data) {
                 $("#contractor-form").replaceWith(data);
@@ -38,7 +38,7 @@
         var d = $("#folderid").data('fid');
         $("#addInstaller").modal('show');
         $.ajax({
-            url: ("/backstage/job/get/form/"+d+"/installer"),
+            url: ("/backstage/job/get/form/" + d + "/installer"),
             type: "GET",
             success: function (data) {
                 $("#installer-form").replaceWith(data);
@@ -59,6 +59,28 @@
                 $(".hasdatepicker").datepicker();
             }
         })
+    }
+
+    function createInvoice() {
+        var d = $("#folderid").data('fid');
+        $("#createInvoice").modal('show');
+        $.ajax({
+            url: ("/backstage/job/get/form/invoice/" + d + "?count=5"),
+            type: "GET",
+            success: function (data) {
+                $("#invoice-form").replaceWith(data);
+            }
+        })
+    }
+
+    function totalizer() {
+        var tot = 0;
+        $(".costing").each(function (x, value) {
+            var v = $(value).val();
+            if (v != "" && !isNaN(v))
+                tot += parseInt(v);
+        });
+        $("#totalcost").text(tot);
     }
 
 
@@ -148,6 +170,25 @@
         </div>
     </div>
 
+    <div class="modal fade" id="createInvoice" tabindex="-1" role="dialog" aria-labelledby="modalCreateInvoice"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Invoice</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="invoice-form"></form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" form="invoice-form" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <div class="wrapper">
         <div th:include="fragments/sidecar::sidenav" th:remove="tag"></div>
         <div class="main">
@@ -180,10 +221,16 @@
                                 <div class="text-bold d-inline-block">Quote: </div><span th:text="${job.quote}"></span>
                             </div>
                             <div class="col-md-10">
-                                <div class="text-bold d-inline-block">Projected Cost: </div>
+                                <div class="text-bold d-inline-block">Projected Cost: </div><span th:text="${#numbers.formatCurrency(jobAttribute.expectedCost)}"></span>
                             </div>
                             <div class="col-md-10">
                                 <div class="text-bold d-inline-block">Margin : </div>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="text-bold d-inline-block">Invoiced : </div><span th:text="${#numbers.formatCurrency(job.invoiced)}"></span>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="text-bold d-inline-block">Received : </div><span th:text="${#numbers.formatCurrency(job.received)}"></span>
                             </div>
                         </div>
                     </div>
@@ -199,18 +246,16 @@
                                     <button class="btn btn-info mb-3" onclick="addCabinets()">Cabinets</button>
                                     <button class="btn btn-info mb-3">Misc</button>
                                 </div>
-                                <hr/>
+                                <hr />
                                 <div>
                                     <div class="col-md-10 mt-5">
                                         <div class="text-bold d-inline-block">Contractor: </div>
-                                        <button class="btn btn-default"
-                                            th:data-id="${jobAttribute.contractorId}"
+                                        <button class="btn btn-default" th:data-id="${jobAttribute.contractorId}"
                                             th:text="${jobAttribute.contractor}"></button>
 
-                                            <div class="text-bold d-inline-block">Installer: </div>
-                                            <button class="btn btn-default"
-                                                th:data-id="${jobAttribute.installerId}"
-                                                th:text="${jobAttribute.installer}"></button>
+                                        <div class="text-bold d-inline-block">Installer: </div>
+                                        <button class="btn btn-default" th:data-id="${jobAttribute.installerId}"
+                                            th:text="${jobAttribute.installer}"></button>
                                     </div>
                                 </div>
                             </div>
@@ -231,16 +276,27 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3>History</h3>
-                                </div>
-                                <div class="card-body">                                  
-                                    <div th:utext="${history}"></div>
-                                </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Actions</h3>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-info mb-3" onclick="createInvoice()">Create Invoice</button>
+                                <button class="btn btn-info mb-3">Record Payment</button>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>History</h3>
+                            </div>
+                            <div class="card-body">
+                                <div th:utext="${history}"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>

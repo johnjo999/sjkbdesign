@@ -21,6 +21,8 @@ public class DropboxTokenEntity {
 
     public String token;
 
+    public String context;
+
     public DropboxTokenEntity() {};
 
     public DropboxTokenEntity(ResponseEntity<DropboxReturnToken> response) {
@@ -50,6 +52,14 @@ public class DropboxTokenEntity {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
     }
 
     

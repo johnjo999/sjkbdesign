@@ -32,7 +32,7 @@
     </div>
 
     <div th:fragment="redirect">
-        <div id="filepath" th:data-path="${link}"></div>
+        <div id="filepath" th:data-path="${link}" th:data-download="${download}"></div>
     </div>
     <div th:fragment="linepreview" th:remove="tag">
         [(${preview})]

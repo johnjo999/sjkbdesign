@@ -17,6 +17,7 @@ import org.springframework.data.annotation.Transient;
 
 @Entity(name = "flexpath")
 @Table(name = "flexpath")
+
 public class FlexPathEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

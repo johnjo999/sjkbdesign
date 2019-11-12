@@ -27,6 +27,5 @@ public class DropboxTokenModel {
     public void setToken(String token) {
         this.token = token;
     }
-
     
 }

@@ -19,6 +19,10 @@ public class JobEntity {
 
     private Integer quote;
 
+    private Float invoiced;
+
+    private Float received;
+
     private Timestamp createDate;
 
     private Timestamp activityDate;
@@ -102,7 +106,22 @@ public class JobEntity {
         this.quote = quote;
     }
 
-    
+    public Float getInvoiced() {
+        return invoiced;
+    }
 
+    public void setInvoiced(Float invoiced) {
+        this.invoiced = invoiced;
+    }
+
+    public Float getReceived() {
+        return received;
+    }
+
+    public void setReceived(Float received) {
+        this.received = received;
+    }
+
+    
 
 }

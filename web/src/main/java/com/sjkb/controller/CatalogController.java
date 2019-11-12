@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.sjkb.models.category.CategoryModel;
 import com.sjkb.models.category.HeritageModel;
+import com.sjkb.models.category.NewItemModel;
 import com.sjkb.models.category.TreePath;
 import com.sjkb.service.CatalogService;
 
@@ -58,6 +59,13 @@ public class CatalogController {
 
     }
 
+    @RequestMapping(value = "additem", method = RequestMethod.POST)
+    public String postItem(ModelMap map, @ModelAttribute("item") final CategoryModel category) {
+        catalogService.addCategory(context, category);
+        return getChildrenOf(map, String.valueOf(category.getParent()));
+
+    }
+
     @RequestMapping(value = "getChildren/{id}", method = RequestMethod.GET)
     public String getChildrenOf(ModelMap map, @PathVariable("id") final String id) {
     Long iid = 0l;
@@ -67,8 +75,37 @@ public class CatalogController {
             return "error";
         }
         HeritageModel heritage = catalogService.getHeritage(iid);
+        if (heritage.getMyself() == null) 
+            return "redirect:/backstage/catalog/addcat";
         map.addAttribute("heritage", heritage);
         return "fragments/catalog::childrow";
+    }
+
+    @RequestMapping(value = "getChildrenEditable/{id}", method = RequestMethod.GET)
+    public String getChildrenEditableOf(ModelMap map, @PathVariable("id") final String id) {
+    Long iid = 0l;
+        try {
+            iid = Long.valueOf(id);
+        } catch (NumberFormatException ex) {
+            return "error";
+        }
+        HeritageModel heritage = catalogService.getHeritage(iid);
+        map.addAttribute("heritage", heritage);
+        return "fragments/catalog::childrowbutton";
+    }
+
+    @RequestMapping(value = "additem", method = RequestMethod.GET)
+    public String getNewItem(ModelMap map) {
+        if (context == null) {
+            context = backstageController.getContext();
+        }
+        NewItemModel item = new NewItemModel();
+        List<CategoryModel> categoryTree = catalogService.getDefaultCatalogTreeForContext(context);
+        map.addAttribute("item", item);
+        map.addAttribute("tree", categoryTree);
+        map.addAttribute("trees", catalogService.getCatalogTreeAsString(context, 0l));
+        return "catalog/item_new";
+
     }
 
 

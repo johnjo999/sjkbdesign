@@ -71,6 +71,9 @@
 
         }
     }
+    function download(loc) {
+        window.location.href = loc;
+    }
 
     function getFile(filename) {
         var d = '{"token": "' + token + '", "filename": "' + filename + '"}';
@@ -83,6 +86,8 @@
                 var filepath = $(data).find("#filepath");
                 if (filepath.length != 0) {
                     var fpath = $(filepath).attr('data-path');
+                    var dnld = $(filepath).data('download');
+                    $("#dlbutton").attr("data-download", dnld);
                     if (fpath === "getBinFile") {
                         getBin(filename)
                     } else {
@@ -167,7 +172,7 @@
                 <section id="preview" class="pdfbox">
                     <div>
                         <button class="btn btn-success btn-inline mr-3 ml-3" onclick="closePreview()" )>Close</button>
-                        <button class="btn btn-info btn-inline">Download</button>
+                        <button id="dlbutton" class="btn btn-info btn-inline" onclick="download(this.getAttribute('data-download'))">Download</button>
                     </div>
                     <div id="pdf-wrapper" style="margin: 20px">
                         <iframe class="pdfitem" id="iframe-pdf-shower" name="iframe-pdf-shower"></iframe>

@@ -43,6 +43,9 @@ public class AdminController {
     @Autowired
     FontRepository fontRepository;
 
+    @Autowired
+    BackstageController backstage;
+
     private String getUser() {
         SecurityContext holder = SecurityContextHolder.getContext();
         final String uname = holder.getAuthentication().getName();
@@ -51,7 +54,8 @@ public class AdminController {
 
     @RequestMapping(value = "setup/dropbox")
     public String showDropboxTokens(ModelMap map) {
-        List<DropboxTokenModel> tokens = dropboxService.getAllUserTokens();
+
+        List<DropboxTokenModel> tokens = dropboxService.getAllUserTokens(backstage.getContext());
         map.addAttribute("tokens", tokens);
         map.addAttribute("user", getUser());
         return "admin/setup_dropbox";
@@ -77,6 +81,7 @@ public class AdminController {
         SecurityContext holder = SecurityContextHolder.getContext();
         final String uname = holder.getAuthentication().getName();
         token.setUser(uname);
+        token.setContext(backstage.getContext());
         dropboxService.saveToken(token);
         return "redirect:/admin/setup/dropbox";
 
