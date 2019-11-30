@@ -26,7 +26,7 @@
     }
 
     function userdet(usertoken) {
-        window.location.href = "/backstage/user/edit/"+usertoken;
+        window.location.href = "/backstage/user/editcomp/"+usertoken;
     }
 
 </script>
@@ -91,31 +91,27 @@
             <div th:include="fragments/sidecar::topnav" th:remove="tag"></div>
             <main class="content">
                 <div class="container-fluid">
-                    <button onclick="window.location.href='/backstage/user/add'" class="btn btn-pill btn-info"><span
+                    <button onclick="window.location.href='/backstage/user/add?role=salesRep'" class="btn btn-pill btn-info"><span
                             data-feather="plus"></span> Add New</button>
                     <div class="sjwhitespace"></div>
                     <div class="row">
                         <table id="datatable" class="table table-striped dataTable no-footer dtr-inline" role="grid">
                             <thead>
                                 <tr role="row">
-                                    <th class="sorting" tabindex="0" aria-controls="datatables-basic" rowspan="1"
-                                        colspan="1">Last</th>
-                                    <th class="sorting" tabindex="0">First</th>
-                                    <th class="sorting" tabindex="0">Username</th>
-                                    <th class="sorting" tabindex="0">email</th>
-                                    <th class="sorting" tabindex="0">Phone</th>
-                                    <th class="sorting" tabindex="0">Street</th>
+                                    <th class="sorting" tabindex="0">Company</th>
+                                    <th class="sorting" tabindex="1" colspan="2">Sales Rep</th>
+                                    <th class="sorting" tabindex="2">email</th>
+                                    <th class="sorting" tabindex="3">Phone</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="user:${users}" th:data-det="${user.token}" onclick="userdet(this.getAttribute('data-det'));">
+                                    <td th:text="${user.company}"></td>
                                     <td th:text="${user.lastname}"></td>
                                     <td th:text="${user.firstname}"></td>
-                                    <td th:text="${user.username}"></td>
                                     <td th:text="${user.email}"></td>
                                     <td th:text="${user.phone}"></td>
-                                    <td th:text="${user.street}"></td>
                                     <td><button class="btn btn-info fas fa-trash-alt" th:data-uid="${user.token}"
                                             onclick="delusermodal(event, this.getAttribute('data-uid'));"></button></td>
                                 </tr>

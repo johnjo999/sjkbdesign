@@ -26,7 +26,6 @@ public  class ContactEntity {
     private String state;
     private String zip;
     private String username;
-    private String account;
     private String role;
     private String context;
     private int branch;
@@ -123,14 +122,6 @@ public  class ContactEntity {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
     }
 
     public String getCompany() {

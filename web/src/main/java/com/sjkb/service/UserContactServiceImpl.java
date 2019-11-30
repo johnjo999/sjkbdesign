@@ -16,6 +16,7 @@ import com.sjkb.models.category.ContractorSelectRow;
 import com.sjkb.models.users.UserDelModel;
 import com.sjkb.models.users.UserRoleModel;
 import com.sjkb.models.users.UserViewModel;
+import com.sjkb.repositores.CompanyRepsInterface;
 import com.sjkb.repositores.ContactRepository;
 import com.sjkb.repositores.UserRepository;
 
@@ -40,9 +41,9 @@ class UserContactServiceImpl implements UserContactService {
     private Map<String, UserViewModel> userTokenMap = new HashMap<>();
 
     @Override
-    public List<UserViewModel> getAllUsers() {
+    public List<UserViewModel> getAllUsers(String role) {
         List<UserViewModel> result = new ArrayList<>();
-        List<ContactEntity> contacts = contactRepository.findByContextOrderByLastname(context);
+        List<ContactEntity> contacts = contactRepository.findByContextAndRoleOrderByLastname(context, role);
         if (contacts != null) {
             userTokenMap.clear();
             for (ContactEntity contact : contacts) {
@@ -215,7 +216,7 @@ class UserContactServiceImpl implements UserContactService {
     @Override
     public List<ContractorSelectRow> getContratorSelectRows() {
         List<ContractorSelectRow> result = new ArrayList<>();
-        List<ContactEntity> contractors = contactRepository.findByRoleAndContext("contractor", context);
+        List<ContactEntity> contractors = contactRepository.findByContextAndRole("contractor", context);
         if (contractors != null && contractors.size() > 0) {
             for (ContactEntity contractor : contractors) {
                 ContractorSelectRow row = new ContractorSelectRow(contractor);
@@ -233,7 +234,7 @@ class UserContactServiceImpl implements UserContactService {
     @Override
     public List<ContractorSelectRow> getInstallerSelectRows() {
         List<ContractorSelectRow> result = new ArrayList<>();
-        List<ContactEntity> contractors = contactRepository.findByRoleAndContext("installer", context);
+        List<ContactEntity> contractors = contactRepository.findByContextAndRole("installer", context);
         if (contractors != null && contractors.size() > 0) {
             for (ContactEntity contractor : contractors) {
                 ContractorSelectRow row = new ContractorSelectRow(contractor);
@@ -285,6 +286,11 @@ class UserContactServiceImpl implements UserContactService {
     @Override
     public String getUidForUsername(String username) {
         return contactRepository.findByUsername(username).getUid();
+    }
+
+    @Override
+    public List<CompanyRepsInterface> getCompaniesWithReps(String context) {
+        return contactRepository.findCompanyByContext(context);
     }
 
 }

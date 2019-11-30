@@ -12,7 +12,7 @@
 <link href="/css/classic.css" rel="stylesheet">
 <script src="/js/jquery.js"></script>
 <script src="/js/jquery-ui.js"></script>
-<script>
+<script th:inline="javascript">
 
     function setUsernameToEmail() {
         var em = $("#email").val();
@@ -25,11 +25,18 @@
             $(".ac").show();
             var digit = $("#phone").val();
             var last4 = digit.substring(digit.length - 4);
-            var first4 = $("#firstname").val().substring(0,4).toLowerCase();
-            $("#password").attr("placeholder", first4+last4);
+            var first4 = $("#firstname").val().substring(0, 4).toLowerCase();
+            $("#password").attr("placeholder", first4 + last4);
 
         }
     }
+
+    $('document').ready(function (d) {
+        /*<![CDATA[*/
+        var actrole = /*[[${actrole}]]*/ 'default';
+        /*]]>*/
+        $("#contactrole").val(actrole);
+    });
 
 
 </script>
@@ -52,7 +59,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title">User Details</h5>
+                                <h5 class="card-title">Contact Details</h5>
                                 <h6 class="card-subtitle text-muted">Customer, Contact, Supplier</h6>
                             </div>
                             <div class="card-body">
@@ -70,19 +77,19 @@
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label for="phone">Phone</label>
-                                            <input type="tel" th:field="*{phone}" class="form-control"
-                                                placeholder="">
+                                            <input type="tel" th:field="*{phone}" class="form-control" placeholder="">
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-4">
                                             <label for="email">Email</label>
-                                            <input type="email" th:field="*{email}" class="form-control"
-                                                placeholder="" onchange="setUsernameToEmail()">
+                                            <input type="email" th:field="*{email}" class="form-control" placeholder=""
+                                                onchange="setUsernameToEmail()">
                                         </div>
                                         <div class="form-group col-md-4" id="can">
                                             <label for="createaccount">Create Account</label>
-                                            <input id="creataccount" type="checkbox" class="form-control" onchange="accountneeded()"></input>
+                                            <input id="creataccount" type="checkbox" class="form-control"
+                                                onchange="accountneeded()"></input>
                                         </div>
                                         <div class="form-group col-md-4 hidden ac">
                                             <label for="username">Username</label>
@@ -128,8 +135,9 @@
                                         <input class="hidden" type="text" th:field="*{key}"></input>
                                         <div class="form-group col-md-4">
                                             <label for="role">Role</label>
-                                            <select th:field="*{role}" class="form-control">
-                                                <option th:each="r:${roles}" th:value="${r}" th:text="${r}"></option>
+                                            <select id="contactrole" th:field="*{role}" class="form-control">
+                                                <option th:each="r:${roles}" th:value="${r}" th:text="${r}"
+                                                    th:id="${r}"></option>
                                             </select>
                                         </div>
                                         <div class="form-group col-md-4">
@@ -140,7 +148,8 @@
                                     </div>
 
                                     <button type="submit" class="btn btn-primary">Submit</button>
-                                    <button type="button" class="btn btn-info" onclick="window.location.href='/backstage/user/getall'">Cancel</button>
+                                    <button type="button" class="btn btn-info"
+                                        onclick="window.location.href='/backstage/user/getall'">Cancel</button>
                                 </form>
                             </div>
                         </div>

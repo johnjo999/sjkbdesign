@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.sjkb.entities.ContactEntity;
 import com.sjkb.entities.JobEntity;
 import com.sjkb.models.AssignExpenseModel;
+import com.sjkb.entities.JobExpenseEntity;
 import com.sjkb.models.jobs.AddInvoiceModel;
 import com.sjkb.models.jobs.JobAttributeModel;
 import com.sjkb.models.category.ContractorSelectRow;
@@ -33,6 +34,9 @@ public class JobController {
     @Autowired
     UserContactService contactService;
 
+    @Autowired
+    BackstageController backstageController;
+
     private String getUser() {
         SecurityContext holder = SecurityContextHolder.getContext();
         final String uname = holder.getAuthentication().getName();
@@ -53,10 +57,11 @@ public class JobController {
     }
 
     @RequestMapping(value = "get/form/{jobid}/{type}")
-    public String getContractorForm(ModelMap map, 
-            @PathVariable("jobid") final String jobid, @PathVariable("type") final String type) {
+    public String getContractorForm(ModelMap map, @PathVariable("jobid") final String jobid,
+            @PathVariable("type") final String type) {
         String form = "fragments/forms::" + type + "-form";
         AssignExpenseModel expenseModel = null;
+        String context = backstageController.getContext();
         switch (type) {
         case "contractor":
             map.addAttribute("allCont", contactService.getContratorSelectRows());
@@ -68,6 +73,13 @@ public class JobController {
             break;
         case "cabinet":
             map.addAttribute("allCont", new ArrayList<ContractorSelectRow>());
+            break;
+        case "expense":
+            map.addAttribute("reps", contactService.getCompaniesWithReps(context));
+            JobExpenseEntity expense = new JobExpenseEntity();
+            expense.setFolder(jobid);
+            map.addAttribute("expense", expense);
+            break;
         }
         if (expenseModel == null) {
             expenseModel = new AssignExpenseModel();
@@ -77,7 +89,8 @@ public class JobController {
     }
 
     @RequestMapping(value = "get/form/invoice/{jobid}", params = "count")
-    public String getInvoiceForJob(ModelMap map, @PathVariable("jobid") final String jobid, @RequestParam("count") Integer count) {
+    public String getInvoiceForJob(ModelMap map, @PathVariable("jobid") final String jobid,
+            @RequestParam("count") Integer count) {
         AddInvoiceModel invoiceModel = new AddInvoiceModel();
         invoiceModel.setFolder(jobid);
         invoiceModel.createBlankRows(count);
@@ -97,6 +110,12 @@ public class JobController {
     public String setJobInvoice(ModelMap map, @ModelAttribute("addInvoiceModel") AddInvoiceModel invoiceModel) {
         jobService.addInvoice(invoiceModel, getUser());
         return "redirect:/backstage/job/getfolder/" + invoiceModel.getFolder();
+    }
+
+    @RequestMapping(value = "post/expense", method = RequestMethod.POST)
+    public String setJobInvoice(ModelMap map, @ModelAttribute("JobExpenseModel") JobExpenseEntity expense) {
+        jobService.postExpense(expense, getUser());
+        return "redirect:/backstage/job/getfolder/" + expense.getFolder();
     }
 
 }

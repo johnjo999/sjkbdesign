@@ -12,7 +12,7 @@ import com.sjkb.models.users.UserViewModel;
 
 public interface UserContactService {
 
-    public List<UserViewModel> getAllUsers();
+    public List<UserViewModel> getAllUsers(String type);
 
 	/**
 	 * 
@@ -46,6 +46,8 @@ public interface UserContactService {
 	public String createContextForNewUser(UserViewModel userModel, String uname) throws UsernameTakenException;
 
 	public String getUidForUsername(String username);
+
+	public Object getCompaniesWithReps(String context);
 
 
 }

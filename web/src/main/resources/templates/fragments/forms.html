@@ -78,4 +78,24 @@
         </div>
         <input type="text" name="folder" class="hidden" th:field="*{folder}"></input>
     </form>
+
+    <div th:fragment="expense-form" th:remove="tag">
+        <form id="expense-form" th:action="@{/backstage/job/post/expense}" th:object="${expense}" class="form" method="post">
+            <label for="company">Supplier</label>
+        <select id="company" th:field="*{companyContactId}" class="input-group custom-select mb-5">
+            <option th:each="rep : ${reps}" th:value="${rep.uid}" th:text="${rep.company}">cont</option>
+        </select>
+        <label for="net">Net</label>
+        <input id="net" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3" th:field="*{net}"></input>
+        <label for="tax">Tax</label>
+        <input id="tax" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3" th:field="*{tax}"></input>
+        <label for="paid">Total</label>
+        <input id="paid" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3" th:field="*{paid}"></input>
+        <label for="multiplier">Multiplier</label>
+        <input id="multiplier" type="number" min="0.00" max="1.00" step="0.01" class="input-group mb-3" th:field="*{multiplier}"></input>
+        <label for="invoice">Invoice</label>
+        <input id="invoice" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3" th:field="*{invoice}"></input>
+        <input id="invoice" type="text" class="hidden" th:field="*{folder}"></input>
+        </form>
+    </div>
 </div>

@@ -107,6 +107,9 @@ public class JobEventEntity {
         case "invoice":
                 result += String.format("Posted invoice %s for %d", objid, lowEnd);
             break;
+        case "expense":
+                result += String.format("Posted expense for %d", lowEnd);
+                break;
         default:
             if (highEnd != 0 && highEnd == lowEnd)
                 result += String.format("%s updated, quote %d", type, highEnd);

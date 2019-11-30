@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
@@ -57,25 +58,48 @@ public class UserController {
         return uname;
     }
 
-    @RequestMapping(value = "/getall", method = RequestMethod.GET)
+    @RequestMapping(value = "/getalluser", method = RequestMethod.GET)
     public String getAllUsers(ModelMap map) {
 
-        map.addAttribute("users", userContactService.getAllUsers());
+        map.addAttribute("users", userContactService.getAllUsers("customer"));
         map.addAttribute("user", getUser());
         map.addAttribute("userDelModel", new UserDelModel());
-        return "users_list";
+        return "contacts/users_list";
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String addContact(ModelMap map) {
+    @RequestMapping(value = "/getallrep", method = RequestMethod.GET)
+    public String getAllReps(ModelMap map) {
+
+        map.addAttribute("users", userContactService.getAllUsers("salesRep"));
+        map.addAttribute("user", getUser());
+        map.addAttribute("userDelModel", new UserDelModel());
+        return "contacts/salerep_list";
+    }
+
+    @RequestMapping(value = "/add", params = "role", method = RequestMethod.GET)
+    public String addRoleContact(ModelMap map, @RequestParam("role") String role) {
         UserNewModel user = new UserNewModel();
         key = UUID.randomUUID().toString();
         user.setKey(key);
         map.addAttribute("newuser", user);
         map.addAttribute("user", getUser());
+        map.addAttribute("actrole", role);
         map.addAttribute("action", "/backstage/user/add");
         map.addAttribute("roles", UserRoleModel.getRolesLessThan(getRole()));
-        return "users_new";
+        return "contacts/users_new";
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public String addContact(ModelMap map, @RequestParam("role") String role) {
+        UserNewModel user = new UserNewModel();
+        key = UUID.randomUUID().toString();
+        user.setKey(key);
+        map.addAttribute("newuser", user);
+        map.addAttribute("user", getUser());
+        map.addAttribute("actrole", "customer");
+        map.addAttribute("action", "/backstage/user/add");
+        map.addAttribute("roles", UserRoleModel.getRolesLessThan(getRole()));
+        return "contacts/users_new";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -106,7 +130,7 @@ public class UserController {
                     }
                 }
             } catch (UsernameTakenException e) {
-                return "users_error_taken";
+                return "contacts/users_error_taken";
             }
 
         return getAllUsers(map);
@@ -132,10 +156,25 @@ public class UserController {
     @RequestMapping(value = "/edit/{token}", method = RequestMethod.GET)
     public String editUser(ModelMap map, @PathVariable final String token) {
         key = UUID.randomUUID().toString();
+        UserViewModel user = userContactService.getByToken(token).setKey(key).setToken(token);
+        map.addAttribute("newuser", user);
+        map.addAttribute("user", getUser());
+        map.addAttribute("actrole", user.getRole());
+        map.addAttribute("roles", UserRoleModel.getRolesLessThan(getRole()));
+        return "contacts/users_new";
+    }
+
+    @RequestMapping(value = "/edit/editcomp/{token}", method = RequestMethod.GET)
+    public String editCompany(ModelMap map, @PathVariable final String token) {
+        key = UUID.randomUUID().toString();
+        UserViewModel userModel = userContactService.getByToken(token).setKey(key).setToken(token);
+        VendorModel vendorModel = new VendorModel();
+        vendorModel.setPocId(token);
+        vendorModel.setName(userModel.getCompany());
         map.addAttribute("newuser", userContactService.getByToken(token).setKey(key).setToken(token));
         map.addAttribute("user", getUser());
         map.addAttribute("roles", UserRoleModel.getRolesLessThan(getRole()));
-        return "users_new";
+        return "contacts/users_new";
     }
 
     /**

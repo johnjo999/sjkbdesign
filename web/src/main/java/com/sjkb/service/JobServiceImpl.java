@@ -15,6 +15,7 @@ import com.sjkb.entities.InvoiceEntity;
 import com.sjkb.entities.InvoiceItemEntity;
 import com.sjkb.entities.JobEntity;
 import com.sjkb.entities.JobEventEntity;
+import com.sjkb.entities.JobExpenseEntity;
 import com.sjkb.entities.UserEntity;
 import com.sjkb.models.AssignExpenseModel;
 import com.sjkb.models.jobs.AddInvoiceModel;
@@ -24,6 +25,7 @@ import com.sjkb.models.jobs.JobInvoiceRowModel;
 import com.sjkb.repositores.ContactRepository;
 import com.sjkb.repositores.InvoiceRepository;
 import com.sjkb.repositores.JobEventRepository;
+import com.sjkb.repositores.JobExpenseRepository;
 import com.sjkb.repositores.JobRepository;
 import com.sjkb.repositores.UserRepository;
 
@@ -50,6 +52,9 @@ public class JobServiceImpl implements JobService {
 
     @Autowired
     DropboxService dropboxService;
+
+    @Autowired
+    JobExpenseRepository jobExpenseRepository;
 
     @Override
     public void createJob(String jobid, String designer, String pocId) {
@@ -119,7 +124,7 @@ public class JobServiceImpl implements JobService {
             if (expenseModel.getQuote() > 0) {
                 newEvent.setLowEnd(expenseModel.getQuote());
                 newEvent.setHighEnd(expenseModel.getQuote());
-                
+
             } else {
                 newEvent.setLowEnd(expenseModel.getLowEstimate());
                 newEvent.setHighEnd(expenseModel.getHighEstimate());
@@ -179,10 +184,11 @@ public class JobServiceImpl implements JobService {
 
     /**
      * @param: jobid - job folder,
-     * @param: role - this is the expense's function, ie: contractor, installer
+     * @param: role  - this is the expense's function, ie: contractor, installer
      * 
-     * This will return the most current instance of this type of event
-     * (assumes only latest update is current, all others are historical only)
+     *               This will return the most current instance of this type of
+     *               event (assumes only latest update is current, all others are
+     *               historical only)
      */
     @Override
     public AssignExpenseModel getCurrentExpenseFor(String jobid, String role) {
@@ -213,8 +219,9 @@ public class JobServiceImpl implements JobService {
     /**
      * Adds an invoice to the database, then creates a PDF that is stored in the
      * users shared project folder
+     * 
      * @param AddInvoiceModel: invoice model;
-     * @Param String user: 
+     * @Param String user:
      */
 
     @Override
@@ -244,7 +251,7 @@ public class JobServiceImpl implements JobService {
                     invoice.addItem(item);
                 }
             }
-            job.setInvoiced(total+ job.getInvoiced());
+            job.setInvoiced(total + job.getInvoiced());
             jobRepository.save(job);
             invoiceRepository.save(invoice);
             JobEventEntity newEvent = new JobEventEntity();
@@ -258,8 +265,8 @@ public class JobServiceImpl implements JobService {
             PdfDbxWriter pdfWriter = new PdfDbxWriter();
             UploadUploader dropbox;
             try {
-                dropbox = dropboxService.getOutputFileStream(invoiceModel.getFolder(), "invoice-"+invoice.getInvoiceId()+".pdf",
-                        user);
+                dropbox = dropboxService.getOutputFileStream(invoiceModel.getFolder(),
+                        "invoice-" + invoice.getInvoiceId() + ".pdf", user);
                 pdfWriter.createInvoice(invoice, customer, agent, dropbox);
 
             } catch (DbxException e) {
@@ -269,11 +276,22 @@ public class JobServiceImpl implements JobService {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            
 
         }
-        
 
+    }
+
+    @Override
+    public void postExpense(JobExpenseEntity expense, String user) {
+        jobExpenseRepository.save(expense);
+        JobEventEntity newEvent = new JobEventEntity();
+        newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        newEvent.setJobid(expense.getFolder());
+        newEvent.setCreatorId(user);
+        newEvent.setObjid(expense.getUid());
+        newEvent.setType("expense");
+        newEvent.setLowEnd(Math.round(expense.getNet()));
+        jobEventRepository.save(newEvent);
     }
 
     

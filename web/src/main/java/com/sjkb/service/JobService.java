@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.sjkb.entities.InvoiceEntity;
 import com.sjkb.entities.JobEntity;
+import com.sjkb.entities.JobExpenseEntity;
 import com.sjkb.models.AssignExpenseModel;
 import com.sjkb.models.jobs.AddInvoiceModel;
 import com.sjkb.models.jobs.JobAttributeModel;
@@ -28,5 +29,7 @@ public interface JobService {
 	void addInvoice(InvoiceEntity invoice);
 
 	void addInvoice(AddInvoiceModel invoiceModel, String user);
+
+	void postExpense(JobExpenseEntity expenseModel, String user);
 
 }
