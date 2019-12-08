@@ -58,6 +58,7 @@
                 </div>
                 <div class="modal-body m-3">
                     <form id="deluserform" class="form" th:object="${userDelModel}" , method="post">
+                        <input type="text" class="hidden" th:field="*{nextPage}">
                         <div class="custom-control from-group">
                             <label>
                                 <input id="delJobChk" type="checkbox" class="sjhidden" th:field="*{delJobs}">

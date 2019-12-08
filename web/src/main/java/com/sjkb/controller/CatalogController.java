@@ -2,10 +2,13 @@ package com.sjkb.controller;
 
 import java.util.List;
 
+import com.sjkb.entities.VendorEntity;
 import com.sjkb.models.category.CategoryModel;
 import com.sjkb.models.category.HeritageModel;
 import com.sjkb.models.category.NewItemModel;
 import com.sjkb.models.category.TreePath;
+import com.sjkb.models.users.VendorModel;
+import com.sjkb.repositores.VendorRepository;
 import com.sjkb.service.CatalogService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping(value = "/backstage/catalog")
@@ -25,6 +29,9 @@ public class CatalogController {
 
     @Autowired
     BackstageController backstageController;
+
+    @Autowired
+    VendorRepository vendorRepository;
 
     private String context;
 
@@ -108,5 +115,17 @@ public class CatalogController {
 
     }
 
+    @RequestMapping(value = "newVendor", method = RequestMethod.POST, params = "na")
+    public String postNewVendor(ModelMap map, @RequestParam("na") final String na, @ModelAttribute("vendor") final VendorModel vendor) {
+        String context = backstageController.getContext();
+        VendorEntity vendorEntity = vendorRepository.findByAccountId(vendor.getAccountId());
+        if (vendorEntity == null)
+            vendorEntity = new VendorEntity();
+        vendorEntity.parseModel(vendor);
+        vendorEntity.setContext(context);
+        vendorRepository.save(vendorEntity);
+        return "redirect:"+na;
+        
+    }
 
 }

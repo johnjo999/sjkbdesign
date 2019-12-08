@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.UUID;
 
 import com.dropbox.core.DbxException;
+import com.sjkb.entities.VendorEntity;
 import com.sjkb.exception.UsernameTakenException;
 import com.sjkb.models.users.UserDelModel;
 import com.sjkb.models.users.UserNewModel;
@@ -13,6 +14,7 @@ import com.sjkb.models.users.VendorModel;
 import com.sjkb.repositores.UserRepository;
 import com.sjkb.service.JobService;
 import com.sjkb.service.UserContactService;
+import com.sjkb.repositores.VendorRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,6 +41,9 @@ public class UserController {
     UserRepository userRepository;
 
     @Autowired
+    VendorRepository vendorRepository;
+
+    @Autowired
     UserContactService userContactService;
 
     @Autowired
@@ -63,7 +68,9 @@ public class UserController {
 
         map.addAttribute("users", userContactService.getAllUsers("customer"));
         map.addAttribute("user", getUser());
-        map.addAttribute("userDelModel", new UserDelModel());
+        UserDelModel userDelModel = new UserDelModel();
+        userDelModel.setNextPage("/backstage/user/getalluser");
+        map.addAttribute("userDelModel", userDelModel);
         return "contacts/users_list";
     }
 
@@ -72,7 +79,9 @@ public class UserController {
 
         map.addAttribute("users", userContactService.getAllUsers("salesRep"));
         map.addAttribute("user", getUser());
-        map.addAttribute("userDelModel", new UserDelModel());
+        UserDelModel userDelModel = new UserDelModel();
+        userDelModel.setNextPage("/backstage/user/getallrep");
+        map.addAttribute("userDelModel", userDelModel);
         return "contacts/salerep_list";
     }
 
@@ -90,7 +99,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String addContact(ModelMap map, @RequestParam("role") String role) {
+    public String addContact(ModelMap map) {
         UserNewModel user = new UserNewModel();
         key = UUID.randomUUID().toString();
         user.setKey(key);
@@ -122,10 +131,10 @@ public class UserController {
                         VendorModel vendorModel = new VendorModel();
                         vendorModel.setPocId(contactId);
                         vendorModel.setName(userModel.getCompany());
-                        vendorModel.setPostNextAction("/backstage/catalog/newVendor?na=/backstage/user/getall");
+                        vendorModel.setPostNextAction("/backstage/catalog/newVendor?na=/backstage/user/getallrep");
                         map.addAttribute("vendor", vendorModel);
                         map.addAttribute("user", getUser());
-                        return "create_vendor";
+                        return "contacts/create_vendor";
 
                     }
                 }
@@ -143,8 +152,9 @@ public class UserController {
         SecurityContext holder = SecurityContextHolder.getContext();
         final String emp = holder.getAuthentication().getName();
         try {
+            // return back the page appropriate from where they came
             userContactService.remove(emp, userDelModel);
-            return "redirect:/backstage/user/getall";
+            return "redirect:" + userDelModel.getNextPage();
         } catch (DbxException e) {
             map.addAttribute("errMessage",
                     String.format("<h5>Could not delete Dropbox folder</h5><p class='sjerror'>%s</p>", e.getMessage()));
@@ -164,17 +174,24 @@ public class UserController {
         return "contacts/users_new";
     }
 
-    @RequestMapping(value = "/edit/editcomp/{token}", method = RequestMethod.GET)
+    @RequestMapping(value = "/editcomp/{token}", method = RequestMethod.GET)
     public String editCompany(ModelMap map, @PathVariable final String token) {
         key = UUID.randomUUID().toString();
-        UserViewModel userModel = userContactService.getByToken(token).setKey(key).setToken(token);
+        UserViewModel userModel = new UserViewModel(userContactService.getContactByUid(token));
+        userModel.setKey(key);
         VendorModel vendorModel = new VendorModel();
-        vendorModel.setPocId(token);
-        vendorModel.setName(userModel.getCompany());
-        map.addAttribute("newuser", userContactService.getByToken(token).setKey(key).setToken(token));
+        VendorEntity entity = vendorRepository.findByRepId(token);
+        if (entity == null) {
+            vendorModel.setPocId(token);
+            vendorModel.setName(userModel.getCompany());
+        } else {
+            vendorModel = entity.getModel();
+        }
+        vendorModel.setPostNextAction("/backstage/catalog/newVendor?na=/backstage/user/getallrep");
+        map.addAttribute("newuser", userModel);
         map.addAttribute("user", getUser());
-        map.addAttribute("roles", UserRoleModel.getRolesLessThan(getRole()));
-        return "contacts/users_new";
+        map.addAttribute("vendor", vendorModel);
+        return "contacts/edit_vendor";
     }
 
     /**

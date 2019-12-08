@@ -1,5 +1,8 @@
 package com.sjkb.models.users;
 
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
+
 public class VendorModel {
     private String name;
     private Float multiplier;
@@ -7,6 +10,8 @@ public class VendorModel {
     private String pocId;
     private String url;
     private String postNextAction;
+    private String login;
+    private String pwd;
 
     public String getName() {
         return name;
@@ -55,6 +60,32 @@ public class VendorModel {
     public void setPostNextAction(String postNextAction) {
         this.postNextAction = postNextAction;
     }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
+    public String getPwdEncrypt() {
+        TextEncryptor crypter = Encryptors.text((CharSequence)"thesjkbkey", "AE7387");
+        return crypter.encrypt(pwd);
+	}
+    
+    public String getPwdDecrypt() {
+        TextEncryptor crypter = Encryptors.text("thesjkbkey", "AE7387");
+        return crypter.decrypt(pwd);
+	}
 
     
 }

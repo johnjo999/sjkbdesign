@@ -26,7 +26,7 @@
     }
 
     function userdet(usertoken) {
-        window.location.href = "/backstage/user/editcomp/"+usertoken;
+        window.location.href = "/backstage/user/editcomp/" + usertoken;
     }
 
 </script>
@@ -58,6 +58,7 @@
                 </div>
                 <div class="modal-body m-3">
                     <form id="deluserform" class="form" th:object="${userDelModel}" , method="post">
+                        <input type="text" class="hidden" th:field="*{nextPage}">
                         <div class="custom-control from-group">
                             <label>
                                 <input id="delJobChk" type="checkbox" class="sjhidden" th:field="*{delJobs}">
@@ -91,8 +92,8 @@
             <div th:include="fragments/sidecar::topnav" th:remove="tag"></div>
             <main class="content">
                 <div class="container-fluid">
-                    <button onclick="window.location.href='/backstage/user/add?role=salesRep'" class="btn btn-pill btn-info"><span
-                            data-feather="plus"></span> Add New</button>
+                    <button onclick="window.location.href='/backstage/user/add?role=salesRep'"
+                        class="btn btn-pill btn-info"><span data-feather="plus"></span> Add New</button>
                     <div class="sjwhitespace"></div>
                     <div class="row">
                         <table id="datatable" class="table table-striped dataTable no-footer dtr-inline" role="grid">
@@ -106,7 +107,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="user:${users}" th:data-det="${user.token}" onclick="userdet(this.getAttribute('data-det'));">
+                                <tr th:each="user:${users}" th:data-det="${user.token}"
+                                    onclick="userdet(this.getAttribute('data-det'));">
                                     <td th:text="${user.company}"></td>
                                     <td th:text="${user.lastname}"></td>
                                     <td th:text="${user.firstname}"></td>

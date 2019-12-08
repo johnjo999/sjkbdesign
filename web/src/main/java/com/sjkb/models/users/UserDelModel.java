@@ -5,6 +5,7 @@ public class UserDelModel {
     private boolean delJobs;
     private boolean delDropbox;
     private String type;
+    private String nextPage;
 
     
     public boolean isDelJobs() {
@@ -38,5 +39,15 @@ public class UserDelModel {
     public void setUid(String uid) {
         this.uid = uid;
     }
+
+    public String getNextPage() {
+        return nextPage;
+    }
+
+    public void setNextPage(String nextPage) {
+        this.nextPage = nextPage;
+    }
+
+    
 
 }
