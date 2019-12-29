@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.files.DeleteErrorException;
+import com.sjkb.components.UserComponent;
 import com.sjkb.entities.ContactEntity;
 import com.sjkb.entities.UserEntity;
 import com.sjkb.exception.UsernameTakenException;
@@ -19,9 +20,16 @@ import com.sjkb.models.users.UserViewModel;
 import com.sjkb.repositores.CompanyRepsInterface;
 import com.sjkb.repositores.ContactRepository;
 import com.sjkb.repositores.UserRepository;
+import com.sjkb.repositores.VendorRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+import org.springframework.util.DigestUtils;
 
 @Service
 class UserContactServiceImpl implements UserContactService {
@@ -33,22 +41,55 @@ class UserContactServiceImpl implements UserContactService {
     UserRepository userRepository;
 
     @Autowired
+    VendorRepository vendorRepository;;
+
+    @Autowired
     DropboxService dropboxService;
 
-    private String context;
+    TextEncryptor crypter = Encryptors.text("thesjkbkey", "AE7387");
 
-    // cached ID handler used as alternate reference to username;
-    private Map<String, UserViewModel> userTokenMap = new HashMap<>();
+    private String context = null;
+    private String userIs;
+    private String uname;
+    private Map<String, String> cachedUsers = new HashMap<>();
+
+    public String getUser() {
+        final SecurityContext holder = SecurityContextHolder.getContext();
+        UserComponent principal = (UserComponent) holder.getAuthentication().getPrincipal();
+        ContactEntity contact = null;
+        userIs = principal.getUser().getUsernameClear();
+        uname = principal.getUser().getUsername();
+        if (context == null) {
+            contact = getContactByUserid(uname);
+            if (contact != null)
+                context = contact.getContext();
+        }
+        return userIs;
+    }
+
+    public String getUserId() {
+        if (uname == null)
+            getUser();
+        return uname;
+    }
+
+    public String getContext() {
+        if (context == null) {
+            getUser();
+        }
+        return context;
+    }
 
     @Override
     public List<UserViewModel> getAllUsers(String role) {
         List<UserViewModel> result = new ArrayList<>();
-        List<ContactEntity> contacts = contactRepository.findByContextAndRoleOrderByLastname(context, role);
+        List<ContactEntity> contacts = contactRepository.findByContextAndRoleOrderByFirstname(getContext(), role);
         if (contacts != null) {
-            userTokenMap.clear();
             for (ContactEntity contact : contacts) {
+                Optional<UserEntity> clearUserOption = userRepository.findByUsername(contact.getUsername());
                 UserViewModel userModel = new UserViewModel(contact);
-                userTokenMap.put(userModel.getToken(), userModel);
+                if (clearUserOption.isPresent())
+                    userModel.setUsername(clearUserOption.get().getUsernameClear());
                 result.add(userModel);
             }
         }
@@ -66,8 +107,9 @@ class UserContactServiceImpl implements UserContactService {
      */
     private boolean createUserAccount(UserViewModel userNewModel, String createdBy) throws UsernameTakenException {
         boolean result = true;
+        String userHash = DigestUtils.md5DigestAsHex(userNewModel.getUsername().getBytes());
         if (userNewModel.getUsername().length() > 2) {
-            Optional<UserEntity> user = userRepository.findByUsername(userNewModel.getUsername());
+            Optional<UserEntity> user = userRepository.findByUsername(userHash);
             UserEntity userEntity = null;
             if (user.isPresent() == true) {
                 if (userNewModel.getToken() == null) {
@@ -91,13 +133,14 @@ class UserContactServiceImpl implements UserContactService {
             if (userNewModel.getPassword().length() > 2) {
                 userEntity = new UserEntity();
                 userEntity.encodePwd(userNewModel.getPassword());
-                userEntity.setUsername(userNewModel.getUsername());
+                userEntity.setUseridClear(userNewModel.getUsername());
                 userEntity.setLocked(false);
                 userEntity.setRole(UserRoleModel.getUserRole(userNewModel.getRole()));
                 userEntity.setSponsor(createdBy);
                 userRepository.save(userEntity);
             }
         }
+        userNewModel.setUsername(userHash);
         return result;
     }
 
@@ -120,12 +163,13 @@ class UserContactServiceImpl implements UserContactService {
             contactEntity.copyFromContact(userNewModel);
         }
         contactEntity.setBranch(1);
-        contactEntity.setContext(context);
+        contactEntity.setContext(getContext());
         contactRepository.save(contactEntity);
         return contactEntity.getUid();
     }
 
     public String createDbxFolder(UserViewModel userNewModel, String createdBy) {
+
         long empid = 0L;
         int locid = 0;
         int year = 19;
@@ -145,7 +189,7 @@ class UserContactServiceImpl implements UserContactService {
                     Optional<UserEntity> optionalUserEntity = userRepository.findByUsername(userNewModel.getUsername());
                     if (optionalUserEntity.isPresent()) {
                         UserEntity userEntity = optionalUserEntity.get();
-                        userEntity.setDbxFolder(foldername);
+                        userEntity.setJobid(foldername);
                         userRepository.save(userEntity);
                     }
 
@@ -181,8 +225,8 @@ class UserContactServiceImpl implements UserContactService {
             if (userEntityOpt.isPresent()) {
                 UserEntity userEntity = userEntityOpt.get();
                 userRepository.delete(userEntity);
-                if (userDelModel.isDelDropbox() && userEntity.getDbxFolder() != null) {
-                    dropboxService.removeFolderFor(empId, userEntity.getDbxFolder());
+                if (userDelModel.isDelDropbox() && userEntity.getJobid() != null) {
+                    dropboxService.removeFolderFor(empId, userEntity.getJobid());
                 }
             }
         }
@@ -198,14 +242,20 @@ class UserContactServiceImpl implements UserContactService {
         ContactEntity result = null;
         Optional<UserEntity> userOpt = userRepository.findByUsername(username);
         if (userOpt.isPresent()) {
-            result = contactRepository.findByUsername(userOpt.get().getSponsor());
+            result = contactRepository.findByUsername(crypter.encrypt(userOpt.get().getSponsor()));
         }
         return result;
     }
 
     @Override
-    public UserViewModel getByToken(String token) {
-        return userTokenMap.get(token);
+    public UserViewModel getByUid(String token) {
+        ContactEntity contact = contactRepository.getOne(token);
+        Optional<UserEntity> user = userRepository.findByUsername(contact.getUsername());
+        UserViewModel result = new UserViewModel(contact);
+        if (user.isPresent()) {
+            result.setUsername(user.get().getUsernameClear());
+        }
+        return result;
     }
 
     @Override
@@ -216,7 +266,7 @@ class UserContactServiceImpl implements UserContactService {
     @Override
     public List<ContractorSelectRow> getContratorSelectRows() {
         List<ContractorSelectRow> result = new ArrayList<>();
-        List<ContactEntity> contractors = contactRepository.findByContextAndRole("contractor", context);
+        List<ContactEntity> contractors = contactRepository.findByContextAndRole(context, "contractor");
         if (contractors != null && contractors.size() > 0) {
             for (ContactEntity contractor : contractors) {
                 ContractorSelectRow row = new ContractorSelectRow(contractor);
@@ -234,7 +284,7 @@ class UserContactServiceImpl implements UserContactService {
     @Override
     public List<ContractorSelectRow> getInstallerSelectRows() {
         List<ContractorSelectRow> result = new ArrayList<>();
-        List<ContactEntity> contractors = contactRepository.findByContextAndRole("installer", context);
+        List<ContactEntity> contractors = contactRepository.findByContextAndRole(context, "installer");
         if (contractors != null && contractors.size() > 0) {
             for (ContactEntity contractor : contractors) {
                 ContractorSelectRow row = new ContractorSelectRow(contractor);
@@ -249,12 +299,6 @@ class UserContactServiceImpl implements UserContactService {
         return result;
     }
 
-    @Override
-    public void setContext(String context) {
-        this.context = context;
-
-    }
-
     /***
      * Creates new context Input, Admin of the new context, Sponsor user creating
      * the context Output, the UID of the newly created context. Company name should
@@ -265,18 +309,21 @@ class UserContactServiceImpl implements UserContactService {
     @Override
     public String createContextForNewUser(UserViewModel userNewModel, String uname) throws UsernameTakenException {
         ContactEntity contactEntity = null;
+        Assert.notNull(userNewModel, "attempted to create new user with NULL model");
         String contextUid = UUID.randomUUID().toString();
         if (userNewModel.getUsername().length() == 0 && userNewModel.getEmail().length() > 3) {
             userNewModel.setUsername(userNewModel.getEmail());
         }
+        String userHash = DigestUtils.md5DigestAsHex(userNewModel.getUsername().getBytes());
         if (createUserAccount(userNewModel, uname) == false) {
-            contactEntity = contactRepository.findByUsername(userNewModel.getUsername());
+            contactEntity = contactRepository.findByUsername(userHash);
         }
         if (contactEntity == null)
             contactEntity = new ContactEntity(userNewModel);
         else {
             contactEntity.copyFromContact(userNewModel);
         }
+        contactEntity.setUsername(userHash);
         contactEntity.setContext(contextUid);
         contactEntity.setBranch(1);
         contactRepository.save(contactEntity);
@@ -290,7 +337,41 @@ class UserContactServiceImpl implements UserContactService {
 
     @Override
     public List<CompanyRepsInterface> getCompaniesWithReps(String context) {
-        return contactRepository.findCompanyByContext(context);
+        return vendorRepository.findByContext(context);
+    }
+
+    @Override
+    public void clearContext() {
+        this.context = null;
+        this.userIs = null;
+    }
+
+    @Override
+    public String getUserIs() {
+        if (userIs == null)
+            getUser();
+        return userIs;
+    }
+
+    @Override
+    public void setContext() {
+        clearContext();
+        getContext();
+
+    }
+
+    @Override
+    public String getUsernameFor(String user) {
+        String result = "";
+        if (cachedUsers.containsKey(user))
+            result = cachedUsers.get(user);
+        else {
+            Optional<UserEntity> userOpt = userRepository.findByUsername(user);
+            if (userOpt.isPresent()) {
+                result = userOpt.get().getUsernameClear();
+            }
+        }
+        return result;
     }
 
 }

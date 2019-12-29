@@ -1,20 +1,24 @@
 package com.sjkb.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.sjkb.entities.ContactEntity;
 import com.sjkb.entities.JobEntity;
 import com.sjkb.models.AssignExpenseModel;
 import com.sjkb.entities.JobExpenseEntity;
 import com.sjkb.models.jobs.AddInvoiceModel;
+import com.sjkb.models.jobs.AddPaymentModel;
 import com.sjkb.models.jobs.JobAttributeModel;
+import com.sjkb.models.jobs.PandLModel;
+import com.sjkb.repositores.JobExpenseInvoiceInterface;
+import com.sjkb.repositores.JobExpenseRepository;
 import com.sjkb.models.category.ContractorSelectRow;
 import com.sjkb.service.JobService;
 import com.sjkb.service.UserContactService;
 
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -32,16 +36,15 @@ public class JobController {
     JobService jobService;
 
     @Autowired
+    JobExpenseRepository jobExpenseRepository;
+
+    @Autowired
     UserContactService contactService;
 
     @Autowired
     BackstageController backstageController;
 
-    private String getUser() {
-        SecurityContext holder = SecurityContextHolder.getContext();
-        final String uname = holder.getAuthentication().getName();
-        return uname;
-    }
+    TextEncryptor crypter = Encryptors.text("thesjkbkey", "AE7387");
 
     @RequestMapping(value = "getfolder/{folder}")
     public String getSharedFiles(ModelMap map, @PathVariable("folder") final String folder) {
@@ -61,7 +64,6 @@ public class JobController {
             @PathVariable("type") final String type) {
         String form = "fragments/forms::" + type + "-form";
         AssignExpenseModel expenseModel = null;
-        String context = backstageController.getContext();
         switch (type) {
         case "contractor":
             map.addAttribute("allCont", contactService.getContratorSelectRows());
@@ -75,11 +77,10 @@ public class JobController {
             map.addAttribute("allCont", new ArrayList<ContractorSelectRow>());
             break;
         case "expense":
-            map.addAttribute("reps", contactService.getCompaniesWithReps(context));
+            map.addAttribute("reps", contactService.getCompaniesWithReps(contactService.getContext()));
             JobExpenseEntity expense = new JobExpenseEntity();
             expense.setFolder(jobid);
             map.addAttribute("expense", expense);
-            break;
         }
         if (expenseModel == null) {
             expenseModel = new AssignExpenseModel();
@@ -92,10 +93,23 @@ public class JobController {
     public String getInvoiceForJob(ModelMap map, @PathVariable("jobid") final String jobid,
             @RequestParam("count") Integer count) {
         AddInvoiceModel invoiceModel = new AddInvoiceModel();
+        List<JobExpenseInvoiceInterface> expenses = jobExpenseRepository.findByFolderAndNotInvoiced(jobid);
+        invoiceModel.addAllExpenses(expenses);
         invoiceModel.setFolder(jobid);
         invoiceModel.createBlankRows(count);
         map.addAttribute("addInvoiceModel", invoiceModel);
         return "fragments/forms::invoice-form";
+
+    }
+
+    @RequestMapping(value = "get/form/payment/{jobid}")
+    public String getPaymentForJob(ModelMap map, @PathVariable("jobid") final String jobid) {
+        AddPaymentModel paymentModel = new AddPaymentModel();
+        paymentModel.setFolder(jobid);
+        List<String> methods = jobService.getPaymentMethods();
+        map.addAttribute("addPaymentModel", paymentModel);
+        map.addAttribute("methods", methods);
+        return "fragments/forms::payment-form";
 
     }
 
@@ -108,14 +122,33 @@ public class JobController {
 
     @RequestMapping(value = "set/invoice", method = RequestMethod.POST)
     public String setJobInvoice(ModelMap map, @ModelAttribute("addInvoiceModel") AddInvoiceModel invoiceModel) {
-        jobService.addInvoice(invoiceModel, getUser());
+        jobService.addInvoice(invoiceModel, contactService.getUserId());
         return "redirect:/backstage/job/getfolder/" + invoiceModel.getFolder();
     }
 
     @RequestMapping(value = "post/expense", method = RequestMethod.POST)
     public String setJobInvoice(ModelMap map, @ModelAttribute("JobExpenseModel") JobExpenseEntity expense) {
-        jobService.postExpense(expense, getUser());
+        jobService.postExpense(expense, contactService.getUserId());
         return "redirect:/backstage/job/getfolder/" + expense.getFolder();
+    }
+
+    @RequestMapping(value = "post/payment", method = RequestMethod.POST)
+    public String setJobInvoice(ModelMap map, @ModelAttribute("addPaymentModel") AddPaymentModel payment) {
+        jobService.postPayment(payment, contactService.getUserId());
+        return "redirect:/backstage/job/getfolder/" + payment.getFolder();
+    }
+
+    @RequestMapping(value = "/get/pandl/{jobid}")
+    public String getJobPandL(ModelMap map, @PathVariable("jobid") final String jobid) {
+        PandLModel pandl = new PandLModel();
+        JobEntity job = jobService.getJobForFolder(jobid);
+        pandl.setExpenses(jobService.getExpenses(jobid));
+        ContactEntity contact = contactService.getContactByUid(job.getPocId());
+        pandl.setJobid(jobid);
+        map.addAttribute("pandl", pandl);
+        map.addAttribute("contact", contact);
+        return "project_pl";
+
     }
 
 }

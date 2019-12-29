@@ -1,7 +1,8 @@
 package com.sjkb.models.users;
 
-
 import com.sjkb.entities.ContactEntity;
+
+import org.springframework.util.DigestUtils;
 
 public class UserViewModel {
     private String username;
@@ -44,6 +45,10 @@ public class UserViewModel {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getUsernameHash() {
+        return DigestUtils.md5DigestAsHex(username.getBytes());
     }
 
     public void setUsername(String username) {

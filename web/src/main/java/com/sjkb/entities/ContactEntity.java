@@ -6,8 +6,12 @@ import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.sjkb.models.users.UserViewModel;
+
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 
 @Entity(name="contact")
 @Table(name="contact")
@@ -16,10 +20,10 @@ public  class ContactEntity {
     @Id
     private String uid;
     private String firstname;
-    private String lastname;
+    private String lastnameCry;
     private String company;
-    private String email;
-    private String phone;
+    private String emailCry;
+    private String phoneCry;
     private String street;
     private String street2;
     private String city;
@@ -32,15 +36,18 @@ public  class ContactEntity {
     private Timestamp lastLogin;
     private Timestamp created;
 
+    @Transient
+    TextEncryptor crypter = Encryptors.text("thesjkbkey", "AE7387");
+
     public ContactEntity() {}
 
     public ContactEntity(UserViewModel userModel) {
         this.uid = UUID.randomUUID().toString();
-        this.username = userModel.getUsername();
+        this.setUsername(userModel.getUsername());
         this.firstname = userModel.getFirstname();
-        this.lastname = userModel.getLastname();
-        this.email = userModel.getEmail();
-        this.phone = userModel.getPhone();
+        this.setLastname(userModel.getLastname());
+        this.setEmail(userModel.getEmail());
+        this.setPhone(userModel.getPhone());
         this.role = userModel.getRole();
         this.city = userModel.getCity();
         this.state = userModel.getState();
@@ -50,7 +57,8 @@ public  class ContactEntity {
         this.zip = userModel.getZip();
         this.company = userModel.getCompany();
 
-	}
+    }
+    
 
 	public String getUid() {
         return uid;
@@ -69,27 +77,27 @@ public  class ContactEntity {
     }
 
     public String getLastname() {
-        return lastname;
+        return crypter.decrypt(lastnameCry);
     }
 
     public void setLastname(String lastname) {
-        this.lastname = lastname;
+        this.lastnameCry = crypter.encrypt(lastname);
     }
 
     public String getEmail() {
-        return email;
+        return crypter.decrypt(emailCry);
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.emailCry = crypter.encrypt(email);
     }
 
     public String getPhone() {
-        return phone;
+        return crypter.decrypt(phoneCry);
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        this.phoneCry = crypter.encrypt(phone);
     }
 
     public String getStreet() {
@@ -116,17 +124,11 @@ public  class ContactEntity {
         this.state = state;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    
 
     public String getCompany() {
         if (company == null || company.length() == 0) {
-            return this.lastname;
+            return this.getLastname();
         }
         return company;
     }
@@ -193,12 +195,11 @@ public  class ContactEntity {
     }
 
 	public void copyFromContact(UserViewModel userModel) {
-
-        this.username = userModel.getUsername();
+        this.setUsername(userModel.getUsername());
         this.firstname = userModel.getFirstname();
-        this.lastname = userModel.getLastname();
-        this.email = userModel.getEmail();
-        this.phone = userModel.getPhone();
+        this.setLastname(userModel.getLastname());
+        this.setEmail(userModel.getEmail());
+        this.setPhone(userModel.getPhone());
         this.role = userModel.getRole();
         this.city = userModel.getCity();
         this.state = userModel.getState();
@@ -208,6 +209,36 @@ public  class ContactEntity {
         this.company = userModel.getCompany();
 	}
 
-    
+    public String getLastnameCry() {
+        return lastnameCry;
+    }
+
+    public void setLastnameCry(String lastnameCry) {
+        this.lastnameCry = lastnameCry;
+    }
+
+    public String getEmailCry() {
+        return emailCry;
+    }
+
+    public void setEmailCry(String emailCry) {
+        this.emailCry = emailCry;
+    }
+
+    public String getPhoneCry() {
+        return phoneCry;
+    }
+
+    public void setPhoneCry(String phoneCry) {
+        this.phoneCry = phoneCry;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
     
 }

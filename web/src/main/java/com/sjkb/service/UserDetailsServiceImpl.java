@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -19,7 +20,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserEntity> optionalEntity = userRepository.findByUsername(username);
+        String userHash = DigestUtils.md5DigestAsHex(username.getBytes());
+        Optional<UserEntity> optionalEntity = userRepository.findByUsername(userHash);
         UserComponent user = null;
         if (optionalEntity.isPresent())
             user = new UserComponent(optionalEntity.get());

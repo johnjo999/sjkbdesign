@@ -7,6 +7,7 @@ public class JobAttributeModel {
     private String contractorId;
     private String installer;
     private String installerId;
+    private String designer;
     private int expectedCost = 0;
 
     public String getContractor() {
@@ -53,6 +54,15 @@ public class JobAttributeModel {
         this.expectedCost += cost;
 	}
 
+    public String getDesigner() {
+        return designer;
+    }
+
+    public void setDesigner(String designer) {
+        this.designer = designer;
+    }
+
+    
     
 
 }

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sjkb.repositores.JobExpenseInvoiceInterface;
+
 public class AddInvoiceModel {
     private Long id;
     private String folder;
@@ -52,5 +54,12 @@ public class AddInvoiceModel {
     public void setId(Long id) {
         this.id = id;
     }
+
+	public void addAllExpenses(List<JobExpenseInvoiceInterface> expenses) {
+        for (JobExpenseInvoiceInterface expense : expenses) {
+            rows.add(new JobInvoiceRowModel(expense));
+        }
+
+	}
 
 }

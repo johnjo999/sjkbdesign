@@ -52,7 +52,7 @@ input.sjhidden {
 }
 
 .sjwhitespace {
-    height: 18px;
+    min-height: 18px;
 }
 
 .filecard {
@@ -66,4 +66,19 @@ input.sjhidden {
 .sjicon {
     display: flexbox;
     scale: 2;
+}
+
+.card-link {
+    cursor:pointer;
+    box-shadow: 0 10px 24px -6px rgba(0,0,0,0.25);
+    margin-bottom: 12px
+}
+.card-link:hover {
+    box-shadow: 0 10px 24px -6px #00bceb;
+}
+.card-link:active {
+    margin-left: 12px;
+    margin-top: 12px;
+    margin-bottom: 0px;
+    box-shadow: none;
 }

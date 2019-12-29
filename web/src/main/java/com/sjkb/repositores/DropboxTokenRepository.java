@@ -10,7 +10,7 @@ public interface DropboxTokenRepository extends JpaRepository<DropboxTokenEntity
 
     List<DropboxTokenEntity>findAll();
 
-    List<DropboxTokenEntity> findByUser(String user);
+    DropboxTokenEntity findByUser(String user);
 
     List<DropboxTokenEntity> findByContext(String context);
     

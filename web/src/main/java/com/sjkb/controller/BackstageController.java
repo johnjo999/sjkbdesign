@@ -27,43 +27,25 @@ public class BackstageController {
     JobService jobService;
 
     @Autowired
-    UserContactService userContactService;
+    UserContactService userService;
 
-    private String context = null;
-
-    private String getUser() {
-        SecurityContext holder = SecurityContextHolder.getContext();
-        final String uname = holder.getAuthentication().getName();
-        if (context == null) {
-            context = userContactService.getContactByUserid(uname).getContext();
-            userContactService.setContext(context);
-        }
-        return uname;
-    }
-
-    public String getContext() {
-        if (context == null) {
-            getUser();
-        }
-        return context;
-    }
 
     @RequestMapping(value = "dashboard")
-    public String dashboard(ModelMap map) {
-        map.addAttribute("user", getUser());
+    public String dashboard(final ModelMap map) {
+        map.addAttribute("user", userService.getUserIs());
         return "dashboard";
     }
 
     @RequestMapping(value = "doquote")
-    public String doQuote(ModelMap map) {
+    public String doQuote(final ModelMap map) {
         map.addAttribute("quote", new QuickQuoteModel());
         map.addAttribute("mats", Material.getList());
-        map.addAttribute("user", getUser());
+        map.addAttribute("user", userService.getUserIs());
         return "doquickquote";
     }
 
     @RequestMapping(value = "getquotecard")
-    public String getQuoteCard(ModelMap map, @RequestParam("card") final String card) {
+    public String getQuoteCard(final ModelMap map, @RequestParam("card") final String card) {
         String viewModel = null;
         CardModel cardModel = null;
         switch (card) {
@@ -83,7 +65,7 @@ public class BackstageController {
         }
         map.addAttribute("mats", Material.getList());
         map.addAttribute("cardModel", cardModel);
-        map.addAttribute("user", getUser());
+        map.addAttribute("user", userService.getUserIs());
         return viewModel;
     }
 
@@ -91,20 +73,17 @@ public class BackstageController {
      * Add room card to quick quote
      */
     @RequestMapping(value = "addroomtoqq", method = RequestMethod.POST)
-    public String addRoomToQuickQuote(ModelMap map, @ModelAttribute("cardModel") final CardModel cardModel) {
+    public String addRoomToQuickQuote(final ModelMap map, @ModelAttribute("cardModel") final CardModel cardModel) {
         return "fragments/cards::qqrow";
     }
 
     @RequestMapping(value = "get/jobs/{type}")
-    public String getJobs(ModelMap map, @PathVariable("type") final String type) {
-        SecurityContext holder = SecurityContextHolder.getContext();
+    public String getJobs(final ModelMap map, @PathVariable("type") final String type) {
+        final SecurityContext holder = SecurityContextHolder.getContext();
         final String uname = holder.getAuthentication().getName();
-        map.addAttribute("cards", jobService.getAllJobsForUser(uname));
+        map.addAttribute("cards", jobService.getAllJobsForUser(uname, type));
+        map.addAttribute("user", userService.getUserIs());
         return "jobs_list";
     }
-
-	public void clearContext() {
-        this.context = null;
-	}
 
 }

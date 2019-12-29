@@ -21,6 +21,7 @@ public class JobExpenseEntity {
     private float multiplier;
     private float invoice;
     private LocalDate dateNew;
+    private boolean invoiced;
     
     public JobExpenseEntity() {
         uid = UUID.randomUUID().toString();
@@ -98,6 +99,16 @@ public class JobExpenseEntity {
     public void setDateNew(LocalDate dateNew) {
         this.dateNew = dateNew;
     }
+
+    public boolean isInvoiced() {
+        return invoiced;
+    }
+
+    public void setInvoiced(boolean invoiced) {
+        this.invoiced = invoiced;
+    }
+
+    
 
     
 }

@@ -1,11 +1,20 @@
 package com.sjkb.models.jobs;
 
+import com.sjkb.repositores.JobExpenseInvoiceInterface;
+
 public class JobInvoiceRowModel {
     private String name;
     private String desc;
     private Float cost;
 
-    public String getName() {
+    public JobInvoiceRowModel() {}
+    
+    public JobInvoiceRowModel(JobExpenseInvoiceInterface expense) {
+        name = expense.getCompanyName();
+        cost = expense.getCost();
+	}
+
+	public String getName() {
         return name;
     }
 

@@ -49,18 +49,13 @@ public class UserController {
     @Autowired
     JobService jobService;
 
+    @Autowired
+    BackstageController backstage;
+
     private String key = null;
 
-    private String context = null;;
-
     public String getUser() {
-        SecurityContext holder = SecurityContextHolder.getContext();
-        final String uname = holder.getAuthentication().getName();
-        if (context == null) {
-            context = userContactService.getContactByUserid(uname).getContext();
-            userContactService.setContext(context);
-        }
-        return uname;
+        return userContactService.getUserIs();
     }
 
     @RequestMapping(value = "/getalluser", method = RequestMethod.GET)
@@ -135,7 +130,7 @@ public class UserController {
                         map.addAttribute("vendor", vendorModel);
                         map.addAttribute("user", getUser());
                         return "contacts/create_vendor";
-
+                        
                     }
                 }
             } catch (UsernameTakenException e) {
@@ -166,7 +161,7 @@ public class UserController {
     @RequestMapping(value = "/edit/{token}", method = RequestMethod.GET)
     public String editUser(ModelMap map, @PathVariable final String token) {
         key = UUID.randomUUID().toString();
-        UserViewModel user = userContactService.getByToken(token).setKey(key).setToken(token);
+        UserViewModel user = userContactService.getByUid(token).setKey(key).setToken(token);
         map.addAttribute("newuser", user);
         map.addAttribute("user", getUser());
         map.addAttribute("actrole", user.getRole());

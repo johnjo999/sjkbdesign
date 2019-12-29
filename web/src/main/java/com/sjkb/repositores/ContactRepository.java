@@ -13,7 +13,7 @@ public interface ContactRepository extends JpaRepository<ContactEntity, String> 
 
     List<ContactEntity>findByContextAndRole(String context, String role);
 
-    List<ContactEntity>findByContextAndRoleOrderByLastname(String context, String role);
+    List<ContactEntity>findByContextAndRoleOrderByFirstname(String context, String role);
 
     ContactEntity findByUsername(String username);
 
@@ -21,6 +21,9 @@ public interface ContactRepository extends JpaRepository<ContactEntity, String> 
 
     @Query("SELECT u FROM contact u WHERE u.company != 'NULL' and u.context = :context and u.role = 'salesRep'")
     List<CompanyRepsInterface> findCompanyByContext(@Param("context") String context);
+
+    @Query("SELECT company FROM contact WHERE uid = :uid")
+    String getCompanyForId(@Param("uid") String companyContactId);
 
 
 }

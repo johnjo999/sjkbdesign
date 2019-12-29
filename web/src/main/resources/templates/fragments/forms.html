@@ -62,14 +62,15 @@
                     th:field="*{rows[__${stat.index}__].name}"></input>
             </div>
             <div class="form-group col-md-6">
-                    <label th:for="|lineDesc${stat.index}|">Description</label>
-                    <input id="|lineDesc${stat.index}|" type="text" class="input-group mb-3 inline"
-                        th:field="*{rows[__${stat.index}__].desc}"></input>
-                </div>
+                <label th:for="|lineDesc${stat.index}|">Description</label>
+                <input id="|lineDesc${stat.index}|" type="text" class="input-group mb-3 inline"
+                    th:field="*{rows[__${stat.index}__].desc}"></input>
+            </div>
             <div class="form-group col-md-3">
                 <label th:for="|lineCost${stat.index}|">Cost</label>
-                <input id="|lineCost${stat.index}|" type="number"  min="0.00" max="100000.00" step="0.01" class="input-group mb-3 costing"
-                    th:field="*{rows[__${stat.index}__].cost}" onchange="totalizer()"></input>
+                <input id="|lineCost${stat.index}|" type="number" min="0.00" max="100000.00" step="0.01"
+                    class="input-group mb-3 costing" th:field="*{rows[__${stat.index}__].cost}"
+                    onchange="totalizer()"></input>
             </div>
         </div>
         <div class="form-row">
@@ -78,77 +79,140 @@
         </div>
         <input type="text" name="folder" class="hidden" th:field="*{folder}"></input>
     </form>
+</div>
+<div th:fragment="expense-form" th:remove="tag">
+    <script>
 
-    <div th:fragment="expense-form" th:remove="tag">
-        <form id="expense-form" th:action="@{/backstage/job/post/expense}" th:object="${expense}" class="form" method="post">
-            <label for="company">Supplier</label>
-        <select id="company" th:field="*{companyContactId}" class="input-group custom-select mb-5">
-            <option th:each="rep : ${reps}" th:value="${rep.uid}" th:text="${rep.company}">cont</option>
+        function doMulti(dom) {
+            $("option").each(function (index, element) {
+                var p = $(element).prop('selected');
+                var m = $(element).data("multi");
+                if ($(element).prop('selected'))
+                    $("#multiplier").val(m);
+            });
+        }
+
+        function doMath(e, d) {
+            var tar = e.target.id;
+            var n = parseFloat($("#net").val());
+            var t = parseFloat($("#tax").val());
+            var m = parseFloat($("#multiplier").val());
+            var invoice = parseFloat($("#invoice").val());
+            var multi = parseFloat($("#multiplier").val());
+            if (m === 0.0) {
+                m = 1.0;
+            }
+            switch(tar) {
+                case "net":
+                case "tax":
+                   invoice = parseFloat(n / m + t).toFixed(2);
+                break;
+                case "invoice":
+                    multi = parseFloat(n/(invoice - t)).toFixed(2);
+            }
+            var paid = parseFloat(n + t).toFixed(2);
+            var i = $("#invoice").val();
+            $("#paid").val(paid);
+            $("#invoice").val(invoice);
+            $("#multiplier").val(multi);
+            console.log(n / m + t);
+        }
+
+        $("input").change(doMath);
+    </script>
+    <form id="expense-form" th:action="@{/backstage/job/post/expense}" th:object="${expense}" class="form"
+        method="post">
+        <label for="company">Supplier</label>
+        <select id="company" onchange="doMulti(this)" th:field="*{companyContactId}"
+            class="input-group custom-select mb-5">
+            <option th:each="vendor : ${reps}" th:data-multi="${vendor.multiplier}" th:value="${vendor.uid}"
+                th:text="${vendor.name}">cont</option>
         </select>
         <label for="net">Net</label>
-        <input id="net" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3" th:field="*{net}"></input>
+        <input id="net" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+            th:field="*{net}"></input>
         <label for="tax">Tax</label>
-        <input id="tax" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3" th:field="*{tax}"></input>
+        <input id="tax" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+            th:field="*{tax}"></input>
         <label for="paid">Total</label>
-        <input id="paid" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3" th:field="*{paid}"></input>
+        <input id="paid" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+            th:field="*{paid}"></input>
         <label for="multiplier">Multiplier</label>
-        <input id="multiplier" type="number" min="0.00" max="1.00" step="0.01" class="input-group mb-3" th:field="*{multiplier}"></input>
+        <input id="multiplier" type="number" min="0.00" max="1.00" step="0.01" class="input-group mb-3"
+            th:field="*{multiplier}"></input>
         <label for="invoice">Invoice</label>
-        <input id="invoice" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3" th:field="*{invoice}"></input>
+        <input id="invoice" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+            th:field="*{invoice}"></input>
         <input id="invoice" type="text" class="hidden" th:field="*{folder}"></input>
-        </form>
-    </div>
+    </form>
+</div>
 
-    <div th:fragment="vendor" th:remove="tag">
-        <form th:action="@{${vendor.postNextAction}}" th:object="${vendor}" method="post">
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="name">Company Name</label>
-                    <input type="text" th:field="*{name}" class="form-control" placeholder="">
-                </div>
+<div th:fragment="payment-form" th:remove="tag">
+    <form id="payment-form" th:action="@{/backstage/job/post/payment}" th:object="${addPaymentModel}" class="form"
+        method="post">
+        <label for="method">Method</label>
+        <select id="methdod" th:field="*{method}" class="input-group custom-select mb-5">
+            <option th:each="meth : ${methods}" th:value="${meth}" th:text="${meth}">cont</option>
+        </select>
+        <label for="paid">Paid</label>
+        <input id="paid" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+            th:field="*{paid}"></input>
+        <label for="tax">Tax</label>
+        <input id="tax" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+            th:field="*{tax}"></input>
+        <label for="processing">Processing</label>
+        <input id="processing" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+            th:field="*{processing}"></input>
+        <div class="form-group col-md-4 hidden">
+            <input type="text" th:field="*{folder}" class="form-control">
+        </div>
+    </form>
+</div>
 
-                <div class="form-group col-md-4">
-                    <label for="accountId">Account ID</label>
-                    <input type="text" th:field="*{accountId}" class="form-control"
-                        placeholder="">
-                </div>
+<div th:fragment="vendor" th:remove="tag">
+    <form th:action="@{${vendor.postNextAction}}" th:object="${vendor}" method="post">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="name">Company Name</label>
+                <input type="text" th:field="*{name}" class="form-control" placeholder="">
             </div>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="url">Url</label>
-                    <input type="text" th:field="*{url}" class="form-control"
-                        placeholder="optional">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="url">Login</label>
-                    <input type="text" th:field="*{login}" class="form-control"
-                        placeholder="optional">
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="url">password</label>
-                    <input type="text" th:field="*{pwd}" class="form-control"
-                        placeholder="optional">
-                </div>
-                <div class="form-group col-md-1">
-                    <label for="showme"></label>
-                    <input type="checkbox" class="checkbox"></checkbox>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-4 ac">
-                    <label for="multiplier">Multiplier</label>
-                    <input type="number" th:field="*{multiplier}" class="form-control"
-                        step="0.01">
-                </div>
 
-                <div class="form-group col-md-4 hidden">
-                    <input type="text" th:field="*{pocId}" class="form-control">
-                </div>
+            <div class="form-group col-md-4">
+                <label for="accountId">Account ID</label>
+                <input type="text" th:field="*{accountId}" class="form-control" placeholder="">
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <button type="button" class="btn btn-info"
-                th:data-nextact="${vendor.postNextAction}"
-                onclick="getNextAction(this.getAttribute('data-nextact'))">Cancel</button>
-        </form>
-    </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="url">Url</label>
+                <input type="text" th:field="*{url}" class="form-control" placeholder="optional">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="url">Login</label>
+                <input type="text" th:field="*{login}" class="form-control" placeholder="optional">
+            </div>
+            <div class="form-group col-md-3">
+                <label for="url">password</label>
+                <input type="text" th:field="*{pwd}" class="form-control" placeholder="optional">
+            </div>
+            <div class="form-group col-md-1">
+                <label for="showme"></label>
+                <input type="checkbox" class="checkbox"></checkbox>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4 ac">
+                <label for="multiplier">Multiplier</label>
+                <input type="number" th:field="*{multiplier}" class="form-control" step="0.01">
+            </div>
+
+            <div class="form-group col-md-4 hidden">
+                <input type="text" th:field="*{pocId}" class="form-control">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-info" th:data-nextact="${vendor.postNextAction}"
+            onclick="getNextAction(this.getAttribute('data-nextact'))">Cancel</button>
+    </form>
+</div>
 </div>

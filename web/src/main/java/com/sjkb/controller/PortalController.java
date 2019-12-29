@@ -31,6 +31,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +60,8 @@ public class PortalController {
 
     final String portalToken = UUID.randomUUID().toString().replaceAll("-", "3");
     String fileOnDeck = null;
+
+    TextEncryptor crypter = Encryptors.text("thesjkbkey", "AE7387");
 
     @RequestMapping(value = "dashboard")
     public String dashboard(ModelMap map, @RequestHeader Map<String, String> header, Authentication authentication) {
@@ -104,7 +108,7 @@ public class PortalController {
             if (userEntityOption.isPresent()) {
                 UserEntity userEntity = userEntityOption.get();
                 List<FileHandleModel> files = dropboxService.getFilesSharedFor(userEntity.getSponsor(),
-                        userEntity.getDbxFolder());
+                        userEntity.getJobid());
                 map.addAttribute("files", files);
             }
         }
@@ -168,7 +172,7 @@ public class PortalController {
             if (userEntityOption.isPresent()) {
                 UserEntity userEntity = userEntityOption.get();
                 result[0] = userEntity.getSponsor();
-                result[1] = userEntity.getDbxFolder();
+                result[1] = userEntity.getJobid();            
             }
         }
         return result;

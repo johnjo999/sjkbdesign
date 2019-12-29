@@ -4,7 +4,8 @@ package com.sjkb.repositores;
  */
 public interface CompanyRepsInterface {
 
-    public String getCompany();
+    public String getName();
     public String getUid();
-    public String getLastname();
+    public String getFirstname();
+    public String getMultiplier();
 }

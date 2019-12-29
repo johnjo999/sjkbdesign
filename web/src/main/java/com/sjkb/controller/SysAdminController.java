@@ -58,7 +58,7 @@ public class SysAdminController {
         map.addAttribute("user", getUser());
         map.addAttribute("action", "/sysadm/context/add");
         map.addAttribute("roles", "administrator");
-        return "users_new";
+        return "contacts/users_new";
     }
 
     @RequestMapping(value = "context/add", method = RequestMethod.POST)
@@ -70,7 +70,7 @@ public class SysAdminController {
                 String contextId = userContactService.createContextForNewUser(userModel, uname);
                 ContextEntity context = new ContextEntity();
                 context.setUid(contextId);
-                context.setAdmin(userContactService.getUidForUsername(userModel.getUsername()));
+                context.setAdmin(userContactService.getUidForUsername(userModel.getUsernameHash()));
                 context.setName(userModel.getCompany());
                 if (context.getName() != null && context.getName().length() > 3)
                 sysAdminService.createCompany(context);
@@ -81,7 +81,7 @@ public class SysAdminController {
                 }
             return "redirect:/sysadm/dashboard";      
             } catch (UsernameTakenException e) {
-                return "users_error_taken";
+                return "contacts/users_error_taken";
             }             
         return "redirect:/home"; 
     }

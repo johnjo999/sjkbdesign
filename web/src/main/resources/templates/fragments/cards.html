@@ -21,7 +21,7 @@
                     <div class="form-group">
                         <label for="cabline">Cabinet Line</label>
                         <select class="form-control" id="cabline">
-                            <option class="option" selected>JR Cabinet</option>
+                            <option class="option" selected>JK Cabinet</option>
                             <option class="option">KitchenCraft</option>
                             <option class="option">Custom</option>
                             <option class="option">Other</option>
@@ -99,7 +99,7 @@
                     <div class="form-group">
                         <label for="cabline"></label>
                         <select class="form-control" id="bethcabline">
-                            <option class="option" selected>JR Cabinet</option>
+                            <option class="option" selected>JK Cabinet</option>
                             <option class="option">KitchenCraft</option>
                             <option class="option">Custom</option>
                             <option class="option">Other</option>
@@ -216,7 +216,7 @@
 <!-- JOB CARD --------------------------------------->
 <div th:fragment="jobcard" th:remove="tag">
     <div class="col-md-4" th:id="${card.id}">
-        <div class="card" th:data-id="${card.id}" onclick="getfolder(this.getAttribute('data-id'));">
+        <div class="card card-link" th:data-id="${card.id}" onclick="getfolder(this.getAttribute('data-id'));">
             <div class="card-header">
                 <h3 class="d-inline" th:text="${card.title}">Kitchen</h3>
                 <span style="border: 5px" th:text="${card.id}"></span>
@@ -237,7 +237,7 @@
 <!-- CONTACT CARD  --------------------------------->
 <div th:fragment="contactcard" th:remove="tag">
     <div th:id="${contact.uid}">
-        <div class="card" th:data-id="${contact.uid}" onclick="getcontact(this.getAttribute('data-id'));">
+        <div class="card card-link" th:data-id="${contact.uid}" onclick="getcontact(this.getAttribute('data-id'));">
             <div class="card-header">
                
                 <h3>Contact</h3>

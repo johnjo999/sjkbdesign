@@ -1,6 +1,7 @@
 package com.sjkb.entities;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -23,7 +24,9 @@ public class JobEntity {
 
     private Float received;
 
-    private Timestamp createDate;
+    private LocalDate createDate;
+
+    private LocalDate completeDate;
 
     private Timestamp activityDate;
 
@@ -56,14 +59,6 @@ public class JobEntity {
 
     public void setBudget(Integer budget) {
         this.budget = budget;
-    }
-
-    public Timestamp getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Timestamp createDate) {
-        this.createDate = createDate;
     }
 
     public String getState() {
@@ -122,6 +117,20 @@ public class JobEntity {
         this.received = received;
     }
 
-    
+    public LocalDate getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDate createDate) {
+        this.createDate = createDate;
+    }
+
+    public LocalDate getCompleteDate() {
+        return completeDate;
+    }
+
+    public void setCompleteDate(LocalDate completeDate) {
+        this.completeDate = completeDate;
+    }
 
 }

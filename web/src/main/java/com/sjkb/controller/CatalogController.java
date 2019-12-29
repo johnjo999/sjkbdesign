@@ -2,14 +2,17 @@ package com.sjkb.controller;
 
 import java.util.List;
 
+import com.sjkb.entities.ContactEntity;
 import com.sjkb.entities.VendorEntity;
 import com.sjkb.models.category.CategoryModel;
 import com.sjkb.models.category.HeritageModel;
 import com.sjkb.models.category.NewItemModel;
 import com.sjkb.models.category.TreePath;
 import com.sjkb.models.users.VendorModel;
+import com.sjkb.repositores.ContactRepository;
 import com.sjkb.repositores.VendorRepository;
 import com.sjkb.service.CatalogService;
+import com.sjkb.service.UserContactService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,18 +31,17 @@ public class CatalogController {
     CatalogService catalogService;
 
     @Autowired
-    BackstageController backstageController;
+    UserContactService userService;
 
     @Autowired
     VendorRepository vendorRepository;
 
-    private String context;
+    @Autowired
+    ContactRepository contactRepository;
 
     @RequestMapping(value = "getall")
     public String getAllComponents(ModelMap map) {
-        if (context == null) {
-            context = backstageController.getContext();
-        }
+        String context = userService.getContext();
         List<TreePath> catalog = catalogService.getCatalogForContext(context, 0l);
         map.addAttribute("catalog", catalog);
         return "catalog/catalog_listing";
@@ -47,9 +49,7 @@ public class CatalogController {
 
     @RequestMapping(value = "addcat", method = RequestMethod.GET)
     public String getCatagory(ModelMap map) {
-        if (context == null) {
-            context = backstageController.getContext();
-        }
+        String context = userService.getContext();
         CategoryModel cat = new CategoryModel();
         List<CategoryModel> categoryTree = catalogService.getDefaultCatalogTreeForContext(context);
         map.addAttribute("cat", cat);
@@ -61,28 +61,31 @@ public class CatalogController {
 
     @RequestMapping(value = "addcat", method = RequestMethod.POST)
     public String postCatagory(ModelMap map, @ModelAttribute("cat") final CategoryModel category) {
-        catalogService.addCategory(context, category);
-        return getChildrenOf(map, String.valueOf(category.getParent()));
+        if (category.getName().length() > 0) {
+            catalogService.addCategory(userService.getContext(), category);
+            return getChildrenOf(map, String.valueOf(category.getParent()));
+        }
+        return "redirect:/backstage/catalog/addcat";
 
     }
 
     @RequestMapping(value = "additem", method = RequestMethod.POST)
     public String postItem(ModelMap map, @ModelAttribute("item") final CategoryModel category) {
-        catalogService.addCategory(context, category);
+        catalogService.addCategory(userService.getContext(), category);
         return getChildrenOf(map, String.valueOf(category.getParent()));
 
     }
 
     @RequestMapping(value = "getChildren/{id}", method = RequestMethod.GET)
     public String getChildrenOf(ModelMap map, @PathVariable("id") final String id) {
-    Long iid = 0l;
+        Long iid = 0l;
         try {
             iid = Long.valueOf(id);
         } catch (NumberFormatException ex) {
             return "error";
         }
         HeritageModel heritage = catalogService.getHeritage(iid);
-        if (heritage.getMyself() == null) 
+        if (heritage.getMyself() == null)
             return "redirect:/backstage/catalog/addcat";
         map.addAttribute("heritage", heritage);
         return "fragments/catalog::childrow";
@@ -90,7 +93,7 @@ public class CatalogController {
 
     @RequestMapping(value = "getChildrenEditable/{id}", method = RequestMethod.GET)
     public String getChildrenEditableOf(ModelMap map, @PathVariable("id") final String id) {
-    Long iid = 0l;
+        Long iid = 0l;
         try {
             iid = Long.valueOf(id);
         } catch (NumberFormatException ex) {
@@ -103,10 +106,8 @@ public class CatalogController {
 
     @RequestMapping(value = "additem", method = RequestMethod.GET)
     public String getNewItem(ModelMap map) {
-        if (context == null) {
-            context = backstageController.getContext();
-        }
         NewItemModel item = new NewItemModel();
+        String context = userService.getContext();
         List<CategoryModel> categoryTree = catalogService.getDefaultCatalogTreeForContext(context);
         map.addAttribute("item", item);
         map.addAttribute("tree", categoryTree);
@@ -116,16 +117,22 @@ public class CatalogController {
     }
 
     @RequestMapping(value = "newVendor", method = RequestMethod.POST, params = "na")
-    public String postNewVendor(ModelMap map, @RequestParam("na") final String na, @ModelAttribute("vendor") final VendorModel vendor) {
-        String context = backstageController.getContext();
-        VendorEntity vendorEntity = vendorRepository.findByAccountId(vendor.getAccountId());
+    public String postNewVendor(ModelMap map, @RequestParam("na") final String na,
+            @ModelAttribute("vendor") final VendorModel vendor) {
+        VendorEntity vendorEntity = vendorRepository.findByName(vendor.getName());
         if (vendorEntity == null)
             vendorEntity = new VendorEntity();
+        // ensure sales rep is for this company. 
+        ContactEntity salesRep = contactRepository.getOne(vendor.getPocId());
+        if (salesRep.getCompany().equals(vendor.getName()) == false) {
+            salesRep.setCompany(vendor.getName());
+            contactRepository.save(salesRep);
+        }
         vendorEntity.parseModel(vendor);
-        vendorEntity.setContext(context);
+        vendorEntity.setContext(userService.getContext());
         vendorRepository.save(vendorEntity);
-        return "redirect:"+na;
-        
+        return "redirect:" + na;
+
     }
 
 }

@@ -9,6 +9,7 @@ import com.sjkb.exception.UsernameTakenException;
 import com.sjkb.models.category.ContractorSelectRow;
 import com.sjkb.models.users.UserDelModel;
 import com.sjkb.models.users.UserViewModel;
+import com.sjkb.repositores.CompanyRepsInterface;
 
 public interface UserContactService {
 
@@ -31,7 +32,7 @@ public interface UserContactService {
 
 	public ContactEntity getSponserFor(String username);
 
-	public UserViewModel getByToken(String token);
+	public UserViewModel getByUid(String token);
 
 	public ContactEntity getContactByUid(String pocId);
 
@@ -39,7 +40,7 @@ public interface UserContactService {
 
 	public List<ContractorSelectRow> getInstallerSelectRows();
 
-	public void setContext(String context);
+	public String getContext();
 
 	public String createDbxFolder(UserViewModel userModel, String uname);
 
@@ -47,7 +48,17 @@ public interface UserContactService {
 
 	public String getUidForUsername(String username);
 
-	public Object getCompaniesWithReps(String context);
+	public List<CompanyRepsInterface> getCompaniesWithReps(String context);
+
+	public void clearContext();
+
+	public String getUserIs();
+
+	public String getUserId();
+
+	public void setContext();
+
+	public String getUsernameFor(String user);
 
 
 }

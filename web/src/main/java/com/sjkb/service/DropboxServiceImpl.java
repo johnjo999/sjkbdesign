@@ -53,14 +53,12 @@ public class DropboxServiceImpl implements DropboxService {
 
     @Override
     public void createFolder(String username, String foldername) throws CreateFolderErrorException, DbxException {
-        List<DropboxTokenEntity> tokens = dropboxRepository.findAll();
-        for (DropboxTokenEntity token : tokens) {
-            if (token.getUser().equals(username)) {
-                DbxRequestConfig config = DbxRequestConfig.newBuilder("sjkb/folder1.0").build();
-                DbxClientV2 client = new DbxClientV2(config, token.getToken());
-                client.files().createFolderV2("/" + foldername, true);
-                client.files().createFolderV2("/" + foldername + "/shared", true);
-            }
+        DropboxTokenEntity token = dropboxRepository.findByUser(username);
+        if (token != null) {
+            DbxRequestConfig config = DbxRequestConfig.newBuilder("sjkb/folder1.0").build();
+            DbxClientV2 client = new DbxClientV2(config, token.getToken());
+            client.files().createFolderV2("/" + foldername, true);
+            client.files().createFolderV2("/" + foldername + "/shared", true);
         }
     }
 
@@ -79,7 +77,7 @@ public class DropboxServiceImpl implements DropboxService {
         List<FileHandleModel> files = new ArrayList<>();
         ListFolderResult folderResult = null;
         DbxClientV2 client = getClientFor(sponsor);
-        if (client != null) {
+        if (client != null && dbxFolder != null) {
             folderResult = client.files().listFolder("/" + dbxFolder + "/shared");
             for (Metadata meta : folderResult.getEntries()) {
                 FileHandleModel file = new FileHandleModel();
@@ -92,10 +90,10 @@ public class DropboxServiceImpl implements DropboxService {
 
     private DbxClientV2 getClientFor(String user) {
         DbxClientV2 client = null;
-        List<DropboxTokenEntity> tokens = dropboxRepository.findByUser(user);
-        if (tokens.size() == 1) {
+        DropboxTokenEntity token = dropboxRepository.findByUser(user);
+        if (token != null) {
             DbxRequestConfig config = DbxRequestConfig.newBuilder("sjkb/folder1.0").build();
-            client = new DbxClientV2(config, tokens.get(0).getToken());
+            client = new DbxClientV2(config, token.getToken());
         }
         return client;
     }
@@ -184,9 +182,10 @@ public class DropboxServiceImpl implements DropboxService {
 
     /**
      * Gets an output stream from dropbox that can be used to write files
-     * @param: dbxFoler,  The directory path
-     * @param: filename, The name of the file
-     * user:  The dropbox user account holding the auth token
+     * 
+     * @param: dbxFoler, The directory path
+     * @param: filename, The name of the file user: The dropbox user account holding
+     *                   the auth token
      */
     @Override
     public UploadUploader getOutputFileStream(String dbxFolder, String filename, String user) throws DbxException {
@@ -195,7 +194,5 @@ public class DropboxServiceImpl implements DropboxService {
         UploadUploader handle = client.files().upload(path);
         return handle;
     }
-
-    
 
 }

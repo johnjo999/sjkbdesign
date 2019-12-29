@@ -11,6 +11,7 @@ import com.sjkb.models.admin.HomeStoryModel;
 import com.sjkb.repositores.FontRepository;
 import com.sjkb.repositores.HomeStoryRepository;
 import com.sjkb.service.DropboxService;
+import com.sjkb.service.UserContactService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -44,20 +45,17 @@ public class AdminController {
     FontRepository fontRepository;
 
     @Autowired
-    BackstageController backstage;
-
-    private String getUser() {
-        SecurityContext holder = SecurityContextHolder.getContext();
-        final String uname = holder.getAuthentication().getName();
-        return uname;
-    }
+    UserContactService userService;
 
     @RequestMapping(value = "setup/dropbox")
     public String showDropboxTokens(ModelMap map) {
 
-        List<DropboxTokenModel> tokens = dropboxService.getAllUserTokens(backstage.getContext());
+        List<DropboxTokenModel> tokens = dropboxService.getAllUserTokens(userService.getContext());
+        for (DropboxTokenModel token: tokens) {
+            token.setUser(userService.getUsernameFor(token.getUser()));
+        }
         map.addAttribute("tokens", tokens);
-        map.addAttribute("user", getUser());
+        map.addAttribute("user", userService.getUserIs());
         return "admin/setup_dropbox";
     }
 
@@ -81,7 +79,7 @@ public class AdminController {
         SecurityContext holder = SecurityContextHolder.getContext();
         final String uname = holder.getAuthentication().getName();
         token.setUser(uname);
-        token.setContext(backstage.getContext());
+        token.setContext(userService.getContext());
         dropboxService.saveToken(token);
         return "redirect:/admin/setup/dropbox";
 

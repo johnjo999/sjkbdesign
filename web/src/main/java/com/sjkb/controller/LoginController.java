@@ -13,6 +13,7 @@ import com.sjkb.models.admin.HomeStoryModel;
 import com.sjkb.repositores.FontRepository;
 import com.sjkb.repositores.HomeStoryRepository;
 import com.sjkb.repositores.UserRepository;
+import com.sjkb.service.UserContactService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
@@ -42,7 +43,7 @@ public class LoginController {
     FontRepository fontRepository;
 
     @Autowired
-    BackstageController backstageController;
+    UserContactService userService;
 
     private static final Logger log = Logger.getLogger(Class.class.getName());
 
@@ -110,7 +111,7 @@ public class LoginController {
     public String logout(SessionStatus session) {
         SecurityContextHolder.getContext().setAuthentication(null);
         session.setComplete();
-        backstageController.clearContext();
+        userService.clearContext();
         return "logout_success";
     }
 
@@ -124,6 +125,7 @@ public class LoginController {
         User loggedInUser = ((UserComponent) authentication.getPrincipal()).getUserDetails();
         model.addAttribute("currentUser", ((UserDetails) loggedInUser).getUsername());
         session.setAttribute("userId", loggedInUser.getName());
+        userService.setContext();
         return "redirect:/wallPage";
     }
 

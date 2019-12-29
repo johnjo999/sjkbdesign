@@ -16,16 +16,20 @@ import com.sjkb.entities.InvoiceItemEntity;
 import com.sjkb.entities.JobEntity;
 import com.sjkb.entities.JobEventEntity;
 import com.sjkb.entities.JobExpenseEntity;
+import com.sjkb.entities.JobPaymentEntity;
 import com.sjkb.entities.UserEntity;
 import com.sjkb.models.AssignExpenseModel;
 import com.sjkb.models.jobs.AddInvoiceModel;
+import com.sjkb.models.jobs.AddPaymentModel;
 import com.sjkb.models.jobs.JobAttributeModel;
 import com.sjkb.models.jobs.JobCardModel;
 import com.sjkb.models.jobs.JobInvoiceRowModel;
+import com.sjkb.models.jobs.PandLExpenseModel;
 import com.sjkb.repositores.ContactRepository;
 import com.sjkb.repositores.InvoiceRepository;
 import com.sjkb.repositores.JobEventRepository;
 import com.sjkb.repositores.JobExpenseRepository;
+import com.sjkb.repositores.JobPaymentRepository;
 import com.sjkb.repositores.JobRepository;
 import com.sjkb.repositores.UserRepository;
 
@@ -56,13 +60,19 @@ public class JobServiceImpl implements JobService {
     @Autowired
     JobExpenseRepository jobExpenseRepository;
 
+    @Autowired
+    JobPaymentRepository jobPaymentRepository;
+
+    @Autowired
+    UserContactService userService;
+
     @Override
-    public void createJob(String jobid, String designer, String pocId) {
-        JobEntity job = new JobEntity();
+    public void createJob(final String jobid, final String designer, final String pocId) {
+        final JobEntity job = new JobEntity();
         job.setJobid(jobid);
         job.setPocId(pocId);
-        job.setCreateDate(new Timestamp(System.currentTimeMillis()));
-        job.setActivityDate(job.getCreateDate());
+        job.setCreateDate(LocalDate.now());
+        job.setActivityDate(new Timestamp(System.currentTimeMillis()));
         job.setUser(designer);
         job.setBudget(0);
         job.setQuote(0);
@@ -72,12 +82,30 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<JobCardModel> getAllJobsForUser(String empid) {
-        List<JobCardModel> result = new ArrayList<>();
-        List<JobEntity> userjobs = jobRepository.findAllByUser(empid);
-        for (JobEntity job : userjobs) {
-            JobCardModel card = new JobCardModel();
-            Optional<ContactEntity> contactOpt = contactRepository.findById(job.getPocId());
+    public List<JobCardModel> getAllJobsForUser(final String empid, String status) {
+        final List<JobCardModel> result = new ArrayList<>();
+        final List<JobEntity> userAlljobs = jobRepository.findAllByUser(empid);
+        final List<JobEntity> userjobs = new ArrayList<>();
+        for (final JobEntity thisjob : userAlljobs) {
+            switch (status) {
+            case "active":
+                if (thisjob.getCompleteDate() == null)
+                    userjobs.add(thisjob);
+                break;
+            case "closed":
+                if (thisjob.getCompleteDate() != null)
+                    userjobs.add(thisjob);
+                break;
+            case "all":
+                userjobs.add(thisjob);
+                break;
+            default:
+
+            }
+        }
+        for (final JobEntity job : userjobs) {
+            final JobCardModel card = new JobCardModel();
+            final Optional<ContactEntity> contactOpt = contactRepository.findById(job.getPocId());
             if (contactOpt.isPresent()) {
                 card.setTitle(contactOpt.get().getLastname());
             }
@@ -92,30 +120,30 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public JobEntity getJobForFolder(String folder) {
-        Optional<JobEntity> job = jobRepository.findById(folder);
+    public JobEntity getJobForFolder(final String folder) {
+        final Optional<JobEntity> job = jobRepository.findById(folder);
         if (job.isPresent())
             return job.get();
         return new JobEntity();
     }
 
     @Override
-    public void addExpense(String expense, AssignExpenseModel expenseModel) {
-        Optional<JobEntity> jobOptional = jobRepository.findById(expenseModel.getFolder());
+    public void addExpense(final String expense, final AssignExpenseModel expenseModel) {
+        final Optional<JobEntity> jobOptional = jobRepository.findById(expenseModel.getFolder());
         JobEntity job = null;
         if (jobOptional.isPresent()) {
             job = jobOptional.get();
         } else
             return;
         if (expenseModel.getLowEstimate() > expenseModel.getHighEstimate()) {
-            int le = expenseModel.getLowEstimate();
+            final int le = expenseModel.getLowEstimate();
             expenseModel.setLowEstimate(expenseModel.getHighEstimate());
             expenseModel.setHighEstimate(le);
         }
         switch (expense) {
         case "contractor":
         case "installer":
-            JobEventEntity newEvent = new JobEventEntity();
+            final JobEventEntity newEvent = new JobEventEntity();
             newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
             newEvent.setJobid(job.getJobid());
             newEvent.setCreatorId(job.getUser());
@@ -138,17 +166,20 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public JobAttributeModel getAttributesFor(JobEntity job) {
-        JobAttributeModel result = new JobAttributeModel();
-        List<JobEventEntity> jobEvents = jobEventRepository.findAllByJobidOrderByTimestamp(job.getJobid());
+    public JobAttributeModel getAttributesFor(final JobEntity job) {
+        final JobAttributeModel result = new JobAttributeModel();
+        final List<JobEventEntity> jobEvents = jobEventRepository.findAllByJobidOrderByTimestamp(job.getJobid());
         int contractorCost = 0;
         int installerCost = 0;
+        Optional<UserEntity> designerOptional = userRepository.findByUsername(job.getUser());
+        if (designerOptional.isPresent())
+            result.setDesigner(designerOptional.get().getUsernameClear());
         if (jobEvents != null && jobEvents.size() > 0) {
-            for (JobEventEntity jevent : jobEvents) {
+            for (final JobEventEntity jevent : jobEvents) {
                 if (jevent.getType().equals("contractor")) {
-                    Optional<ContactEntity> optionalContact = contactRepository.findById(jevent.getObjid());
+                    final Optional<ContactEntity> optionalContact = contactRepository.findById(jevent.getObjid());
                     if (optionalContact.isPresent()) {
-                        ContactEntity contractor = optionalContact.get();
+                        final ContactEntity contractor = optionalContact.get();
                         result.setContractor(contractor.getCompany());
                         result.setContractorId(contractor.getUid());
                     } else {
@@ -161,9 +192,9 @@ public class JobServiceImpl implements JobService {
 
                 }
                 if (jevent.getType().equals("installer")) {
-                    Optional<ContactEntity> optionalContact = contactRepository.findById(jevent.getObjid());
+                    final Optional<ContactEntity> optionalContact = contactRepository.findById(jevent.getObjid());
                     if (optionalContact.isPresent()) {
-                        ContactEntity contractor = optionalContact.get();
+                        final ContactEntity contractor = optionalContact.get();
                         result.setInstaller(contractor.getCompany());
                         result.setInstallerId(contractor.getUid());
                     } else {
@@ -191,9 +222,9 @@ public class JobServiceImpl implements JobService {
      *               historical only)
      */
     @Override
-    public AssignExpenseModel getCurrentExpenseFor(String jobid, String role) {
-        List<JobEventEntity> jobEvents = jobEventRepository.findAllByJobidAndTypeOrderByTimestamp(jobid, role);
-        int i = jobEvents.size();
+    public AssignExpenseModel getCurrentExpenseFor(final String jobid, final String role) {
+        final List<JobEventEntity> jobEvents = jobEventRepository.findAllByJobidAndTypeOrderByTimestamp(jobid, role);
+        final int i = jobEvents.size();
         if (i > 0) {
             return new AssignExpenseModel(jobEvents.get(i - 1));
         }
@@ -201,19 +232,14 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public String getJobHistory(JobEntity job) {
+    public String getJobHistory(final JobEntity job) {
         String result = "<span>";
-        List<JobEventEntity> jobEvents = jobEventRepository.findAllByJobidOrderByTimestamp(job.getJobid());
-        for (JobEventEntity jobEvent : jobEvents) {
+        final List<JobEventEntity> jobEvents = jobEventRepository.findAllByJobidOrderByTimestamp(job.getJobid());
+        for (final JobEventEntity jobEvent : jobEvents) {
+            jobEvent.setUsername(userService.getUsernameFor(jobEvent.getCreatorId()));
             result += jobEvent.getMessage() + "<br/>";
         }
         return result;
-    }
-
-    @Override
-    public void addInvoice(InvoiceEntity invoice) {
-        // TODO Auto-generated method stub
-
     }
 
     /**
@@ -225,24 +251,24 @@ public class JobServiceImpl implements JobService {
      */
 
     @Override
-    public void addInvoice(AddInvoiceModel invoiceModel, String user) {
-        ContactEntity agent = contactRepository.findByUsername(user);
-        Optional<JobEntity> jobOption = jobRepository.findById(invoiceModel.getFolder());
+    public void addInvoice(final AddInvoiceModel invoiceModel, final String user) {
+        final ContactEntity agent = contactRepository.findByUsername(user);
+        final Optional<JobEntity> jobOption = jobRepository.findById(invoiceModel.getFolder());
         // must be new invoice. Updated invoice should have an existing ID
         if (jobOption.isPresent()) {
-            JobEntity job = jobOption.get();
-            List<UserEntity> users = userRepository.findByDbxFolder(job.getJobid());
-            ContactEntity customer = contactRepository.findByUsername(users.get(0).getUsername());
-            InvoiceEntity invoice = new InvoiceEntity();
+            final JobEntity job = jobOption.get();
+            final List<UserEntity> users = userRepository.findByJobid(job.getJobid());
+            final ContactEntity customer = contactRepository.findByUsername(users.get(0).getUsername());
+            final InvoiceEntity invoice = new InvoiceEntity();
             invoice.setInvoiceId(UUID.randomUUID().toString().split("-")[0]);
             invoice.setContext(agent.getContext());
             invoice.setCreatorId(agent.getUid());
             invoice.setCustomerId(job.getJobid());
             invoice.setCreateDate(LocalDate.now());
             Float total = 0.0f;
-            for (JobInvoiceRowModel row : invoiceModel.getRows()) {
+            for (final JobInvoiceRowModel row : invoiceModel.getRows()) {
                 if (row.getName() != null && !row.getName().isEmpty()) {
-                    InvoiceItemEntity item = new InvoiceItemEntity();
+                    final InvoiceItemEntity item = new InvoiceItemEntity();
                     item.setInvoice(invoice.getUid());
                     item.setName(row.getName());
                     item.setDescription(row.getDesc());
@@ -254,7 +280,7 @@ public class JobServiceImpl implements JobService {
             job.setInvoiced(total + job.getInvoiced());
             jobRepository.save(job);
             invoiceRepository.save(invoice);
-            JobEventEntity newEvent = new JobEventEntity();
+            final JobEventEntity newEvent = new JobEventEntity();
             newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
             newEvent.setJobid(job.getJobid());
             newEvent.setCreatorId(job.getUser());
@@ -262,17 +288,17 @@ public class JobServiceImpl implements JobService {
             newEvent.setType("invoice");
             newEvent.setLowEnd(total.intValue());
             jobEventRepository.save(newEvent);
-            PdfDbxWriter pdfWriter = new PdfDbxWriter();
+            final PdfDbxWriter pdfWriter = new PdfDbxWriter();
             UploadUploader dropbox;
             try {
                 dropbox = dropboxService.getOutputFileStream(invoiceModel.getFolder(),
                         "invoice-" + invoice.getInvoiceId() + ".pdf", user);
                 pdfWriter.createInvoice(invoice, customer, agent, dropbox);
 
-            } catch (DbxException e) {
+            } catch (final DbxException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
@@ -282,17 +308,70 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public void postExpense(JobExpenseEntity expense, String user) {
-        jobExpenseRepository.save(expense);
-        JobEventEntity newEvent = new JobEventEntity();
-        newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
-        newEvent.setJobid(expense.getFolder());
-        newEvent.setCreatorId(user);
-        newEvent.setObjid(expense.getUid());
-        newEvent.setType("expense");
-        newEvent.setLowEnd(Math.round(expense.getNet()));
-        jobEventRepository.save(newEvent);
+    public void postExpense(final JobExpenseEntity expense, final String user) {
+        final Optional<JobEntity> jobOption = jobRepository.findById(expense.getFolder());
+        if (jobOption.isPresent()) {
+            jobExpenseRepository.save(expense);
+            final JobEventEntity newEvent = new JobEventEntity();
+            newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
+            newEvent.setJobid(expense.getFolder());
+            newEvent.setCreatorId(user);
+            newEvent.setObjid(expense.getUid());
+            newEvent.setType("expense");
+            newEvent.setLowEnd(Math.round(expense.getNet()));
+            jobEventRepository.save(newEvent);
+            // JobEntity job = jobOption.get();
+            // job.setReceived(job.getExpensed() + expense.get );
+        }
     }
 
-    
+    @Override
+    public List<String> getPaymentMethods() {
+        final List<String> methods = new ArrayList<>();
+
+        methods.add("Check");
+        methods.add("Credit Card");
+        methods.add("Cash");
+        methods.add("Financed");
+
+        return methods;
+    }
+
+    @Override
+    public void postPayment(AddPaymentModel paymentModel, String user) {
+        final Optional<JobEntity> jobOption = jobRepository.findById(paymentModel.getFolder());
+        if (jobOption.isPresent()) {
+            JobPaymentEntity payment = new JobPaymentEntity();
+            payment.createFromModel(paymentModel);
+            jobPaymentRepository.save(payment);
+            final JobEventEntity newEvent = new JobEventEntity();
+            newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
+            newEvent.setJobid(payment.getFolder());
+            newEvent.setCreatorId(user);
+            newEvent.setObjid(payment.getUid());
+            newEvent.setType("payment");
+            newEvent.setLowEnd(Math.round(payment.getPaid()));
+            jobEventRepository.save(newEvent);
+            JobEntity job = jobOption.get();
+            job.setReceived(job.getReceived() + paymentModel.getPaid());
+            jobRepository.save(job);
+        }
+
+    }
+
+    @Override
+    public List<PandLExpenseModel> getExpenses(String jobid) {
+        List<PandLExpenseModel> result = new ArrayList<>();
+        List<JobExpenseEntity> entities = jobExpenseRepository.findByFolder(jobid);
+        if (entities != null) {
+            for (JobExpenseEntity expense : entities) {
+                PandLExpenseModel pandl = new PandLExpenseModel();
+                pandl.setEntityAmounts(expense);
+                pandl.setVendor(contactRepository.getCompanyForId(expense.getCompanyContactId()));
+                result.add(pandl);
+            }
+        }
+        return result;
+    }
+
 }
