@@ -143,6 +143,7 @@ public class JobController {
         PandLModel pandl = new PandLModel();
         JobEntity job = jobService.getJobForFolder(jobid);
         pandl.setExpenses(jobService.getExpenses(jobid));
+        pandl.setInvoiced(jobService.getInvoices(jobid));
         ContactEntity contact = contactService.getContactByUid(job.getPocId());
         pandl.setJobid(jobid);
         map.addAttribute("pandl", pandl);

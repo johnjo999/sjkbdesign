@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 @Entity(name = "invoice")
 @Table(name = "invoice")
@@ -25,6 +26,10 @@ public class InvoiceEntity {
     private LocalDate createDate;
     private LocalDate userViewDate;
     private boolean signed;
+    
+    @Size(max=255)
+    private String description;
+
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "invoice")
@@ -102,6 +107,22 @@ public class InvoiceEntity {
 
     public void setSigned(boolean signed) {
         this.signed = signed;
+    }
+
+    public LocalDate getUserViewDate() {
+        return userViewDate;
+    }
+
+    public void setUserViewDate(LocalDate userViewDate) {
+        this.userViewDate = userViewDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     

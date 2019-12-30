@@ -39,8 +39,17 @@
                                 <table class="table">
                                     <h4>Income</h4>
                                     <thead class="thead-light">
-                                        <th>Invoice Item</th><th>Gross</th><th>Tax Held</th><th>Net Income</th>
+                                        <th>Invoice</th><th>Description</th><th>Date</th><th>Amount</th><th>Paid</th>
                                     </thead>
+                                    <tbody>
+                                        <tr th:each="inv:${pandl.invoiced}">
+                                            <td th:text="${inv.invoiceId}">acme abc</td>
+                                            <td th:text="${inv.desc}">1.00</td>
+                                            <td th:text="${inv.dateSubmitted}"></td>
+                                            <td th:text="${inv.amountDue}">0.10</td>
+                                            <td th:text="${inv.amountPaid}">0.90</td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                                 <hr/>
                                 <table class="table">

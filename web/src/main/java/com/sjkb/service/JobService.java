@@ -10,6 +10,7 @@ import com.sjkb.models.jobs.AddPaymentModel;
 import com.sjkb.models.jobs.JobAttributeModel;
 import com.sjkb.models.jobs.JobCardModel;
 import com.sjkb.models.jobs.PandLExpenseModel;
+import com.sjkb.models.jobs.PandLInvoiceModel;
 
 public interface JobService {
 
@@ -36,5 +37,7 @@ public interface JobService {
 	void postPayment(AddPaymentModel payment, String user);
 
 	List<PandLExpenseModel> getExpenses(String jobid);
+
+	List<PandLInvoiceModel> getInvoices(String jobid);
 
 }

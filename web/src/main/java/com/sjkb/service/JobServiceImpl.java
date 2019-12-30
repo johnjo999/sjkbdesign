@@ -25,6 +25,7 @@ import com.sjkb.models.jobs.JobAttributeModel;
 import com.sjkb.models.jobs.JobCardModel;
 import com.sjkb.models.jobs.JobInvoiceRowModel;
 import com.sjkb.models.jobs.PandLExpenseModel;
+import com.sjkb.models.jobs.PandLInvoiceModel;
 import com.sjkb.repositores.ContactRepository;
 import com.sjkb.repositores.InvoiceRepository;
 import com.sjkb.repositores.JobEventRepository;
@@ -370,6 +371,27 @@ public class JobServiceImpl implements JobService {
                 pandl.setVendor(contactRepository.getCompanyForId(expense.getCompanyContactId()));
                 result.add(pandl);
             }
+        }
+        return result;
+    }
+
+    @Override
+    public List<PandLInvoiceModel> getInvoices(String jobid) {
+        List<PandLInvoiceModel> result = new ArrayList<>();
+        List<InvoiceEntity> entities = invoiceRepository.findByCustomerId(jobid);
+        for (InvoiceEntity ent : entities) {
+            PandLInvoiceModel pandl = new PandLInvoiceModel();
+            List<InvoiceItemEntity> items = ent.getItems();
+            if (items != null) {
+                for (InvoiceItemEntity item : items) {
+                    pandl.addAmount(item.getRetail());
+                }
+            }
+            pandl.setDateSubmitted(ent.getCreateDate());
+            pandl.setDesc(ent.getDescription());
+            pandl.setDateViewed(ent.getUserViewDate());
+            pandl.setInvoiceId(ent.getInvoiceId());
+            result.add(pandl);
         }
         return result;
     }

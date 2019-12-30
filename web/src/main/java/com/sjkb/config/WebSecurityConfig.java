@@ -48,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login.html").permitAll().defaultSuccessUrl("/portal/dashboard").and().logout()
                 .permitAll();
         http.authorizeRequests().expressionHandler(webExpressionHandler());
-        http.requiresChannel().anyRequest().requiresSecure();
+  //      http.requiresChannel().anyRequest().requiresSecure();
     }
 
     @Bean

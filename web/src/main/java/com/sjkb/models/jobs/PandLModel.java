@@ -1,14 +1,12 @@
 package com.sjkb.models.jobs;
 
 import java.util.List;
-
-import com.sjkb.entities.InvoiceEntity;
 import com.sjkb.entities.JobPaymentEntity;
 
 public class PandLModel {
     String jobid;
     List<PandLExpenseModel> expenses;
-    List<InvoiceEntity> invoiced;
+    List<PandLInvoiceModel> invoiced;
     List<JobPaymentEntity> account;
 
     public String getJobid() {
@@ -17,14 +15,6 @@ public class PandLModel {
 
     public void setJobid(String jobid) {
         this.jobid = jobid;
-    }
-
-    public List<InvoiceEntity> getInvoiced() {
-        return invoiced;
-    }
-
-    public void setInvoiced(List<InvoiceEntity> invoiced) {
-        this.invoiced = invoiced;
     }
 
     public List<JobPaymentEntity> getAccount() {
@@ -43,6 +33,12 @@ public class PandLModel {
         this.expenses = expenses;
     }
 
-    
+    public List<PandLInvoiceModel> getInvoiced() {
+        return invoiced;
+    }
+
+    public void setInvoiced(List<PandLInvoiceModel> invoiced) {
+        this.invoiced = invoiced;
+    }
     
 }

@@ -34,6 +34,7 @@ public class JobEntity {
 
     private String context;
 
+
     // ContactEntity.id
     private String pocId;
 
