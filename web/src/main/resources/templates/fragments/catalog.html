@@ -5,6 +5,12 @@
     <tr role="row" th:each="catrow : ${row.allChildren}" th:data-depth="${catrow.depth}">
         <td th:replace="~{fragments/catalog::catrow(${catrow})}">
     </tr>
+    <tr th:each="catitem : ${row.catalogItems}">
+        <td th:text="${catitem.name}"></td>
+        <td th:text="${catitem.description}"></td>
+        <td th:text="${catitem.listHigh}"></td>
+        <td th:text="${catitem.listLow}"></td>
+    </tr>
 </div>
 <div th:fragment="childrow" th:id="flexid">
     <div th:if="${heritage.myself}" th:each="row: ${heritage.myself?.allChildren}">

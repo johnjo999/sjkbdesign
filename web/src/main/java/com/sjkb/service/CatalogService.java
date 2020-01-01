@@ -2,6 +2,7 @@ package com.sjkb.service;
 
 import java.util.List;
 
+import com.sjkb.entities.CatalogEntity;
 import com.sjkb.entities.FlexPathEntity;
 import com.sjkb.models.category.CategoryModel;
 import com.sjkb.models.category.HeritageModel;
@@ -23,5 +24,7 @@ public interface CatalogService {
 	TreePath getChildrenOfPath(Long id);
 
 	HeritageModel getHeritage(Long iid);
+
+	void addItemTo(String string, CatalogEntity catalog);
     
 }

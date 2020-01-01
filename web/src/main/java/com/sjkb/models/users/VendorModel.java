@@ -12,6 +12,7 @@ public class VendorModel {
     private String postNextAction;
     private String login;
     private String pwd;
+    private boolean cabSupplier;
 
     public String getName() {
         return name;
@@ -85,7 +86,15 @@ public class VendorModel {
     public String getPwdDecrypt() {
         TextEncryptor crypter = Encryptors.text("thesjkbkey", "AE7387");
         return crypter.decrypt(pwd);
-	}
+    }
+
+    public boolean isCabSupplier() {
+        return cabSupplier;
+    }
+
+    public void setCabSupplier(boolean cabSupplier) {
+        this.cabSupplier = cabSupplier;
+    }
 
     
 }

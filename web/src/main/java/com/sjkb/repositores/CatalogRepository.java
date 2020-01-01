@@ -12,7 +12,7 @@ public interface CatalogRepository extends JpaRepository<CatalogEntity, Long>  {
 
 	List<CatalogEntity> findByContextAndItemId(String context, String category);
 
-	CatalogEntity findByDefaultFlexPath(Long id);
+	List<CatalogEntity> findByDefaultFlexPath(Long id);
 
 
 }

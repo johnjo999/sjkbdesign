@@ -21,6 +21,7 @@ public class VendorEntity {
     private Float multiplier;
     private String login;
     private String pwd;
+    private boolean cabVendor;
 
     public String getUid() {
         return uid;
@@ -82,6 +83,7 @@ public class VendorEntity {
         this.repId = model.getPocId();
         this.login = model.getLogin();
         this.pwd = model.getPwdEncrypt();
+        this.cabVendor = model.isCabSupplier();
     }
 
     public VendorModel getModel() {
@@ -94,6 +96,7 @@ public class VendorEntity {
         result.setLogin(this.login);
         result.setPwd(this.pwd);
         result.setPwd(result.getPwdDecrypt());
+        result.setCabSupplier(this.cabVendor);
         return result;
     }
 
@@ -120,5 +123,15 @@ public class VendorEntity {
     public void setPwd(String pwd) {
         this.pwd = pwd;
     }
+
+    public boolean isCabVendor() {
+        return cabVendor;
+    }
+
+    public void setCabVendor(boolean cabVendor) {
+        this.cabVendor = cabVendor;
+    }
+
+    
     
 }

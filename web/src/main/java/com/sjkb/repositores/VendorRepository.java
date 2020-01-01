@@ -18,6 +18,8 @@ public interface VendorRepository extends JpaRepository<VendorEntity, String> {
 
 	@Query("SELECT v.name as name, u.uid as uid, v.multiplier as multiplier FROM contact u, vendor v WHERE u.uid = v.repId and u.context = :context and u.role = 'salesRep'")
 	public List<CompanyRepsInterface> findByContext(@Param("context") String context);
+
+	public List<VendorEntity> findByContextAndCabVendorTrue(String context);
 	
 	
 }

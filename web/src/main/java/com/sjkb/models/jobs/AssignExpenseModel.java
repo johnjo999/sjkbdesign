@@ -1,4 +1,4 @@
-package com.sjkb.models;
+package com.sjkb.models.jobs;
 
 import java.sql.Timestamp;
 
@@ -13,10 +13,15 @@ public class AssignExpenseModel {
     private String folder;
 
     public AssignExpenseModel() {}
+    
+    public AssignExpenseModel(String jobid) {
+        this.folder = jobid;
+    }
 
     public AssignExpenseModel(JobEventEntity job) {
         this.contId = job.getObjid();
-        this.date = job.getTimestamp().toString().split(" ")[0];
+        if (job.getScheduled() != null)
+            this.date = job.getScheduled().toString().split(" ")[0];
         this.lowEstimate = job.getLowEnd();
         this.highEstimate = job.getHighEnd();
         if (this.lowEstimate > 0 && this.lowEstimate == this.highEstimate) {

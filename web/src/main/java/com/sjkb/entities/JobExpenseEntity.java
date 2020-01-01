@@ -17,6 +17,7 @@ public class JobExpenseEntity {
     private String companyContactId;
     private float net;
     private float tax;
+    private float shipping;
     private float paid;
     private float multiplier;
     private float invoice;
@@ -108,6 +109,15 @@ public class JobExpenseEntity {
         this.invoiced = invoiced;
     }
 
+    public float getShipping() {
+        return shipping;
+    }
+
+    public void setShipping(float shipping) {
+        this.shipping = shipping;
+    }
+
+    
     
 
     

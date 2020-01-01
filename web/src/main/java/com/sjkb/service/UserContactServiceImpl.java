@@ -12,6 +12,7 @@ import com.dropbox.core.v2.files.DeleteErrorException;
 import com.sjkb.components.UserComponent;
 import com.sjkb.entities.ContactEntity;
 import com.sjkb.entities.UserEntity;
+import com.sjkb.entities.VendorEntity;
 import com.sjkb.exception.UsernameTakenException;
 import com.sjkb.models.category.ContractorSelectRow;
 import com.sjkb.models.users.UserDelModel;
@@ -263,6 +264,9 @@ class UserContactServiceImpl implements UserContactService {
         return contactRepository.findByUid(pocId);
     }
 
+    /**
+     * used by forms to generate "select" options for the contractor
+     */
     @Override
     public List<ContractorSelectRow> getContratorSelectRows() {
         List<ContractorSelectRow> result = new ArrayList<>();
@@ -281,6 +285,11 @@ class UserContactServiceImpl implements UserContactService {
         return result;
     }
 
+    /**
+     * used by forms to generate "select" options for the installer
+     */
+    // TODO implement selectible entities interface for selectors (contractor, installer), refractor get_SelectRows
+
     @Override
     public List<ContractorSelectRow> getInstallerSelectRows() {
         List<ContractorSelectRow> result = new ArrayList<>();
@@ -292,10 +301,30 @@ class UserContactServiceImpl implements UserContactService {
             }
 
         }
+        //TODO implement new as a selector for installer
         ContractorSelectRow newcontractor = new ContractorSelectRow();
         newcontractor.setId("createnew");
         newcontractor.setName("New Installer");
         result.add(newcontractor);
+        return result;
+    }
+
+    /**
+     * used by forms to generate "select" options for the cabinet vendor
+     */
+    @Override
+    public List<ContractorSelectRow> getCabinetSelectRows() {
+        List<VendorEntity> cabVendors = vendorRepository.findByContextAndCabVendorTrue(context);
+        List<ContractorSelectRow> result = new ArrayList<>();
+        if (cabVendors != null && cabVendors.size() > 0) {
+            for (VendorEntity cabven : cabVendors) {
+                ContractorSelectRow row = new ContractorSelectRow();
+                row.setName(cabven.getName());
+                row.setId(cabven.getUid());
+                result.add(row);
+            }
+
+        }
         return result;
     }
 

@@ -35,7 +35,7 @@ public class CatalogServiceImpl implements CatalogService {
             trees.add(treePath);
         }
         for (TreePath tree : trees) {
-            tree.addCatalogItem(catalogRepository.findByDefaultFlexPath(tree.getId()));
+            tree.addAllCatalogItems(catalogRepository.findByDefaultFlexPath(tree.getId()));
         }
         return trees;
 
@@ -178,6 +178,40 @@ public class CatalogServiceImpl implements CatalogService {
         for (FlexPathEntity flex : flexPath) {
             myself.addBranch(flex);
         }
+    }
+
+    @Override
+    public void addItemTo(String stringPath, CatalogEntity catalog) {
+        if (stringPath.charAt(0) != '/')
+            return;
+        String[] path = stringPath.substring(1).split("/");
+        List<TreePath> roots = getTreePathsForContext(catalog.getContext());
+        TreePath branch = null;
+        for (TreePath root : roots) {
+            if (path[0].equals(root.getName())) {
+                branch = root;
+                break;
+            }
+        }
+        if (path.length > 1 && branch != null) {
+            for (int i = 1; i < path.length; i++) {
+                branch = getPathFrom(branch, path[i]);
+            }
+        }
+        if (branch != null) {
+            branch.addCatalogItem(catalog);
+            catalogRepository.save(catalog);
+        }
+
+    }
+
+    private TreePath getPathFrom(TreePath branch, String name) {
+        for (TreePath path : branch.getAllChildren()) {
+            if (name.equals(path.getName())) {
+                return path;
+            }
+        }
+        return null;
     }
 
 }

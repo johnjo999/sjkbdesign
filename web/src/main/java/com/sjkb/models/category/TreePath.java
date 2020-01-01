@@ -94,6 +94,7 @@ public class TreePath {
         if (catalogItems == null)
             catalogItems = new ArrayList<>();
         catalogItems.add(catalogEntity);
+        catalogEntity.setDefaultFlexPath(flexEntity.getIid());
     }
 
     public FlexPathEntity getFlexEntity() {
@@ -121,6 +122,12 @@ public class TreePath {
     public int getDepth() {
         return flexEntity.getDepth();
     }
+
+	public void addAllCatalogItems(List<CatalogEntity> items) {
+        if (catalogItems == null)
+            catalogItems = new ArrayList<>();
+        catalogItems.addAll(items);
+	}
     
     
 }

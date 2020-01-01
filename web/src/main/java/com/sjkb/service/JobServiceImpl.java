@@ -18,7 +18,7 @@ import com.sjkb.entities.JobEventEntity;
 import com.sjkb.entities.JobExpenseEntity;
 import com.sjkb.entities.JobPaymentEntity;
 import com.sjkb.entities.UserEntity;
-import com.sjkb.models.AssignExpenseModel;
+import com.sjkb.models.jobs.AssignExpenseModel;
 import com.sjkb.models.jobs.AddInvoiceModel;
 import com.sjkb.models.jobs.AddPaymentModel;
 import com.sjkb.models.jobs.JobAttributeModel;
@@ -144,6 +144,7 @@ public class JobServiceImpl implements JobService {
         switch (expense) {
         case "contractor":
         case "installer":
+        case "cabinet":
             final JobEventEntity newEvent = new JobEventEntity();
             newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
             newEvent.setJobid(job.getJobid());
@@ -310,17 +311,19 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void postExpense(final JobExpenseEntity expense, final String user) {
-        final Optional<JobEntity> jobOption = jobRepository.findById(expense.getFolder());
-        if (jobOption.isPresent()) {
-            jobExpenseRepository.save(expense);
-            final JobEventEntity newEvent = new JobEventEntity();
-            newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
-            newEvent.setJobid(expense.getFolder());
-            newEvent.setCreatorId(user);
-            newEvent.setObjid(expense.getUid());
-            newEvent.setType("expense");
-            newEvent.setLowEnd(Math.round(expense.getNet()));
-            jobEventRepository.save(newEvent);
+        if (expense.getInvoice() != 0.0) {
+            final Optional<JobEntity> jobOption = jobRepository.findById(expense.getFolder());
+            if (jobOption.isPresent()) {
+                jobExpenseRepository.save(expense);
+                final JobEventEntity newEvent = new JobEventEntity();
+                newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
+                newEvent.setJobid(expense.getFolder());
+                newEvent.setCreatorId(user);
+                newEvent.setObjid(expense.getUid());
+                newEvent.setType("expense");
+                newEvent.setLowEnd(Math.round(expense.getNet()));
+                jobEventRepository.save(newEvent);
+            }
             // JobEntity job = jobOption.get();
             // job.setReceived(job.getExpensed() + expense.get );
         }

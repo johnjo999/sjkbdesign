@@ -2,6 +2,7 @@ package com.sjkb.controller;
 
 import java.util.List;
 
+import com.sjkb.entities.CatalogEntity;
 import com.sjkb.entities.ContactEntity;
 import com.sjkb.entities.VendorEntity;
 import com.sjkb.models.category.CategoryModel;
@@ -131,6 +132,11 @@ public class CatalogController {
         vendorEntity.parseModel(vendor);
         vendorEntity.setContext(userService.getContext());
         vendorRepository.save(vendorEntity);
+        CatalogEntity catalog = new CatalogEntity();
+        catalog.setContext(userService.getContext());
+        catalog.setName(vendor.getName());
+        catalog.setVendorId(vendorEntity.getUid());
+        catalogService.addItemTo("/Vendor", catalog);
         return "redirect:" + na;
 
     }

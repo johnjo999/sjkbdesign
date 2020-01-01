@@ -48,7 +48,7 @@
         <input id="q" type="number" class="input-group mb-3" th:field="*{quote}"></input>
         <label for="le">Ship Date</label>
         <input id="d" type="date" class="input-group hasdatepicker" th:field="*{Date}"></input>
-        <input type="text" name="folder" class="hidden foldervar" th:field="*{folder}"></input>
+        <input type="text" name="folder" class="hidden foldervar" th:value="*{folder}"></input>
     </form>
 </div>
 
@@ -83,40 +83,7 @@
 <div th:fragment="expense-form" th:remove="tag">
     <script>
 
-        function doMulti(dom) {
-            $("option").each(function (index, element) {
-                var p = $(element).prop('selected');
-                var m = $(element).data("multi");
-                if ($(element).prop('selected'))
-                    $("#multiplier").val(m);
-            });
-        }
-
-        function doMath(e, d) {
-            var tar = e.target.id;
-            var n = parseFloat($("#net").val());
-            var t = parseFloat($("#tax").val());
-            var m = parseFloat($("#multiplier").val());
-            var invoice = parseFloat($("#invoice").val());
-            var multi = parseFloat($("#multiplier").val());
-            if (m === 0.0) {
-                m = 1.0;
-            }
-            switch(tar) {
-                case "net":
-                case "tax":
-                   invoice = parseFloat(n / m + t).toFixed(2);
-                break;
-                case "invoice":
-                    multi = parseFloat(n/(invoice - t)).toFixed(2);
-            }
-            var paid = parseFloat(n + t).toFixed(2);
-            var i = $("#invoice").val();
-            $("#paid").val(paid);
-            $("#invoice").val(invoice);
-            $("#multiplier").val(multi);
-            console.log(n / m + t);
-        }
+       
 
         $("input").change(doMath);
     </script>
@@ -126,13 +93,16 @@
         <select id="company" onchange="doMulti(this)" th:field="*{companyContactId}"
             class="input-group custom-select mb-5">
             <option th:each="vendor : ${reps}" th:data-multi="${vendor.multiplier}" th:value="${vendor.uid}"
-                th:text="${vendor.name}">cont</option>
+                th:text="${vendor.name}" class="expclass">cont</option>
         </select>
         <label for="net">Net</label>
         <input id="net" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
             th:field="*{net}"></input>
+            <label for="shipping">Shipping</label>
+        <input id="shipping" type="number" min="0.00" max="1000.00" step="0.01" class="input-group mb-3"
+            th:field="*{shipping}"></input>
         <label for="tax">Tax</label>
-        <input id="tax" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+        <input id="tax" type="number" min="0.00" max="1000.00" step="0.01" class="input-group mb-3"
             th:field="*{tax}"></input>
         <label for="paid">Total</label>
         <input id="paid" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
@@ -194,10 +164,8 @@
             <div class="form-group col-md-3">
                 <label for="url">password</label>
                 <input type="text" th:field="*{pwd}" class="form-control" placeholder="optional">
-            </div>
-            <div class="form-group col-md-1">
-                <label for="showme"></label>
-                <input type="checkbox" class="checkbox"></checkbox>
+                <label for="showme" class="flex-right">showme
+                <input id="showme" type="checkbox" class="checkbox"></checkbox></label>
             </div>
         </div>
         <div class="form-row">
@@ -205,7 +173,10 @@
                 <label for="multiplier">Multiplier</label>
                 <input type="number" th:field="*{multiplier}" class="form-control" step="0.01">
             </div>
-
+            <div class="form-group col-md-1">
+                <label for="cabs">Cabinets</label>
+                <input id="cabs" th:field="*{cabSupplier}" type="checkbox" class="checkbox"></checkbox>
+            </div>
             <div class="form-group col-md-4 hidden">
                 <input type="text" th:field="*{pocId}" class="form-control">
             </div>

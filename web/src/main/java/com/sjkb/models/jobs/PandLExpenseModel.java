@@ -7,12 +7,14 @@ public class PandLExpenseModel {
     private String vendor;
     private String gross;
     private String tax;
+    private String shipping;
     private String net;
 
     public void setEntityAmounts(JobExpenseEntity entity) {
         this.tax = String.format("%.2f", entity.getTax());
         this.gross = String.format("%.2f", entity.getPaid());
         this.net = String.format("%.2f", entity.getPaid() - entity.getTax());
+        this.shipping = String.format("%.2f", entity.getShipping());
     }
 
     public String getVendor() {
@@ -49,5 +51,12 @@ public class PandLExpenseModel {
         this.net = net;
     }
 
+    public String getShipping() {
+        return shipping;
+    }
+
+    public void setShipping(String shipping) {
+        this.shipping = shipping;
+    }
     
 }

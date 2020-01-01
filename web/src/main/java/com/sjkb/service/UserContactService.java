@@ -60,5 +60,7 @@ public interface UserContactService {
 
 	public String getUsernameFor(String user);
 
+	public List<ContractorSelectRow> getCabinetSelectRows();
+
 
 }

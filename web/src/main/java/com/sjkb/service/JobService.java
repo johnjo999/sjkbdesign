@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.sjkb.entities.JobEntity;
 import com.sjkb.entities.JobExpenseEntity;
-import com.sjkb.models.AssignExpenseModel;
+import com.sjkb.models.jobs.AssignExpenseModel;
 import com.sjkb.models.jobs.AddInvoiceModel;
 import com.sjkb.models.jobs.AddPaymentModel;
 import com.sjkb.models.jobs.JobAttributeModel;

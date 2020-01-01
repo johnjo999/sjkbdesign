@@ -1,11 +1,10 @@
 package com.sjkb.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.sjkb.entities.ContactEntity;
 import com.sjkb.entities.JobEntity;
-import com.sjkb.models.AssignExpenseModel;
+import com.sjkb.models.jobs.AssignExpenseModel;
 import com.sjkb.entities.JobExpenseEntity;
 import com.sjkb.models.jobs.AddInvoiceModel;
 import com.sjkb.models.jobs.AddPaymentModel;
@@ -13,7 +12,6 @@ import com.sjkb.models.jobs.JobAttributeModel;
 import com.sjkb.models.jobs.PandLModel;
 import com.sjkb.repositores.JobExpenseInvoiceInterface;
 import com.sjkb.repositores.JobExpenseRepository;
-import com.sjkb.models.category.ContractorSelectRow;
 import com.sjkb.service.JobService;
 import com.sjkb.service.UserContactService;
 
@@ -74,7 +72,8 @@ public class JobController {
             expenseModel = jobService.getCurrentExpenseFor(jobid, "installer");
             break;
         case "cabinet":
-            map.addAttribute("allCont", new ArrayList<ContractorSelectRow>());
+            map.addAttribute("allCont", contactService.getCabinetSelectRows());
+            expenseModel = jobService.getCurrentExpenseFor(jobid, "cabinet");
             break;
         case "expense":
             map.addAttribute("reps", contactService.getCompaniesWithReps(contactService.getContext()));
@@ -83,7 +82,7 @@ public class JobController {
             map.addAttribute("expense", expense);
         }
         if (expenseModel == null) {
-            expenseModel = new AssignExpenseModel();
+            expenseModel = new AssignExpenseModel(jobid);
         }
         map.addAttribute("assignExpenseModel", expenseModel);
         return form;
