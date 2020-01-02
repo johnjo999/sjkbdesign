@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,6 +15,7 @@ import com.dropbox.core.v2.files.UploadUploader;
 import com.sjkb.entities.ContactEntity;
 import com.sjkb.entities.InvoiceEntity;
 import com.sjkb.entities.InvoiceItemEntity;
+import com.sjkb.entities.JobAttachEntity;
 import com.sjkb.entities.JobEntity;
 import com.sjkb.entities.JobEventEntity;
 import com.sjkb.entities.JobExpenseEntity;
@@ -20,6 +23,7 @@ import com.sjkb.entities.JobPaymentEntity;
 import com.sjkb.entities.UserEntity;
 import com.sjkb.models.jobs.AssignExpenseModel;
 import com.sjkb.models.jobs.AddInvoiceModel;
+import com.sjkb.models.jobs.AddNoteModel;
 import com.sjkb.models.jobs.AddPaymentModel;
 import com.sjkb.models.jobs.JobAttributeModel;
 import com.sjkb.models.jobs.JobCardModel;
@@ -28,6 +32,7 @@ import com.sjkb.models.jobs.PandLExpenseModel;
 import com.sjkb.models.jobs.PandLInvoiceModel;
 import com.sjkb.repositores.ContactRepository;
 import com.sjkb.repositores.InvoiceRepository;
+import com.sjkb.repositores.JobAttachRepository;
 import com.sjkb.repositores.JobEventRepository;
 import com.sjkb.repositores.JobExpenseRepository;
 import com.sjkb.repositores.JobPaymentRepository;
@@ -51,6 +56,9 @@ public class JobServiceImpl implements JobService {
 
     @Autowired
     JobEventRepository jobEventRepository;
+
+    @Autowired
+    JobAttachRepository jobAttachRepository;
 
     @Autowired
     InvoiceRepository invoiceRepository;
@@ -237,9 +245,18 @@ public class JobServiceImpl implements JobService {
     public String getJobHistory(final JobEntity job) {
         String result = "<span>";
         final List<JobEventEntity> jobEvents = jobEventRepository.findAllByJobidOrderByTimestamp(job.getJobid());
+        final List<JobAttachEntity> jobTextBlobs = jobAttachRepository.findAllByJobidAndBinIsFalse(job.getJobid());
+        Map<String, JobAttachEntity> notes = new HashMap<>();
+        for (JobAttachEntity attached : jobTextBlobs) {
+            notes.put(attached.getUid(), attached);
+        }
+        // update username with clear text
         for (final JobEventEntity jobEvent : jobEvents) {
             jobEvent.setUsername(userService.getUsernameFor(jobEvent.getCreatorId()));
             result += jobEvent.getMessage() + "<br/>";
+            if (notes.containsKey(jobEvent.getUid())) {
+                result += notes.get(jobEvent.getUid()).getNote() + "<br/>";
+            }
         }
         return result;
     }
@@ -396,6 +413,36 @@ public class JobServiceImpl implements JobService {
             pandl.setInvoiceId(ent.getInvoiceId());
             result.add(pandl);
         }
+        return result;
+    }
+
+    @Override
+    public void postNote(AddNoteModel note, String userId) {
+        final JobEventEntity newEvent = new JobEventEntity();
+            newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
+            newEvent.setJobid(note.getJobid());
+            newEvent.setCreatorId(userId);
+            newEvent.setType("note");
+            newEvent.setObjid("-1");
+            jobEventRepository.save(newEvent);
+            JobAttachEntity attachEntity = new JobAttachEntity(note);
+            attachEntity.setUid(newEvent.getUid());
+            jobAttachRepository.save(attachEntity);
+    }
+
+    @Override
+    public String getCustNotes(String uid) {
+        String result = "";
+        List<JobEntity> jobs = jobRepository.findAllByPocId(uid);
+        List<JobAttachEntity> jevents = null;
+        if (jobs.size() == 1) {
+            jevents = jobAttachRepository.findByJobidAndPubIsTrue(jobs.get(0).getJobid());
+        }
+        if (jevents != null)
+            for (JobAttachEntity jevent : jevents) {
+                JobEventEntity jmeta = jobEventRepository.getOne(jevent.getUid());
+                result += "<span class='text-secondary'>"+jmeta.getTimestamp().toString()+": </span>"+jevent.getNote() + "<hr/>";
+            }
         return result;
     }
 

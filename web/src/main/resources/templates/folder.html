@@ -85,6 +85,19 @@
             }
         })
     }
+/*
+    function createEvent() {
+        var d = $("#folderid").data('fid');
+        $("#createNote").modal('show');
+        $.ajax({
+            url: ("/backstage/job/get/form/" + d + "/note"),
+            type: "GET",
+            success: function (data) {
+                $("#invoice-form").replaceWith(data);
+            }
+        })
+    }
+*/
 
     function totalizer() {
         var tot = 0;
@@ -108,14 +121,16 @@
         })
     }
 
-    function addNote() {
+    function createJobEvent(eventType) {
         var d = $("#folderid").data('fid');
-        $("#makeNote").modal('show');
+        var sb = $("#subutton").attr("form");
+        $("#subutton").attr("form", eventType + "-form");
+        $("#addEvent").modal('show');
         $.ajax({
-            url: ("/backstage/job/get/form/note/" + d),
+            url: ("/backstage/job/get/form/event/"+d+"/" + eventType),
             type: "GET",
             success: function (data) {
-                $("#note-form").replaceWith(data);
+                $("#event-form").replaceWith(data);
             }
         })
     }
@@ -151,6 +166,10 @@
         background: rgb(235, 240, 245);
         min-height: 700px;
         margin-top: -10px;
+    }
+
+    .card {
+        margin-top: 10px;
     }
 </style>
 </head>
@@ -230,6 +249,25 @@
         </div>
     </div>
 
+    <div class="modal fade" id="addEvent" tabindex="-1" role="dialog" aria-labelledby="modalAddEvent"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="eventTitle" class="modal-title">Add Event</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="event-form"></form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button id="subutton" type="submit" form="cabinet-form" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <div class="modal fade" id="createInvoice" tabindex="-1" role="dialog" aria-labelledby="modalCreateInvoice"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -265,7 +303,7 @@
             </div>
         </div>
     </div>
-
+<!--
     <div class="modal fade" id="makeNote" tabindex="-1" role="dialog" aria-labelledby="modalMakeNote"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -278,12 +316,12 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="submit" form="payment-form" class="btn btn-default">Submit</button>
+                    <button type="submit" form="note-form" class="btn btn-default">Submit</button>
                 </div>
             </div>
         </div>
     </div>
-
+-->
     <div class="wrapper">
         <div th:include="fragments/sidecar::sidenav" th:remove="tag"></div>
         <div class="main">
@@ -362,7 +400,7 @@
                                 <h3>Events</h3>
                             </div>
                             <div class="card-body">
-                                <button class="btn btn-info mb-3">Note</button>
+                                <button class="btn btn-info mb-3" onclick="createJobEvent('note')">Note</button>
                                 <button class="btn btn-info mb-3">Quote</button>
                                 <button class="btn btn-info mb-3">Signoff</button>
                                 <button class="btn btn-info mb-3">Order</button>
@@ -387,7 +425,7 @@
                             <div class="card-header">
                                 <h3>History</h3>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body" style="max-height: 400px; overflow-y: scroll;">
                                 <div th:utext="${history}"></div>
                             </div>
                         </div>

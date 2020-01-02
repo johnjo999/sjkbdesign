@@ -1,4 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+< xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 </div>
 <div th:fragment="contractor-form" th:remove="tag">
     <form id="contractor-form" th:action="@{/backstage/job/set/contractor}" th:object="${assignExpenseModel}"
@@ -135,6 +135,20 @@
             th:field="*{processing}"></input>
         <div class="form-group col-md-4 hidden">
             <input type="text" th:field="*{folder}" class="form-control">
+        </div>
+    </form>
+</div>
+
+<div th:fragment="note-form" th:remove="tag">
+    <form id="note-form" th:action="@{/backstage/job/post/note}" th:object="${addNoteModel}" class="form"
+        method="post">
+        <label for="method">Note</label>
+        <textarea id="note" class="input-group mb-3 textarea"
+            th:field="*{note}"></textarea>
+        <div class="form-group checkbox">
+            <input type="checkbox" th:field="*{pub}"> Customer Visible</input></div>
+        <div class="form-group col-md-4 hidden">
+            <input type="text" th:field="*{jobid}" class="form-control"></div>
         </div>
     </form>
 </div>

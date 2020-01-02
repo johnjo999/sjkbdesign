@@ -6,15 +6,15 @@
 <style>
     .sjimg {
         display: flexbox;
-        transform: scale(3,3);
+        transform: scale(2,2);
     }
 </style>
 <body>
     <div th:fragment="file" th:remove="tag">
         <div class="col-md-3" th:each="card:${files}" th:id="${card.filename}">
-            <div class="card text-center card-border border-success clickable" th:data-file="${card.filename}" th:onclick="getFile(this.getAttribute('data-file'))">
+            <div class="card text-center card-border border-info clickable" th:data-file="${card.filename}" th:onclick="getFile(this.getAttribute('data-file'))">
                 <div class="card-header">
-                    <h3 class="d-inline" th:text="${card.filename}">name</h3>
+                    <h5 class="d-inline" th:text="${card.filename}">name</h3>
                 </div>
                 <div class="card-body">
                     <img class="sjimg" src="/assets/img/icons/duotone-icons/Files/File.svg"></img>

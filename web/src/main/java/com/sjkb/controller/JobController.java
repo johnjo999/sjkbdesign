@@ -7,6 +7,7 @@ import com.sjkb.entities.JobEntity;
 import com.sjkb.models.jobs.AssignExpenseModel;
 import com.sjkb.entities.JobExpenseEntity;
 import com.sjkb.models.jobs.AddInvoiceModel;
+import com.sjkb.models.jobs.AddNoteModel;
 import com.sjkb.models.jobs.AddPaymentModel;
 import com.sjkb.models.jobs.JobAttributeModel;
 import com.sjkb.models.jobs.PandLModel;
@@ -88,6 +89,13 @@ public class JobController {
         return form;
     }
 
+    @RequestMapping(value = "get/form/event/{jobid}/{type}")
+    public String getJobEventForm(ModelMap map, @PathVariable("jobid") final String jobid, @PathVariable("type") final String type) {
+        map.addAttribute("addNoteModel", new AddNoteModel(jobid));
+        String form = "fragments/forms::" + type + "-form";
+        return form;
+    }
+
     @RequestMapping(value = "get/form/invoice/{jobid}", params = "count")
     public String getInvoiceForJob(ModelMap map, @PathVariable("jobid") final String jobid,
             @RequestParam("count") Integer count) {
@@ -135,6 +143,12 @@ public class JobController {
     public String setJobInvoice(ModelMap map, @ModelAttribute("addPaymentModel") AddPaymentModel payment) {
         jobService.postPayment(payment, contactService.getUserId());
         return "redirect:/backstage/job/getfolder/" + payment.getFolder();
+    }
+
+    @RequestMapping(value = "post/note", method = RequestMethod.POST)
+    public String setJobInvoice(ModelMap map, @ModelAttribute("addNoteModel") AddNoteModel note) {
+        jobService.postNote(note, contactService.getUserId());
+        return "redirect:/backstage/job/getfolder/" + note.getJobid();
     }
 
     @RequestMapping(value = "/get/pandl/{jobid}")

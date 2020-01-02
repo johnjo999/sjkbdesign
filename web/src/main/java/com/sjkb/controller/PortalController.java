@@ -21,6 +21,7 @@ import com.sjkb.models.GetFileModel;
 import com.sjkb.repositores.ContactRepository;
 import com.sjkb.repositores.UserRepository;
 import com.sjkb.service.DropboxService;
+import com.sjkb.service.JobService;
 import com.sjkb.service.UserContactService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,9 @@ public class PortalController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    JobService jobService;
 
     final String portalToken = UUID.randomUUID().toString().replaceAll("-", "3");
     String fileOnDeck = null;
@@ -96,6 +100,7 @@ public class PortalController {
             map.addAttribute("user", "guest");
         } else
             map.addAttribute("user", contact.getFirstname());
+        map.addAttribute("notes", jobService.getCustNotes(contact.getUid()));
         return "portal";
     }
 

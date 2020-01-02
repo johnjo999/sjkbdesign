@@ -119,6 +119,9 @@ public class JobEventEntity {
         case "payment":
             result += String.format("Posted payment for %d", lowEnd);
             break;
+        case "note":
+            result += String.format("<strong>Note:</strong>");
+            break;
         default:
             if (highEnd != 0 && highEnd == lowEnd)
                 result += String.format("%s updated, quote %d", type, highEnd);

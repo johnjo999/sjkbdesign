@@ -11,5 +11,7 @@ public interface JobRepository extends JpaRepository<JobEntity, String> {
     List<JobEntity> findAllByUser(String empid);
     
     List<JobEntity> findByUser(String user);
+
+	List<JobEntity> findAllByPocId(String uid);
     
 }

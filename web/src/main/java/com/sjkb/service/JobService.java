@@ -6,6 +6,7 @@ import com.sjkb.entities.JobEntity;
 import com.sjkb.entities.JobExpenseEntity;
 import com.sjkb.models.jobs.AssignExpenseModel;
 import com.sjkb.models.jobs.AddInvoiceModel;
+import com.sjkb.models.jobs.AddNoteModel;
 import com.sjkb.models.jobs.AddPaymentModel;
 import com.sjkb.models.jobs.JobAttributeModel;
 import com.sjkb.models.jobs.JobCardModel;
@@ -39,5 +40,9 @@ public interface JobService {
 	List<PandLExpenseModel> getExpenses(String jobid);
 
 	List<PandLInvoiceModel> getInvoices(String jobid);
+
+	void postNote(AddNoteModel note, String userId);
+
+	String getCustNotes(String uid);
 
 }
