@@ -82,3 +82,8 @@ input.sjhidden {
     margin-bottom: 0px;
     box-shadow: none;
 }
+
+.card-item {
+    display: flex;
+    justify-content: space-between;
+}

@@ -37,3 +37,19 @@ function doMath(e, d) {
     $("#invoice").val(invoice);
     $("#multiplier").val(multi);
 }
+
+function doInvoiceDue() {
+    var b = false;
+    var a = $("#invo").find("option").each(
+        function (e) {
+            if ($(this).prop('selected')) {
+                b = true;
+                var v = $(this).data("due");
+                $("#paid").val(v);
+            }
+        });
+    if (b === false) {
+        $("#paid").val($(a[0]).data("due"));
+    }
+    console.log(a);
+}

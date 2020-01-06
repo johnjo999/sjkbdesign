@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+
 @Entity(name = "jobEvent")
 @Table(name = "job_event")
 public class JobEventEntity {
@@ -121,6 +122,14 @@ public class JobEventEntity {
             break;
         case "note":
             result += String.format("<strong>Note:</strong>");
+            break;
+        case "quote":
+            if (highEnd == 0) {
+                result += String.format("Quoted Job at $%d", lowEnd);
+            } else {
+                result += String.format("Quote updated, was $%d, now $%d", highEnd, lowEnd);
+            }
+            
             break;
         default:
             if (highEnd != 0 && highEnd == lowEnd)

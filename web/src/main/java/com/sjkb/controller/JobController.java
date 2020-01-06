@@ -3,14 +3,18 @@ package com.sjkb.controller;
 import java.util.List;
 
 import com.sjkb.entities.ContactEntity;
+import com.sjkb.entities.InvoiceEntity;
 import com.sjkb.entities.JobEntity;
 import com.sjkb.models.jobs.AssignExpenseModel;
+import com.sjkb.models.jobs.InvoiceModel;
 import com.sjkb.entities.JobExpenseEntity;
 import com.sjkb.models.jobs.AddInvoiceModel;
 import com.sjkb.models.jobs.AddNoteModel;
 import com.sjkb.models.jobs.AddPaymentModel;
+import com.sjkb.models.jobs.AddQuoteModel;
 import com.sjkb.models.jobs.JobAttributeModel;
 import com.sjkb.models.jobs.PandLModel;
+import com.sjkb.repositores.InvoiceRepository;
 import com.sjkb.repositores.JobExpenseInvoiceInterface;
 import com.sjkb.repositores.JobExpenseRepository;
 import com.sjkb.service.JobService;
@@ -36,6 +40,9 @@ public class JobController {
 
     @Autowired
     JobExpenseRepository jobExpenseRepository;
+
+    @Autowired
+    InvoiceRepository invoiceRepository;
 
     @Autowired
     UserContactService contactService;
@@ -90,10 +97,19 @@ public class JobController {
     }
 
     @RequestMapping(value = "get/form/event/{jobid}/{type}")
-    public String getJobEventForm(ModelMap map, @PathVariable("jobid") final String jobid, @PathVariable("type") final String type) {
-        map.addAttribute("addNoteModel", new AddNoteModel(jobid));
-        String form = "fragments/forms::" + type + "-form";
-        return form;
+    public String getJobEventForm(ModelMap map, @PathVariable("jobid") final String jobid,
+            @PathVariable("type") final String type) {
+        switch (type) {
+        case "note":
+            map.addAttribute("addNoteModel", new AddNoteModel(jobid));
+            break;
+        case "quote":
+            AddQuoteModel quote = new AddQuoteModel(jobid);
+            quote.setAmount(jobService.getJobForFolder(jobid).getQuote());
+            map.addAttribute("addQuoteModel", quote);
+            break;
+        }
+        return "fragments/forms::" + type + "-form";
     }
 
     @RequestMapping(value = "get/form/invoice/{jobid}", params = "count")
@@ -115,6 +131,7 @@ public class JobController {
         paymentModel.setFolder(jobid);
         List<String> methods = jobService.getPaymentMethods();
         map.addAttribute("addPaymentModel", paymentModel);
+        map.addAttribute("invoiceOut", jobService.getOutstandingInvoices(jobid));
         map.addAttribute("methods", methods);
         return "fragments/forms::payment-form";
 
@@ -146,23 +163,46 @@ public class JobController {
     }
 
     @RequestMapping(value = "post/note", method = RequestMethod.POST)
-    public String setJobInvoice(ModelMap map, @ModelAttribute("addNoteModel") AddNoteModel note) {
+    public String addJobNote(ModelMap map, @ModelAttribute("addNoteModel") AddNoteModel note) {
         jobService.postNote(note, contactService.getUserId());
         return "redirect:/backstage/job/getfolder/" + note.getJobid();
+    }
+
+    @RequestMapping(value = "post/quote", method = RequestMethod.POST)
+    public String addJobQuote(ModelMap map, @ModelAttribute("addQuoteModel") AddQuoteModel quote) {
+        jobService.postQuote(quote, contactService.getUserId());
+        return "redirect:/backstage/job/getfolder/" + quote.getJobid();
     }
 
     @RequestMapping(value = "/get/pandl/{jobid}")
     public String getJobPandL(ModelMap map, @PathVariable("jobid") final String jobid) {
         PandLModel pandl = new PandLModel();
         JobEntity job = jobService.getJobForFolder(jobid);
+        JobAttributeModel jobAttributes = jobService.getAttributesFor(job);
         pandl.setExpenses(jobService.getExpenses(jobid));
         pandl.setInvoiced(jobService.getInvoices(jobid));
+        pandl.setQuote(job.getQuote());
+        pandl.setCustBudget(job.getBudget());
+        pandl.setCollected(jobAttributes.getCustPaid());
+        pandl.setInstallerBilled(jobAttributes.getInstallerInvoiced());
+        pandl.setInstallerCost(jobAttributes.getInstallerCost());
+        pandl.setVendorCost(jobAttributes.getVendorPaid());
         ContactEntity contact = contactService.getContactByUid(job.getPocId());
         pandl.setJobid(jobid);
         map.addAttribute("pandl", pandl);
         map.addAttribute("contact", contact);
-        return "project_pl";
+        return "jobs/project_pl";
 
+    }
+
+    @RequestMapping(value = "/get/invoice/{invoiceid}")
+    public String getInvoiceById(ModelMap map, @PathVariable("invoiceid") final String invoiceid) {
+        InvoiceEntity invoice = invoiceRepository.findByInvoiceId(invoiceid);
+        ContactEntity contact = contactService.getContactByUid(invoice.getCustomerId());
+
+        map.addAttribute("invoice", new InvoiceModel(invoice));
+        map.addAttribute("contact", contact);
+        return "/jobs/invoice";
     }
 
 }

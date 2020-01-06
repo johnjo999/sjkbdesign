@@ -71,6 +71,7 @@
                 <input id="|lineCost${stat.index}|" type="number" min="0.00" max="100000.00" step="0.01"
                     class="input-group mb-3 costing" th:field="*{rows[__${stat.index}__].cost}"
                     onchange="totalizer()"></input>
+                    <input class="hidden" th:field="*{rows[__${stat.index}__].expenseUid}"></input>
             </div>
         </div>
         <div class="form-row">
@@ -120,6 +121,10 @@
 <div th:fragment="payment-form" th:remove="tag">
     <form id="payment-form" th:action="@{/backstage/job/post/payment}" th:object="${addPaymentModel}" class="form"
         method="post">
+        <label for="method">Invoice</label>
+        <select id="invo" th:field="*{invoice}" class="input-group custom-select mb-5"  onchange="doInvoiceDue()">
+            <option th:each="inv : ${invoiceOut}" th:value="${inv.invId}" th:text="${inv.desc}" th:data-due="${inv.due}">cont</option>
+        </select>
         <label for="method">Method</label>
         <select id="methdod" th:field="*{method}" class="input-group custom-select mb-5">
             <option th:each="meth : ${methods}" th:value="${meth}" th:text="${meth}">cont</option>
@@ -143,6 +148,23 @@
     <form id="note-form" th:action="@{/backstage/job/post/note}" th:object="${addNoteModel}" class="form"
         method="post">
         <label for="method">Note</label>
+        <textarea id="note" class="input-group mb-3 textarea"
+            th:field="*{note}"></textarea>
+        <div class="form-group checkbox">
+            <input type="checkbox" th:field="*{pub}"> Customer Visible</input></div>
+        <div class="form-group col-md-4 hidden">
+            <input type="text" th:field="*{jobid}" class="form-control"></div>
+        </div>
+    </form>
+</div>
+
+<div th:fragment="quote-form" th:remove="tag">
+    <form id="quote-form" th:action="@{/backstage/job/post/quote}" th:object="${addQuoteModel}" class="form"
+        method="post">
+        <label for="amount">Set Quote</label>
+        <input type="number" min="0" max="1000000" class="input-group mb-3"
+            th:field="*{amount}"></input>
+        <label for="method">Notes</label>
         <textarea id="note" class="input-group mb-3 textarea"
             th:field="*{note}"></textarea>
         <div class="form-group checkbox">

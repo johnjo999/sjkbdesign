@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en xmlns=" http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"">
+
+<head>
+	<meta charset=" utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Kitchen Bath Design">
+
+<title>SJKB Design</title>
+
+<link href="/css/jquery-ui.min.css" rel="stylesheet">
+<link href="/css/classic.css" rel="stylesheet">
+<link href="/css/sjkbcss.css" rel="stylesheet">
+
+
+<script src="/js/sjkbjs.js"></script>
+
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div th:include="fragments/sidecar::sidenav" th:remove="tag"></div>
+        <div class="main">
+
+            <div th:include="fragments/sidecar::topnav" th:remove="tag"></div>
+            <main class="content">
+                <div class="folder-tab">
+                    <h2 id="folderid" th:data-fid="${invoice.jobid}" th:text="${invoice.jobid}">title</h2>
+                </div>
+                <div class="card-deck folder">
+                    <div th:include="fragments/cards::contactcard" class="col-md-4"></div>
+                    <div class="col-md-12">
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h3>SJKB Invoice</h3>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered">
+                                    <h4 class="d-inline-block mr-2">Invoice ID: </h4><span
+                                        th:text="${invoice.invoiceId}">123</span>
+                                    <div class="float-right">
+                                        <h4 class="d-inline-block mr-2">Date:</h4><span
+                                            th:text="${invoice.date}">123</span>
+                                    </div>
+                                    <thead class="thead-light">
+                                        <th>Item</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="inv:${invoice.items}">
+                                            <td th:text="${inv.name}">acme abc</td>
+                                            <td th:text="${inv.description}">1.00</td>
+                                            <td class="d-flex justify-content-end" th:text="${inv.retail}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <hr />
+                                <div class="d-flex justify-content-end">
+                                    <div class="font-weight-bold">Total: <span th:text="${invoice.total}"></span></div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <div class="font-weight-bold">Paid: <span th:text="${invoice.paid}"></span></div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <div class="font-weight-bold">Due: <span th:text="${invoice.due}"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </main>
+        </div>
+        <script src="/js/app.js"></script>
+        <script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+</body>
+
+
+</html>

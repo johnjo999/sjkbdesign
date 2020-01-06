@@ -8,8 +8,10 @@ import com.sjkb.models.jobs.AssignExpenseModel;
 import com.sjkb.models.jobs.AddInvoiceModel;
 import com.sjkb.models.jobs.AddNoteModel;
 import com.sjkb.models.jobs.AddPaymentModel;
+import com.sjkb.models.jobs.AddQuoteModel;
 import com.sjkb.models.jobs.JobAttributeModel;
 import com.sjkb.models.jobs.JobCardModel;
+import com.sjkb.models.jobs.OutstandingInvoiceModel;
 import com.sjkb.models.jobs.PandLExpenseModel;
 import com.sjkb.models.jobs.PandLInvoiceModel;
 
@@ -44,5 +46,9 @@ public interface JobService {
 	void postNote(AddNoteModel note, String userId);
 
 	String getCustNotes(String uid);
+
+	List<OutstandingInvoiceModel> getOutstandingInvoices(String jobId);
+
+	void postQuote(AddQuoteModel quote, String userId);
 
 }

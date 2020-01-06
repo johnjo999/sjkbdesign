@@ -12,7 +12,7 @@ public interface JobExpenseRepository extends JpaRepository<JobExpenseEntity, St
 
 	List<JobExpenseEntity> findByFolder(String jobid);
 	// TODO:  reference company directly from vendor UID rather than via the rep's contact ID
-	@Query("SELECT v.name as companyName, x.invoice as cost FROM expense x, vendor v WHERE x.folder = :folder and x.invoiced = false and v.repId = x.companyContactId")
+	@Query("SELECT v.name as companyName, x.invoice as cost, x.uid as uid FROM expense x, vendor v WHERE x.folder = :folder and x.invoiced = false and v.repId = x.companyContactId")
 	public List<JobExpenseInvoiceInterface> findByFolderAndNotInvoiced(@Param("folder") String folder);
     
 }

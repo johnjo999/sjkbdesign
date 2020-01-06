@@ -5,6 +5,7 @@ public class AddPaymentModel {
     float paid;
     float tax;
     float processing;
+    String invoice;
     String method;
     String folder;
 
@@ -47,5 +48,16 @@ public class AddPaymentModel {
     public void setFolder(String folder) {
         this.folder = folder;
     }
+
+    public String getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(String invoice) {
+        this.invoice = invoice;
+    }
+
+    
+
 
 }

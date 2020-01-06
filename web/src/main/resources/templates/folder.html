@@ -82,31 +82,19 @@
             type: "GET",
             success: function (data) {
                 $("#invoice-form").replaceWith(data);
+                totalizer();
             }
         })
     }
-/*
-    function createEvent() {
-        var d = $("#folderid").data('fid');
-        $("#createNote").modal('show');
-        $.ajax({
-            url: ("/backstage/job/get/form/" + d + "/note"),
-            type: "GET",
-            success: function (data) {
-                $("#invoice-form").replaceWith(data);
-            }
-        })
-    }
-*/
 
     function totalizer() {
-        var tot = 0;
+        var tot = 0.0;
         $(".costing").each(function (x, value) {
             var v = $(value).val();
             if (v != "" && !isNaN(v))
-                tot += parseInt(v);
+                tot += parseFloat(v);
         });
-        $("#totalcost").text(tot);
+        $("#totalcost").text(parseFloat(tot).toFixed(2));
     }
 
     function recordPayment() {
@@ -117,6 +105,7 @@
             type: "GET",
             success: function (data) {
                 $("#payment-form").replaceWith(data);
+                doInvoiceDue();
             }
         })
     }
@@ -303,25 +292,6 @@
             </div>
         </div>
     </div>
-<!--
-    <div class="modal fade" id="makeNote" tabindex="-1" role="dialog" aria-labelledby="modalMakeNote"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Post Note</h5>
-                </div>
-                <div class="modal-body">
-                    <form id="payment-form"></form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="submit" form="note-form" class="btn btn-default">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div>
--->
     <div class="wrapper">
         <div th:include="fragments/sidecar::sidenav" th:remove="tag"></div>
         <div class="main">
@@ -351,13 +321,13 @@
                                     th:text="${job.budget}"></span>
                             </div>
                             <div class="col-md-10">
-                                <div class="text-bold d-inline-block">Quote: </div><span th:text="${job.quote}"></span>
+                                <div class="text-bold d-inline-block">Quote: </div><span th:text="${#numbers.formatCurrency(job.quote)}"></span>
                             </div>
                             <div class="col-md-10">
                                 <div class="text-bold d-inline-block">Projected Cost: </div><span th:text="${#numbers.formatCurrency(jobAttribute.expectedCost)}"></span>
                             </div>
                             <div class="col-md-10">
-                                <div class="text-bold d-inline-block">Margin : </div>
+                                <div class="text-bold d-inline-block">Margin : </div><span th:text="${#numbers.formatCurrency(jobAttribute.margin)}"></span>
                             </div>
                             <div class="col-md-10">
                                 <div class="text-bold d-inline-block">Invoiced : </div><span th:text="${#numbers.formatCurrency(job.invoiced)}"></span>
@@ -401,7 +371,7 @@
                             </div>
                             <div class="card-body">
                                 <button class="btn btn-info mb-3" onclick="createJobEvent('note')">Note</button>
-                                <button class="btn btn-info mb-3">Quote</button>
+                                <button class="btn btn-info mb-3" onclick="createJobEvent('quote')">Quote</button>
                                 <button class="btn btn-info mb-3">Signoff</button>
                                 <button class="btn btn-info mb-3">Order</button>
                                 <button class="btn btn-info mb-3">Ship</button>

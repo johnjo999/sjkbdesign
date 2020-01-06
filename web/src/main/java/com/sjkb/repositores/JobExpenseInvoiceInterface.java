@@ -4,5 +4,6 @@ public interface JobExpenseInvoiceInterface {
 
     public String getCompanyName();
     public float getCost();
+    public String getUid();
 
 }

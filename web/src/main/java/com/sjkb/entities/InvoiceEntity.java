@@ -23,9 +23,12 @@ public class InvoiceEntity {
     private String context;
     private String customerId;
     private String creatorId;
+    private String jobId;
     private LocalDate createDate;
     private LocalDate userViewDate;
     private boolean signed;
+    private float paid;
+    private boolean outstanding;
     
     @Size(max=255)
     private String description;
@@ -125,7 +128,46 @@ public class InvoiceEntity {
         this.description = description;
     }
 
-    
+    public String getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
+
+    public float getPaid() {
+        return paid;
+    }
+
+    public void setPaid(float paid) {
+        this.paid = paid;
+    }
+
+    public float getDue() {
+        float due = 0.0f;
+        for (InvoiceItemEntity item: items) {
+            due += item.getRetail();
+        }
+        return due - paid;
+    }
+
+    public boolean isOutstanding() {
+        return outstanding;
+    }
+
+    public void setOutstanding(boolean outstanding) {
+        this.outstanding = outstanding;
+    }
+
+	public void recordPayment(float paid2) {
+        this.paid += paid2;
+        if (getDue() <= 0) {
+            outstanding = false;
+        }
+
+	}
+
     
 
 }

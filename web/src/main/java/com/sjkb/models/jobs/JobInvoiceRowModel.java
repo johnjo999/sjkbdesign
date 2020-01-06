@@ -6,12 +6,14 @@ public class JobInvoiceRowModel {
     private String name;
     private String desc;
     private Float cost;
+    private String expenseUid;  // mark expense as invoices (where available)
 
     public JobInvoiceRowModel() {}
     
     public JobInvoiceRowModel(JobExpenseInvoiceInterface expense) {
         name = expense.getCompanyName();
         cost = expense.getCost();
+        expenseUid = expense.getUid();
 	}
 
 	public String getName() {
@@ -37,6 +39,16 @@ public class JobInvoiceRowModel {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+    public String getExpenseUid() {
+        return expenseUid;
+    }
+
+    public void setExpenseUid(String expenseUid) {
+        this.expenseUid = expenseUid;
+    }
+
+    
     
     
 }
