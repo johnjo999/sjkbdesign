@@ -23,7 +23,9 @@ import com.sjkb.entities.JobEventEntity;
 import com.sjkb.entities.JobExpenseEntity;
 import com.sjkb.entities.JobPaymentEntity;
 import com.sjkb.entities.UserEntity;
+import com.sjkb.entities.VendorEntity;
 import com.sjkb.models.jobs.AssignExpenseModel;
+import com.sjkb.models.jobs.AddBudgetModel;
 import com.sjkb.models.jobs.AddInvoiceModel;
 import com.sjkb.models.jobs.AddNoteModel;
 import com.sjkb.models.jobs.AddPaymentModel;
@@ -42,6 +44,7 @@ import com.sjkb.repositores.JobExpenseRepository;
 import com.sjkb.repositores.JobPaymentRepository;
 import com.sjkb.repositores.JobRepository;
 import com.sjkb.repositores.UserRepository;
+import com.sjkb.repositores.VendorRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,6 +81,11 @@ public class JobServiceImpl implements JobService {
 
     @Autowired
     UserContactService userService;
+
+    @Autowired
+    VendorRepository vendorRepository;
+
+    private Map<String, JobAttributeModel> attributes = new HashMap<>();
 
     @Override
     public void createJob(final String jobid, final String designer, final String pocId) {
@@ -154,35 +162,59 @@ public class JobServiceImpl implements JobService {
             expenseModel.setHighEstimate(le);
         }
         switch (expense) {
-        case "contractor":
-        case "installer":
         case "cabinet":
-            final JobEventEntity newEvent = new JobEventEntity();
-            newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
-            newEvent.setJobid(job.getJobid());
-            newEvent.setCreatorId(job.getUser());
-            newEvent.setObjid(expenseModel.getContId());
-            newEvent.setType(expense);
-            if (expenseModel.getQuote() > 0) {
-                newEvent.setLowEnd(expenseModel.getQuote());
-                newEvent.setHighEnd(expenseModel.getQuote());
-
-            } else {
-                newEvent.setLowEnd(expenseModel.getLowEstimate());
-                newEvent.setHighEnd(expenseModel.getHighEstimate());
+        case "installer":
+            if (expenseModel.getPaid() > 0) {
+                JobExpenseEntity installerExpense = new JobExpenseEntity();
+                installerExpense.setPaid(expenseModel.getPaid());
+                installerExpense.setInvoice(expenseModel.getPaid());
+                installerExpense.setFolder(expenseModel.getFolder());
+                installerExpense.setDateNew(LocalDate.now());
+                if (expenseModel.getVendorId() == null)
+                    installerExpense.setVendorId(expenseModel.getContId());
+                else
+                    installerExpense.setVendorId(expenseModel.getVendorId());
+                postExpense(installerExpense, job.getUser());
             }
-            if (expenseModel.getDate() != null) {
-                newEvent.setScheduled(expenseModel.getTimestamp());
-            }
-            jobEventRepository.save(newEvent);
+        case "contractor":
+            recordJobEvent(job, expenseModel, expense);
             break;
         }
     }
 
+    private void recordJobEvent(JobEntity job, AssignExpenseModel expense, String type) {
+        final JobEventEntity newEvent = new JobEventEntity();
+        newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        newEvent.setJobid(job.getJobid());
+        newEvent.setCreatorId(job.getUser());
+        if (expense.getVendorId() != null)
+            newEvent.setObjid(expense.getVendorId());
+        else {
+            newEvent.setObjid(expense.getContId());
+            newEvent.setSubType("contact");
+        }
+
+        newEvent.setType(type);
+        if (expense.getQuote() > 0) {
+            newEvent.setLowEnd(expense.getQuote());
+            newEvent.setHighEnd(expense.getQuote());
+
+        } else {
+            newEvent.setLowEnd(expense.getLowEstimate());
+            newEvent.setHighEnd(expense.getHighEstimate());
+        }
+        if (expense.getDate() != null) {
+            newEvent.setStartDate(LocalDate.parse(expense.getDate()));
+        }
+        jobEventRepository.save(newEvent);
+    }
+
     @Override
     public JobAttributeModel getAttributesFor(final JobEntity job) {
+        if (attributes.containsKey(job.getJobid()))
+            return attributes.get(job.getJobid());
         final JobAttributeModel result = new JobAttributeModel();
-        final List<JobEventEntity> jobEvents = jobEventRepository.findAllByJobidOrderByTimestampDesc(job.getJobid());
+        final List<JobEventEntity> jobEvents = jobEventRepository.findAllByJobidOrderByTimestamp(job.getJobid());
         int contractorCost = 0;
         int installerCost = 0;
         Optional<UserEntity> designerOptional = userRepository.findByUsername(job.getUser());
@@ -220,15 +252,25 @@ public class JobServiceImpl implements JobService {
                     }
                     break;
                 case "expense":
-                    result.addVendorCost(jevent.getLowEnd());
+                    if (jevent.getSubType() == null) {
+                        result.addVendorCost(jevent.getPaid());
+                        break;
+                    }
+                    if (jevent.getSubType().equals("cabinet")) {
+                        result.setCabinetCost(jevent.getPaid());
+                    }
                     break;
                 case "payment":
-                    result.addCustPayment(jevent.getLowEnd());
+                    result.addCustPayment(jevent.getPaid());
                     break;
                 case "cabinet":
-                    result.addCabinetCost(jevent.getLowEnd());
+                    result.setCabinetQuote(jevent.getLowEnd());
                     break;
-                
+                case "budget":
+                    result.setBudgetLow(jevent.getLowEnd());
+                    result.setBudgetHigh(jevent.getHighEnd());
+                    result.setStartDate(jevent.getStartDate());
+                    result.setEndDate(jevent.getEndDate());
                 case "invoice":
                     result.addInvoicedCost(jevent.getLowEnd());
                     result.addInvoicedRetial(jevent.getHighEnd());
@@ -238,6 +280,7 @@ public class JobServiceImpl implements JobService {
             result.setInstallerCost(installerCost);
             result.setMargin(job.getQuote() - result.getExpectedCost());
         }
+        attributes.put(job.getJobid(), result);
         return result;
     }
 
@@ -259,6 +302,10 @@ public class JobServiceImpl implements JobService {
         }
         return null;
     }
+
+    /**
+     * Returns all the job events for a specfic job formated in html
+     */
 
     @Override
     public String getJobHistory(final JobEntity job) {
@@ -330,6 +377,7 @@ public class JobServiceImpl implements JobService {
             jobRepository.save(job);
             invoiceRepository.save(invoice);
             final JobEventEntity newEvent = new JobEventEntity();
+            attributes.remove(job.getJobid());
             newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
             newEvent.setJobid(job.getJobid());
             newEvent.setCreatorId(job.getUser());
@@ -363,13 +411,26 @@ public class JobServiceImpl implements JobService {
             final Optional<JobEntity> jobOption = jobRepository.findById(expense.getFolder());
             if (jobOption.isPresent()) {
                 jobExpenseRepository.save(expense);
+                Optional<VendorEntity> vendorOption = vendorRepository.findById(expense.getVendorId());
+
                 final JobEventEntity newEvent = new JobEventEntity();
+                attributes.remove(expense.getFolder());
                 newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
                 newEvent.setJobid(expense.getFolder());
                 newEvent.setCreatorId(user);
                 newEvent.setObjid(expense.getUid());
                 newEvent.setType("expense");
-                newEvent.setLowEnd(Math.round(expense.getNet()));
+                if (vendorOption.isPresent()) {
+                    if (vendorOption.get().isCabVendor()) {
+                        newEvent.setSubType("cabinet");
+                    }
+                } else {
+                    newEvent.setSubType("installer");
+                }
+                if (expense.getPaid() == 0.0f)  // for most, we pay the net from the invoice (before tax)
+                    newEvent.setPaid(Math.round(expense.getNet()));
+                else
+                    newEvent.setPaid(expense.getPaid());    // but on the installer event, we record direct payment
                 jobEventRepository.save(newEvent);
             }
             // JobEntity job = jobOption.get();
@@ -405,6 +466,7 @@ public class JobServiceImpl implements JobService {
                 }
             }
             final JobEventEntity newEvent = new JobEventEntity();
+            attributes.remove(paymentModel.getFolder());
             newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
             newEvent.setJobid(payment.getFolder());
             newEvent.setCreatorId(user);
@@ -427,7 +489,7 @@ public class JobServiceImpl implements JobService {
             for (JobExpenseEntity expense : entities) {
                 PandLExpenseModel pandl = new PandLExpenseModel();
                 pandl.setEntityAmounts(expense);
-                pandl.setVendor(contactRepository.getCompanyForId(expense.getCompanyContactId()));
+                pandl.setVendor(vendorRepository.getOne(expense.getVendorId()).getName());
                 result.add(pandl);
             }
         }
@@ -473,6 +535,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public void postQuote(AddQuoteModel quote, String userId) {
         final JobEventEntity newEvent = new JobEventEntity();
+        attributes.remove(quote.getJobid());
         newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
         newEvent.setJobid(quote.getJobid());
         newEvent.setCreatorId(userId);
@@ -483,10 +546,34 @@ public class JobServiceImpl implements JobService {
         JobEntity job = jobRepository.getOne(quote.getJobid());
         newEvent.setHighEnd(job.getQuote());
         job.setActivityDate(new Timestamp(System.currentTimeMillis()));
-        if (job.getState().equals("new")) {
+        if (job.getState().equals("budget")) {
             job.setState("quote");
         }
         job.setQuote(quote.getAmount());
+        jobRepository.save(job);
+        jobEventRepository.save(newEvent);
+    }
+
+    @Override
+    public void postBudget(AddBudgetModel budget, String userId) {
+        final JobEventEntity newEvent = new JobEventEntity();
+        attributes.remove(budget.getJobid());
+        newEvent.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        newEvent.setJobid(budget.getJobid());
+        newEvent.setCreatorId(userId);
+        newEvent.setType("budget");
+        newEvent.setObjid("-1");
+        // note low and end track changes, low = new value, high = old value;
+        newEvent.setLowEnd(budget.getLow());
+        newEvent.setHighEnd(budget.getHigh());
+        newEvent.setStartDate(LocalDate.parse(budget.getStartDate()));
+        newEvent.setEndDate(LocalDate.parse(budget.getEndDate()));
+        JobEntity job = jobRepository.getOne(budget.getJobid());
+        job.setActivityDate(new Timestamp(System.currentTimeMillis()));
+        if (job.getState().equals("new")) {
+            job.setState("budget");
+        }
+        job.setBudget(budget.getLow());
         jobRepository.save(job);
         jobEventRepository.save(newEvent);
     }
@@ -532,6 +619,11 @@ public class JobServiceImpl implements JobService {
         account.setDue(0.0f);
         result.add(account);
         return result;
+    }
+
+    @Override
+    public JobAttributeModel getAttributesFor(String jobid) {
+        return this.getAttributesFor(jobRepository.getOne(jobid));
     }
 
 }

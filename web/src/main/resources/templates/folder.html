@@ -69,6 +69,7 @@
             type: "GET",
             success: function (data) {
                 $("#expense-form").replaceWith(data);
+                $(".hasdatepicker").datepicker();
                 doMulti(data);
             }
         });
@@ -120,6 +121,7 @@
             type: "GET",
             success: function (data) {
                 $("#event-form").replaceWith(data);
+                $(".hasdatepicker").datepicker();
             }
         })
     }
@@ -128,6 +130,15 @@
         var d = $("#folderid").data('fid');
         window.location.href = '/backstage/job/get/pandl/' + d;
     }
+
+    $(document).ready(function () {
+        $.datepicker.setDefaults({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: "yy-mm-dd",
+            buttonImage: "/img/buttons/button-play.png"
+        })
+    });
 
 
 </script>
@@ -340,14 +351,13 @@
                     <div class="col-md-4">
                         <div class="card">
                             <div class="card-header">
-                                <h3>Expenses</h3>
+                                <h3>Quotes</h3>
                             </div>
                             <div class="card-body">
                                 <div>
                                     <button class="btn btn-info mb-3" onclick="addContractor()">Contractor</button>
                                     <button class="btn btn-info mb-3" onclick="addInstaller()">Installer</button>
                                     <button class="btn btn-info mb-3" onclick="addCabinets()">Cabinets</button>
-                                    <button class="btn btn-info mb-3" onclick="addExpense()">Vendor</button>
                                 </div>
                                 <hr />
                                 <div>
@@ -371,6 +381,7 @@
                             </div>
                             <div class="card-body">
                                 <button class="btn btn-info mb-3" onclick="createJobEvent('note')">Note</button>
+                                <button class="btn btn-info mb-3" onclick="createJobEvent('budget')">Budget</button>
                                 <button class="btn btn-info mb-3" onclick="createJobEvent('quote')">Quote</button>
                                 <button class="btn btn-info mb-3">Signoff</button>
                                 <button class="btn btn-info mb-3">Order</button>
@@ -385,8 +396,9 @@
                                 <h3>Actions</h3>
                             </div>
                             <div class="card-body">
+                                <button class="btn btn-info mb-3" onclick="addExpense()">Pay Vendor</button>
                                 <button class="btn btn-info mb-3" onclick="createInvoice()">Create Invoice</button>
-                                <button class="btn btn-info mb-3" onclick="recordPayment()">Record Payment</button>
+                                <button class="btn btn-info mb-3" onclick="recordPayment()">Record Payment</button>                               
                             </div>
                         </div>
                     </div>

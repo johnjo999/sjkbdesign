@@ -14,7 +14,7 @@ public class JobExpenseEntity {
     @Id
     private String uid;
     private String folder;
-    private String companyContactId;
+    private String vendorId;
     private float net;
     private float tax;
     private float shipping;
@@ -27,14 +27,6 @@ public class JobExpenseEntity {
     public JobExpenseEntity() {
         uid = UUID.randomUUID().toString();
         dateNew = LocalDate.now();
-    }
-    
-    public String getCompanyContactId() {
-        return companyContactId;
-    }
-
-    public void setCompanyContactId(String companyContactId) {
-        this.companyContactId = companyContactId;
     }
 
     public float getNet() {
@@ -115,6 +107,14 @@ public class JobExpenseEntity {
 
     public void setShipping(float shipping) {
         this.shipping = shipping;
+    }
+
+    public String getVendorId() {
+        return vendorId;
+    }
+
+    public void setVendorId(String vendorId) {
+        this.vendorId = vendorId;
     }
 
     

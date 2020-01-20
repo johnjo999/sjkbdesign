@@ -8,6 +8,7 @@ import com.sjkb.entities.JobEntity;
 import com.sjkb.models.jobs.AssignExpenseModel;
 import com.sjkb.models.jobs.InvoiceModel;
 import com.sjkb.entities.JobExpenseEntity;
+import com.sjkb.models.jobs.AddBudgetModel;
 import com.sjkb.models.jobs.AddInvoiceModel;
 import com.sjkb.models.jobs.AddNoteModel;
 import com.sjkb.models.jobs.AddPaymentModel;
@@ -65,6 +66,18 @@ public class JobController {
         return "folder";
     }
 
+    /**
+     * 
+     * @param map
+     * @param jobid
+     * @param type, form type as seen in the switch()
+     * @return the proper html <form> for the given request, including backing bean. For forms
+     * where the job should have a single assigned instance, then the form is updated with
+     * attributes for that instance, for example contractor, installer, and cabinets.  Other
+     * expense generate a new, empty bean for each expense.  For cabinets, only the quote
+     * is carried here, the paid expense is carried as a JobExpenseEntity with the other expenses
+     */
+
     @RequestMapping(value = "get/form/{jobid}/{type}")
     public String getContractorForm(ModelMap map, @PathVariable("jobid") final String jobid,
             @PathVariable("type") final String type) {
@@ -87,7 +100,7 @@ public class JobController {
             map.addAttribute("reps", contactService.getCompaniesWithReps(contactService.getContext()));
             JobExpenseEntity expense = new JobExpenseEntity();
             expense.setFolder(jobid);
-            map.addAttribute("expense", expense);
+            map.addAttribute("expense", expense);         
         }
         if (expenseModel == null) {
             expenseModel = new AssignExpenseModel(jobid);
@@ -99,6 +112,7 @@ public class JobController {
     @RequestMapping(value = "get/form/event/{jobid}/{type}")
     public String getJobEventForm(ModelMap map, @PathVariable("jobid") final String jobid,
             @PathVariable("type") final String type) {
+                JobAttributeModel attribs = jobService.getAttributesFor(jobid);
         switch (type) {
         case "note":
             map.addAttribute("addNoteModel", new AddNoteModel(jobid));
@@ -106,7 +120,19 @@ public class JobController {
         case "quote":
             AddQuoteModel quote = new AddQuoteModel(jobid);
             quote.setAmount(jobService.getJobForFolder(jobid).getQuote());
+            quote.setCabinetQ(attribs.getCabinetQuote());
+            quote.setInstallerQ(attribs.getInstallerCost());
             map.addAttribute("addQuoteModel", quote);
+            break;
+        case "budget":
+            AddBudgetModel budget = new AddBudgetModel(jobid);
+            budget.setLow(attribs.getBudgetLow());
+            budget.setHigh(attribs.getBudgetHigh());
+            if (attribs.getStartDate() != null)
+                budget.setStartDate(attribs.getStartDate().toString());
+            if (attribs.getEndDate() != null)
+                budget.setEndDate(attribs.getEndDate().toString());
+            map.addAttribute("addBudgetModel", budget);
             break;
         }
         return "fragments/forms::" + type + "-form";
@@ -174,19 +200,22 @@ public class JobController {
         return "redirect:/backstage/job/getfolder/" + quote.getJobid();
     }
 
+    @RequestMapping(value = "post/budget", method = RequestMethod.POST)
+    public String addJobBudget(ModelMap map, @ModelAttribute("addBudgetModel") AddBudgetModel budget) {
+        jobService.postBudget(budget, contactService.getUserId());
+        return "redirect:/backstage/job/getfolder/" + budget.getJobid();
+    }
+
     @RequestMapping(value = "/get/pandl/{jobid}")
     public String getJobPandL(ModelMap map, @PathVariable("jobid") final String jobid) {
         PandLModel pandl = new PandLModel();
         JobEntity job = jobService.getJobForFolder(jobid);
         JobAttributeModel jobAttributes = jobService.getAttributesFor(job);
+        pandl.setJobAtributes(jobAttributes);
         pandl.setExpenses(jobService.getExpenses(jobid));
         pandl.setInvoiced(jobService.getInvoices(jobid));
         pandl.setQuote(job.getQuote());
         pandl.setCustBudget(job.getBudget());
-        pandl.setCollected(jobAttributes.getCustPaid());
-        pandl.setInstallerBilled(jobAttributes.getInstallerInvoiced());
-        pandl.setInstallerCost(jobAttributes.getInstallerCost());
-        pandl.setVendorCost(jobAttributes.getVendorPaid());
         ContactEntity contact = contactService.getContactByUid(job.getPocId());
         pandl.setJobid(jobid);
         map.addAttribute("pandl", pandl);

@@ -1,225 +1,265 @@
 < xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-</div>
-<div th:fragment="contractor-form" th:remove="tag">
-    <form id="contractor-form" th:action="@{/backstage/job/set/contractor}" th:object="${assignExpenseModel}"
-        class="form" method="post">
-        <label for="contractor"></label>
-        <select id="contractor" th:field="*{contId}" class="input-group custom-select mb-5">
-            <option th:each="cont : ${allCont}" th:value="${cont.id}" th:text="${cont.name}">cont</option>
-        </select>
-        <label for="le">Low Estimate</label>
-        <input id="le" type="number" class="input-group mb-3" th:field="*{lowEstimate}"></input>
-        <label for="le">High Estimate</label>
-        <input id="he" type="number" class="input-group mb-3" th:field="*{highEstimate}"></input>
-        <label for="le">Quote</label>
-        <input id="q" type="number" class="input-group mb-3" th:field="*{quote}"></input>
-        <input type="text" name="folder" class="hidden foldervar" th:value="*{folder}"></input>
-    </form>
-</div>
+    </div>
+    <div th:fragment="contractor-form" th:remove="tag">
+        <form id="contractor-form" th:action="@{/backstage/job/set/contractor}" th:object="${assignExpenseModel}"
+            class="form" method="post">
+            <label for="contractor"></label>
+            <select id="contractor" th:field="*{contId}" class="input-group custom-select mb-5">
+                <option th:each="cont : ${allCont}" th:value="${cont.id}" th:text="${cont.name}">cont</option>
+            </select>
+            <label for="le">Low Estimate</label>
+            <input id="le" type="number" required value="0"class="input-group mb-3" th:field="*{lowEstimate}"></input>
+            <label for="le">High Estimate</label>
+            <input id="he" type="number" required value="0"class="input-group mb-3" th:field="*{highEstimate}"></input>
+            <label for="le">Quote</label>
+            <input id="q" type="number" required value="0"class="input-group mb-3" th:field="*{quote}"></input>
+            <input type="text" name="folder" class="hidden foldervar" th:value="*{folder}"></input>
+        </form>
+    </div>
 
-<div th:fragment="installer-form" th:remove="tag">
-    <form id="installer-form" th:action="@{/backstage/job/set/installer}" th:object="${assignExpenseModel}" class="form"
-        method="post">
-        <label for="contractor"></label>
-        <select id="contractor" th:field="*{contId}" class="input-group custom-select mb-5">
-            <option th:each="cont : ${allCont}" th:value="${cont.id}" th:text="${cont.name}">cont</option>
-        </select>
-        <label for="le">Low Estimate</label>
-        <input id="le" type="number" class="input-group mb-3" th:field="*{lowEstimate}"></input>
-        <label for="le">High Estimate</label>
-        <input id="he" type="number" class="input-group mb-3" th:field="*{highEstimate}"></input>
-        <label for="le">Quote</label>
-        <input id="q" type="number" class="input-group mb-3" th:field="*{quote}"></input>
-        <label for="le">Target Date</label>
-        <input id="d" type="text" class="input-group hasdatepicker" th:field="*{date}"></input>
-        <input type="text" name="folder" class="hidden foldervar" th:value="*{folder}"></input>
-    </form>
-</div>
+    <div th:fragment="installer-form" th:remove="tag">
+        <form id="installer-form" th:action="@{/backstage/job/set/installer}" th:object="${assignExpenseModel}"
+            class="form" method="post">
+            <label for="contractor"></label>
+            <select id="contractor" th:field="*{contId}" class="input-group custom-select mb-5">
+                <option th:each="cont : ${allCont}" th:value="${cont.id}" th:text="${cont.name}">cont</option>
+            </select>
+            <label for="le">Low Estimate</label>
+            <input id="le" type="number" required value="0"class="input-group mb-3" th:field="*{lowEstimate}"></input>
+            <label for="le">High Estimate</label>
+            <input id="he" type="number" required value="0"class="input-group mb-3" th:field="*{highEstimate}"></input>
+            <label for="le">Quote</label>
+            <input id="q" type="number" required value="0"class="input-group mb-3" th:field="*{quote}"></input>
+            <label for="le">Target Date</label>
+            <input id="d" type="text" class="input-group hasdatepicker" th:field="*{date}"></input>
+            <label for="paid">Paid</label>
+            <input id="paid" type="number" required value="0" step="0.01" class="input-group mb-3" th:field="*{paid}" disable></input>
+            <input type="text" name="folder" class="hidden foldervar" th:value="*{folder}"></input>
+        </form>
+    </div>
 
 
-<div th:fragment="cabinet-form" th:remove="tag">
-    <form id="cabinet-form" th:action="@{/backstage/job/set/cabinet}" th:object="${assignExpenseModel}" class="form"
-        method="post">
-        <label for="contractor"></label>
-        <select id="contractor" th:field="*{contId}" class="input-group custom-select mb-5">
-            <option th:each="cont : ${allCont}" th:value="${cont.id}" th:text="${cont.name}">cont</option>
-        </select>
-        <label for="le">Quote</label>
-        <input id="q" type="number" class="input-group mb-3" th:field="*{quote}"></input>
-        <label for="le">Ship Date</label>
-        <input id="d" type="date" class="input-group hasdatepicker" th:field="*{Date}"></input>
-        <input type="text" name="folder" class="hidden foldervar" th:value="*{folder}"></input>
-    </form>
-</div>
+    <div th:fragment="cabinet-form" th:remove="tag">
+        <form id="cabinet-form" th:action="@{/backstage/job/set/cabinet}" th:object="${assignExpenseModel}" class="form"
+            method="post">
+            <label for="contractor"></label>
+            <select id="contractor" th:field="*{contId}" class="input-group custom-select mb-5">
+                <option th:each="cont : ${allCont}" th:value="${cont.id}" th:text="${cont.name}">cont</option>
+            </select>
+            <label for="le">Quote</label>
+            <input id="q" type="number" required value="0"class="input-group mb-3" th:field="*{quote}"></input>
+            <label for="le">Ship Date</label>
+            <input id="d" type="date" class="input-group hasdatepicker" th:field="*{Date}"></input>
+            <input type="text" name="folder" class="hidden foldervar" th:value="*{folder}"></input>
+            <label for="paid">Total</label>
+            <input id="paid" type="number" required value="0" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+                th:field="*{paid}"></input>
+        </form>
+    </div>
 
-<div th:fragment="invoice-form" th:remove="tag">
-    <form id="invoice-form" th:action="@{/backstage/job/set/invoice}" th:object="${addInvoiceModel}" class="form"
-        method="post">
-        <div th:each="item, stat : ${addInvoiceModel.rows}" class="form-row">
-            <div class="form-group col-md-3">
-                <label th:for="|lineItem${stat.index}|">Line Item</label>
-                <input id="|lineItem${stat.index}|" type="text" class="input-group mb-3 inline"
-                    th:field="*{rows[__${stat.index}__].name}"></input>
-            </div>
-            <div class="form-group col-md-6">
-                <label th:for="|lineDesc${stat.index}|">Description</label>
-                <input id="|lineDesc${stat.index}|" type="text" class="input-group mb-3 inline"
-                    th:field="*{rows[__${stat.index}__].desc}"></input>
-            </div>
-            <div class="form-group col-md-3">
-                <label th:for="|lineCost${stat.index}|">Cost</label>
-                <input id="|lineCost${stat.index}|" type="number" min="0.00" max="100000.00" step="0.01"
-                    class="input-group mb-3 costing" th:field="*{rows[__${stat.index}__].cost}"
-                    onchange="totalizer()"></input>
+    <div th:fragment="invoice-form" th:remove="tag">
+        <form id="invoice-form" th:action="@{/backstage/job/set/invoice}" th:object="${addInvoiceModel}" class="form"
+            method="post">
+            <div th:each="item, stat : ${addInvoiceModel.rows}" class="form-row">
+                <div class="form-group col-md-3">
+                    <label th:for="|lineItem${stat.index}|">Line Item</label>
+                    <input id="|lineItem${stat.index}|" type="text" class="input-group mb-3 inline"
+                        th:field="*{rows[__${stat.index}__].name}"></input>
+                </div>
+                <div class="form-group col-md-6">
+                    <label th:for="|lineDesc${stat.index}|">Description</label>
+                    <input id="|lineDesc${stat.index}|" type="text" class="input-group mb-3 inline"
+                        th:field="*{rows[__${stat.index}__].desc}"></input>
+                </div>
+                <div class="form-group col-md-3">
+                    <label th:for="|lineCost${stat.index}|">Cost</label>
+                    <input id="|lineCost${stat.index}|" type="number" required value="0" min="0.00" max="100000.00" step="0.01"
+                        class="input-group mb-3 costing" th:field="*{rows[__${stat.index}__].cost}"
+                        onchange="totalizer()"></input>
                     <input class="hidden" th:field="*{rows[__${stat.index}__].expenseUid}"></input>
+                </div>
             </div>
-        </div>
-        <div class="form-row">
-            <div class="col-md-1 offset-md-8">Total:</div>
-            <span id="totalcost"></span>
-        </div>
-        <input type="text" name="folder" class="hidden" th:field="*{folder}"></input>
-    </form>
-</div>
-<div th:fragment="expense-form" th:remove="tag">
-    <script>
-
-       
-
-        $("input").change(doMath);
-    </script>
-    <form id="expense-form" th:action="@{/backstage/job/post/expense}" th:object="${expense}" class="form"
-        method="post">
-        <label for="company">Supplier</label>
-        <select id="company" onchange="doMulti(this)" th:field="*{companyContactId}"
-            class="input-group custom-select mb-5">
-            <option th:each="vendor : ${reps}" th:data-multi="${vendor.multiplier}" th:value="${vendor.uid}"
-                th:text="${vendor.name}" class="expclass">cont</option>
-        </select>
-        <label for="net">Net</label>
-        <input id="net" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
-            th:field="*{net}"></input>
+            <div class="form-row">
+                <div class="col-md-1 offset-md-8">Total:</div>
+                <span id="totalcost"></span>
+            </div>
+            <input type="text" name="folder" class="hidden" th:field="*{folder}"></input>
+        </form>
+    </div>
+    <div th:fragment="expense-form" th:remove="tag">
+        <script>
+            $("input").change(doMath);
+        </script>
+        <form id="expense-form" th:action="@{/backstage/job/post/expense}" th:object="${expense}" class="form"
+            method="post">
+            <label for="company">Supplier</label>
+            <select id="company" onchange="doMulti(this)" th:field="*{vendorId}"
+                class="input-group custom-select mb-5">
+                <option th:each="vendor : ${reps}" th:data-multi="${vendor.multiplier}" th:value="${vendor.uid}"
+                    th:text="${vendor.name}" class="expclass">cont</option>
+            </select>
+            <label for="net">Net</label>
+            <input id="net" type="number" required value="0" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+                th:field="*{net}"></input>
             <label for="shipping">Shipping</label>
-        <input id="shipping" type="number" min="0.00" max="1000.00" step="0.01" class="input-group mb-3"
-            th:field="*{shipping}"></input>
-        <label for="tax">Tax</label>
-        <input id="tax" type="number" min="0.00" max="1000.00" step="0.01" class="input-group mb-3"
-            th:field="*{tax}"></input>
-        <label for="paid">Total</label>
-        <input id="paid" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
-            th:field="*{paid}"></input>
-        <label for="multiplier">Multiplier</label>
-        <input id="multiplier" type="number" min="0.00" max="1.00" step="0.01" class="input-group mb-3"
-            th:field="*{multiplier}"></input>
-        <label for="invoice">Invoice</label>
-        <input id="invoice" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
-            th:field="*{invoice}"></input>
-        <input id="invoice" type="text" class="hidden" th:field="*{folder}"></input>
-    </form>
-</div>
+            <input id="shipping" type="number" required value="0" min="0.00" max="1000.00" step="0.01" class="input-group mb-3"
+                th:field="*{shipping}"></input>
+            <label for="tax">Tax</label>
+            <input id="tax" type="number" required value="0" min="0.00" max="1000.00" step="0.01" class="input-group mb-3"
+                th:field="*{tax}"></input>
+            <label for="paid">Total</label>
+            <input id="paid" type="number" required value="0" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+                th:field="*{paid}"></input>
+            <label for="multiplier">Multiplier</label>
+            <input id="multiplier" type="number" required value="0" min="0.00" max="1.00" step="0.01" class="input-group mb-3"
+                th:field="*{multiplier}"></input>
+            <label for="invoice">Invoice</label>
+            <input id="invoice" type="number" required value="0" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+                th:field="*{invoice}"></input>
+            <input id="invoice" type="text" class="hidden" th:field="*{folder}"></input>
+        </form>
+    </div>
 
-<div th:fragment="payment-form" th:remove="tag">
-    <form id="payment-form" th:action="@{/backstage/job/post/payment}" th:object="${addPaymentModel}" class="form"
-        method="post">
-        <label for="method">Invoice</label>
-        <select id="invo" th:field="*{invoice}" class="input-group custom-select mb-5"  onchange="doInvoiceDue()">
-            <option th:each="inv : ${invoiceOut}" th:value="${inv.invId}" th:text="${inv.desc}" th:data-due="${inv.due}">cont</option>
-        </select>
-        <label for="method">Method</label>
-        <select id="methdod" th:field="*{method}" class="input-group custom-select mb-5">
-            <option th:each="meth : ${methods}" th:value="${meth}" th:text="${meth}">cont</option>
-        </select>
-        <label for="paid">Paid</label>
-        <input id="paid" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
-            th:field="*{paid}"></input>
-        <label for="tax">Tax</label>
-        <input id="tax" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
-            th:field="*{tax}"></input>
-        <label for="processing">Processing</label>
-        <input id="processing" type="number" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
-            th:field="*{processing}"></input>
-        <div class="form-group col-md-4 hidden">
-            <input type="text" th:field="*{folder}" class="form-control">
-        </div>
-    </form>
-</div>
-
-<div th:fragment="note-form" th:remove="tag">
-    <form id="note-form" th:action="@{/backstage/job/post/note}" th:object="${addNoteModel}" class="form"
-        method="post">
-        <label for="method">Note</label>
-        <textarea id="note" class="input-group mb-3 textarea"
-            th:field="*{note}"></textarea>
-        <div class="form-group checkbox">
-            <input type="checkbox" th:field="*{pub}"> Customer Visible</input></div>
-        <div class="form-group col-md-4 hidden">
-            <input type="text" th:field="*{jobid}" class="form-control"></div>
-        </div>
-    </form>
-</div>
-
-<div th:fragment="quote-form" th:remove="tag">
-    <form id="quote-form" th:action="@{/backstage/job/post/quote}" th:object="${addQuoteModel}" class="form"
-        method="post">
-        <label for="amount">Set Quote</label>
-        <input type="number" min="0" max="1000000" class="input-group mb-3"
-            th:field="*{amount}"></input>
-        <label for="method">Notes</label>
-        <textarea id="note" class="input-group mb-3 textarea"
-            th:field="*{note}"></textarea>
-        <div class="form-group checkbox">
-            <input type="checkbox" th:field="*{pub}"> Customer Visible</input></div>
-        <div class="form-group col-md-4 hidden">
-            <input type="text" th:field="*{jobid}" class="form-control"></div>
-        </div>
-    </form>
-</div>
-
-<div th:fragment="vendor" th:remove="tag">
-    <form th:action="@{${vendor.postNextAction}}" th:object="${vendor}" method="post">
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                <label for="name">Company Name</label>
-                <input type="text" th:field="*{name}" class="form-control" placeholder="">
-            </div>
-
-            <div class="form-group col-md-4">
-                <label for="accountId">Account ID</label>
-                <input type="text" th:field="*{accountId}" class="form-control" placeholder="">
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                <label for="url">Url</label>
-                <input type="text" th:field="*{url}" class="form-control" placeholder="optional">
-            </div>
-            <div class="form-group col-md-4">
-                <label for="url">Login</label>
-                <input type="text" th:field="*{login}" class="form-control" placeholder="optional">
-            </div>
-            <div class="form-group col-md-3">
-                <label for="url">password</label>
-                <input type="text" th:field="*{pwd}" class="form-control" placeholder="optional">
-                <label for="showme" class="flex-right">showme
-                <input id="showme" type="checkbox" class="checkbox"></checkbox></label>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-4 ac">
-                <label for="multiplier">Multiplier</label>
-                <input type="number" th:field="*{multiplier}" class="form-control" step="0.01">
-            </div>
-            <div class="form-group col-md-1">
-                <label for="cabs">Cabinets</label>
-                <input id="cabs" th:field="*{cabSupplier}" type="checkbox" class="checkbox"></checkbox>
-            </div>
+    <div th:fragment="payment-form" th:remove="tag">
+        <form id="payment-form" th:action="@{/backstage/job/post/payment}" th:object="${addPaymentModel}" class="form"
+            method="post">
+            <label for="method">Invoice</label>
+            <select id="invo" th:field="*{invoice}" class="input-group custom-select mb-5" onchange="doInvoiceDue()">
+                <option th:each="inv : ${invoiceOut}" th:value="${inv.invId}" th:text="${inv.desc}"
+                    th:data-due="${inv.due}">cont</option>
+            </select>
+            <label for="method">Method</label>
+            <select id="methdod" th:field="*{method}" class="input-group custom-select mb-5">
+                <option th:each="meth : ${methods}" th:value="${meth}" th:text="${meth}">cont</option>
+            </select>
+            <label for="paid">Paid</label>
+            <input id="paid" type="number" required value="0" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+                th:field="*{paid}"></input>
+            <label for="tax">Tax</label>
+            <input id="tax" type="number" required value="0" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+                th:field="*{tax}"></input>
+            <label for="processing">Processing</label>
+            <input id="processing" type="number" required value="0" min="0.00" max="100000.00" step="0.01" class="input-group mb-3"
+                th:field="*{processing}"></input>
             <div class="form-group col-md-4 hidden">
-                <input type="text" th:field="*{pocId}" class="form-control">
+                <input type="text" th:field="*{folder}" class="form-control">
             </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <button type="button" class="btn btn-info" th:data-nextact="${vendor.postNextAction}"
-            onclick="getNextAction(this.getAttribute('data-nextact'))">Cancel</button>
-    </form>
-</div>
-</div>
+        </form>
+    </div>
+
+    <div th:fragment="note-form" th:remove="tag">
+        <form id="note-form" th:action="@{/backstage/job/post/note}" th:object="${addNoteModel}" class="form"
+            method="post">
+            <label for="method">Note</label>
+            <textarea id="note" class="input-group mb-3 textarea" th:field="*{note}"></textarea>
+            <div class="form-group checkbox">
+                <input type="checkbox" th:field="*{pub}"> Customer Visible</input></div>
+            <div class="form-group col-md-4 hidden">
+                <input type="text" th:field="*{jobid}" class="form-control"></div>
+        </form>
+    </div>
+
+    <div th:fragment="budget-form" th:remove="tag">
+        <form id="budget-form" th:action="@{/backstage/job/post/budget}" th:object="${addBudgetModel}" class="form"
+            method="post">
+            <label for="low">Low Budget</label>
+            <input type="number" required value="0" min="0" max="1000000" class="input-group mb-3" th:field="*{low}"></input>
+            <label for="high">High Budget</label>
+            <input type="number" required value="0" min="0" max="1000000" class="input-group mb-3" th:field="*{high}"></input>
+            <label for="sd">Start Date</label>
+            <input id="sd" type="text" class="input-group hasdatepicker" th:field="*{startDate}"></input>
+            <label for="ed">End Date</label>
+            <input id="ed" type="text" class="input-group hasdatepicker" th:field="*{endDate}"></input>
+            <label for="method">Notes</label>
+            <textarea id="note" class="input-group mb-3 textarea" th:field="*{note}"></textarea>
+            <div class="form-group checkbox">
+                <input type="checkbox" th:field="*{pub}"> Customer Visible</input></div>
+            <div class="form-group col-md-4 hidden">
+                <input type="text" th:field="*{jobid}" class="form-control"></div>
+        </form>
+    </div>
+
+    <div th:fragment="quote-form" th:remove="tag">
+        <form id="quote-form" th:action="@{/backstage/job/post/quote}" th:object="${addQuoteModel}" class="form"
+            method="post">
+            <label for="cabq">Installer Quote</label>
+            <input id="q1" type="number" required value="0"class="input-group mb-3" disabled th:field="*{installerQ}"></input>
+            <label for="cabq">Cabinet Quote</label>
+            <input id="q2" type="number" required value="0"class="input-group mb-3" disabled th:field="*{cabinetQ}"></input>
+            <label for="bake">Bake In</label>
+            <input id="q3" type="number" required value="0"class="input-group mb-3"></input>
+            <label for="amount">Set Quote</label>
+            <input id="finalval" type="number" required value="0" min="0" max="1000000" class="input-group mb-3" th:field="*{amount}"></input>
+            <label for="method">Notes</label>
+            <textarea id="note" class="input-group mb-3 textarea" th:field="*{note}"></textarea>
+            <div class="form-group checkbox">
+                <input type="checkbox" th:field="*{pub}"> Customer Visible</input></div>
+            <div class="form-group col-md-4 hidden">
+                <input type="text" th:field="*{jobid}" class="form-control"></div>
+        </form>
+        <script>
+            $("#q3").on("change", function() {
+                var q1 = parseInt($("#q1").val());
+                var q2 = parseInt($("#q2").val());
+                var q3 = parseInt($("#q3").val());
+                var q0 = q1 + q2 + q3;
+                $("#finalval").val(q0);
+            });
+            $("#finalval").on("change", function() {
+                var q1 = parseInt($("#q1").val());
+                var q2 = parseInt($("#q2").val());
+                var q0 = parseInt($("#finalval").val());
+                var q3 = q0 - q1 - q2;
+                $("#q3").val(q3);
+            });
+        </script>
+    </div>
+
+    <div th:fragment="vendor" th:remove="tag">
+        <form th:action="@{${vendor.postNextAction}}" th:object="${vendor}" method="post">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="name">Company Name</label>
+                    <input type="text" th:field="*{name}" class="form-control" placeholder="">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="accountId">Account ID</label>
+                    <input type="text" th:field="*{accountId}" class="form-control" placeholder="">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="url">Url</label>
+                    <input type="text" th:field="*{url}" class="form-control" placeholder="optional">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="url">Login</label>
+                    <input type="text" th:field="*{login}" class="form-control" placeholder="optional">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="url">password</label>
+                    <input type="text" th:field="*{pwd}" class="form-control" placeholder="optional">
+                    <label for="showme" class="flex-right">showme
+                        <input id="showme" type="checkbox" class="checkbox"></checkbox></label>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4 ac">
+                    <label for="multiplier">Multiplier</label>
+                    <input type="number" required value="0"th:field="*{multiplier}" class="form-control" step="0.01">
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="cabs">Cabinets</label>
+                    <input id="cabs" th:field="*{cabSupplier}" type="checkbox" class="checkbox"></checkbox>
+                </div>
+                <div class="form-group col-md-4 hidden">
+                    <input type="text" th:field="*{pocId}" class="form-control">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-info" th:data-nextact="${vendor.postNextAction}"
+                onclick="getNextAction(this.getAttribute('data-nextact'))">Cancel</button>
+        </form>
+    </div>
+    </div>

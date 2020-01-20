@@ -33,15 +33,16 @@
                     <div class="col-md-4">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Projections</h4>
+                                <h4>Account</h4>
                             </div>
                             <div class="card-body">
                                 <div class="card-item"><div>+ Customer Budget:</div> <div th:text="${pandl.custBudget}">0</div></div>
                                 <div class="card-item"><div>- Contractor Cost:</div><div th:text="${pandl.contractorCost}">0</div></div>
                                 <div class="card-item"><div>= SJKB Budget: </div> <div th:text="${pandl.sjkbBudget}">11110</div></div><hr/>
                                 <div class="card-item"><div>Quote: </div> <div th:text="${pandl.quote}">0</div></div>
-                                <div class="card-item"><div>Installer Billed: </div> <div th:text="${pandl.installerBilled}">0</div></div>
-                                <div class="card-item"><div>Invoiced Billed: </div> <div th:text="${pandl.invoiceBilled}">0</div></div>
+                                <div class="card-item"><div>Installer Invoice: </div> <div th:text="${pandl.installerBilled}">0</div></div>
+                                <div class="card-item"><div>Cabinet Invoice: </div> <div th:text="${pandl.cabinetBilled}">0</div></div>
+                                <div class="card-item"><div>Vendor Invoice: </div> <div th:text="${pandl.invoiceBilled}">0</div></div>
                                 <div class="card-item"><div>Customer Paid: </div> <div th:text="${pandl.customerPaid}">0</div></div>
                                 <div class="card-item"><div>Balance: </div> <div th:text="${pandl.balance}">0</div></div>
                             </div>
@@ -50,12 +51,13 @@
                     <div class="col-md-4">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Costs</h4>
+                                <h4>P and L</h4>
                             </div>
                             <div class="card-body">
                                 <div class="card-item"><div>SJKB Budget: </div> <div th:text="${pandl.sjkbBudget}">11110</div></div>
                                 <div class="card-item"><div>Quote: </div> <div th:text="${pandl.quote}">0</div></div>
                                 <div class="card-item"><div>Installer Cost: </div> <div th:text="${pandl.installerCost}">0</div></div>
+                                <div class="card-item"><div>Cabinet Cost: </div> <div th:text="${pandl.cabinetCost}">0</div></div>
                                 <div class="card-item"><div>Invoiced Cost: </div> <div th:text="${pandl.invoiceCost}">0</div></div>
                                 <div class="card-item"><div>SJKB Paid: </div> <div th:text="${pandl.sjkbPaid}">0</div></div>
                                 <div class="card-item"><div>Collected: </div> <div th:text="${pandl.collected}">0</div></div>

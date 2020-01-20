@@ -5,6 +5,7 @@ import java.util.List;
 import com.sjkb.entities.JobEntity;
 import com.sjkb.entities.JobExpenseEntity;
 import com.sjkb.models.jobs.AssignExpenseModel;
+import com.sjkb.models.jobs.AddBudgetModel;
 import com.sjkb.models.jobs.AddInvoiceModel;
 import com.sjkb.models.jobs.AddNoteModel;
 import com.sjkb.models.jobs.AddPaymentModel;
@@ -50,5 +51,9 @@ public interface JobService {
 	List<OutstandingInvoiceModel> getOutstandingInvoices(String jobId);
 
 	void postQuote(AddQuoteModel quote, String userId);
+
+	JobAttributeModel getAttributesFor(String jobid);
+
+	void postBudget(AddBudgetModel budget, String userId);
 
 }

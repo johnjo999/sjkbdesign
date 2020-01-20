@@ -1,13 +1,13 @@
 package com.sjkb.entities;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 
 @Entity(name = "jobEvent")
 @Table(name = "job_event")
@@ -17,6 +17,8 @@ public class JobEventEntity {
     private String uid;
 
     private String type;
+
+    private String subType;
 
     private String jobid;
 
@@ -30,7 +32,11 @@ public class JobEventEntity {
 
     private int highEnd;
 
-    private Timestamp scheduled;
+    private LocalDate startDate;
+
+    private LocalDate endDate;
+
+    private float paid;
 
     @Transient
     private String username;
@@ -103,8 +109,6 @@ public class JobEventEntity {
         this.highEnd = highEnd;
     }
 
-    
-
     public String getMessage() {
         String date = "";
         if (timestamp != null)
@@ -112,13 +116,16 @@ public class JobEventEntity {
         String result = String.format("%s (%s): ", date, this.username);
         switch (type) {
         case "invoice":
-            result += String.format("Posted invoice %s for %d", objid, lowEnd);
+            result += String.format("Posted invoice %s for %.2f", objid, paid);
             break;
         case "expense":
-            result += String.format("Posted expense for %d", lowEnd);
+            if ("cabinet".equals(subType))
+                result += String.format("Posted cabinet expense for $%.2f", paid);
+            else
+                result += String.format("Posted expense for $%.2f", paid);
             break;
         case "payment":
-            result += String.format("Posted payment for %d", lowEnd);
+            result += String.format("Posted payment for %.2f", paid);
             break;
         case "note":
             result += String.format("<strong>Note:</strong>");
@@ -129,27 +136,22 @@ public class JobEventEntity {
             } else {
                 result += String.format("Quote updated, was $%d, now $%d", highEnd, lowEnd);
             }
-            
+
             break;
         default:
             if (highEnd != 0 && highEnd == lowEnd)
                 result += String.format("%s updated, quote %d", type, highEnd);
             else
                 result += String.format("%s updated, high %d, low %d", type, highEnd, lowEnd);
-            if (scheduled != null) {
-                result += " for " + scheduled.toString().split(" ")[0];
+            if (paid > 0) {
+                result += String.format(", paid $%s", paid);
+            }
+            if (startDate != null) {
+                result += " for " + startDate.toString();
             }
         }
         return result;
 
-    }
-
-    public Timestamp getScheduled() {
-        return scheduled;
-    }
-
-    public void setScheduled(final Timestamp scheduled) {
-        this.scheduled = scheduled;
     }
 
     public String getUsername() {
@@ -158,6 +160,38 @@ public class JobEventEntity {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public float getPaid() {
+        return paid;
+    }
+
+    public void setPaid(float paid) {
+        this.paid = paid;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getSubType() {
+        return subType;
+    }
+
+    public void setSubType(String subType) {
+        this.subType = subType;
     }
 
 }

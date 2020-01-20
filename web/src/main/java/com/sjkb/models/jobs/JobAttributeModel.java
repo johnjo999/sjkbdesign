@@ -1,5 +1,7 @@
 package com.sjkb.models.jobs;
 
+import java.time.LocalDate;
+
 /**
  * Attributes are created by scraping the eventlog for this job
  */
@@ -13,13 +15,18 @@ public class JobAttributeModel {
     private float invoicedRetail;
     private float invoicedCost;
     private float custPaid;
-    private float vendorPaid;
-    private float cabinetCost;
+    private float vendorCost;
+    private int cabinetQuote;
     private float cabinetInvoiced;
+    private float cabinetCost;
     private int installerCost;
     private int installerInvoiced;
     private int contractorCost;
     private int contractorInvoiced;
+    private int budgetLow;
+    private int budgetHigh;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     public String getContractor() {
         return contractor;
@@ -93,12 +100,12 @@ public class JobAttributeModel {
         this.custPaid = custPaid;
     }
 
-    public float getVendorPaid() {
-        return vendorPaid;
+    public float getVendorCost() {
+        return vendorCost;
     }
 
-    public void setVendorPaid(float vendorPaid) {
-        this.vendorPaid = vendorPaid;
+    public void setVendorCost(float vendorPaid) {
+        this.vendorCost = vendorPaid;
     }
 
     public int getInstallerCost() {
@@ -134,23 +141,15 @@ public class JobAttributeModel {
     }
 
 	public Integer getExpectedCost() {
-		return Math.round(contractorCost + installerCost + vendorPaid);
+		return Math.round(installerCost + vendorCost + cabinetQuote);
 	}
 
-	public void addVendorCost(int lowEnd) {
-        vendorPaid += lowEnd;
+	public void addVendorCost(float cost) {
+        vendorCost += cost;
 	}
 
-	public void addCustPayment(int paid) {
+	public void addCustPayment(float paid) {
         custPaid += paid;
-    }
-
-    public float getCabinetCost() {
-        return cabinetCost;
-    }
-
-    public void setCabinetCost(float cabinetCost) {
-        this.cabinetCost = cabinetCost;
     }
 
     public float getCabinetInvoiced() {
@@ -159,10 +158,6 @@ public class JobAttributeModel {
 
     public void setCabinetInvoiced(float cabinetInvoiced) {
         this.cabinetInvoiced = cabinetInvoiced;
-    }
-    
-    public void addCabinetCost(int cabCost) {
-        this.cabinetCost += cabCost;
     }
 
     public void addCabInvoice(int cabInvoiced) {
@@ -176,6 +171,55 @@ public class JobAttributeModel {
     public void addInvoicedCost(float cost) {
         this.invoicedCost += cost;
     }
-   
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public int getBudgetLow() {
+        return budgetLow;
+    }
+
+    public void setBudgetLow(int budgetLow) {
+        this.budgetLow = budgetLow;
+    }
+
+    public int getBudgetHigh() {
+        return budgetHigh;
+    }
+
+    public void setBudgetHigh(int budgetHigh) {
+        this.budgetHigh = budgetHigh;
+    }
+
+    public int getCabinetQuote() {
+        return cabinetQuote;
+    }
+
+    public void setCabinetQuote(int cabinetQuote) {
+        this.cabinetQuote = cabinetQuote;
+    }
+
+	public float getCabinetCost() {
+		return cabinetCost;
+    }
+
+    public void setCabinetCost(float cabinetCost) {
+        this.cabinetCost = cabinetCost;
+    }
+    
+    
 
 }

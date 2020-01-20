@@ -11,8 +11,11 @@ public class PandLModel {
     private int custBudget;
     private int contractorCost;
     private int installerCost;
+    private float installerPaid;
     private int installerBilled;
+    private float cabinetBilled;
     private int quote;
+    private float cabinetCost;
     private float collected;
     private float vendorCost;
     private float custInvoiced;
@@ -90,7 +93,7 @@ public class PandLModel {
     }
 
     public int getSjkbBudget() {
-        return 0;
+        return custBudget - contractorCost;
     }
 
     public int getInstallerCost() {
@@ -110,7 +113,7 @@ public class PandLModel {
     }
 
     public int getSjkbPaid() {
-        return Math.round(vendorCost + installerCost);
+        return Math.round(vendorCost + installerCost + cabinetCost);
     }
 
     public float getCollected() {
@@ -144,5 +147,40 @@ public class PandLModel {
     public void setCustInvoiced(float custInvoiced) {
         this.custInvoiced = custInvoiced;
     }
+
+    public float getInstallerPaid() {
+        return installerPaid;
+    }
+
+    public void setInstallerPaid(float installerPaid) {
+        this.installerPaid = installerPaid;
+    }
+
+    public float getCabinetCost() {
+        return cabinetCost;
+    }
+
+    public void setCabinetCost(float cabinetCost) {
+        this.cabinetCost = cabinetCost;
+    }
+
+    public float getCabinetBilled() {
+        return cabinetBilled;
+    }
+
+    public void setCabinetBilled(float cabinetBilled) {
+        this.cabinetBilled = cabinetBilled;
+    }
+
+	public void setJobAtributes(JobAttributeModel jobAttributes) {
+        this.setCollected(jobAttributes.getCustPaid());
+        this.setInstallerBilled(jobAttributes.getInstallerInvoiced());
+        this.setInstallerCost(jobAttributes.getInstallerCost());
+        this.setVendorCost(jobAttributes.getVendorCost());
+        this.setCabinetCost(jobAttributes.getCabinetCost());
+        this.setCabinetBilled(jobAttributes.getCabinetInvoiced());
+        this.setContractorCost(jobAttributes.getContractorCost());
+	}
+
     
 }
