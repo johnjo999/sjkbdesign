@@ -5,7 +5,7 @@ import com.sjkb.repositores.JobExpenseInvoiceInterface;
 public class JobInvoiceRowModel {
     private String name;
     private String desc;
-    private Float cost;
+    private Float cost = 0.0f;
     private String expenseUid;  // mark expense as invoices (where available)
 
     public JobInvoiceRowModel() {}

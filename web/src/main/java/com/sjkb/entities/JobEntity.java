@@ -103,6 +103,8 @@ public class JobEntity {
     }
 
     public Float getInvoiced() {
+        if (invoiced == null)
+            return 0.0f;
         return invoiced;
     }
 
